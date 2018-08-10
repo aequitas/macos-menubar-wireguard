@@ -1,0 +1,576 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04B4BE44211E1E010001213A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE43211E1E010001213A /* AppDelegate.swift */; };
+		04B4BE46211E1E030001213A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE45211E1E030001213A /* Assets.xcassets */; };
+		04B4BE49211E1E030001213A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE47211E1E030001213A /* MainMenu.xib */; };
+		04B4BE55211E1E030001213A /* Wireguard_StatusbarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE54211E1E030001213A /* Wireguard_StatusbarTests.swift */; };
+		04B4BE60211E1E030001213A /* Wireguard_StatusbarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE5F211E1E030001213A /* Wireguard_StatusbarUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		04B4BE51211E1E030001213A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04B4BE38211E1E010001213A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04B4BE3F211E1E010001213A;
+			remoteInfo = "Wireguard Statusbar";
+		};
+		04B4BE5C211E1E030001213A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04B4BE38211E1E010001213A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04B4BE3F211E1E010001213A;
+			remoteInfo = "Wireguard Statusbar";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		04B4BE40211E1E010001213A /* Wireguard Statusbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Wireguard Statusbar.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04B4BE43211E1E010001213A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		04B4BE45211E1E030001213A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		04B4BE48211E1E030001213A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		04B4BE4A211E1E030001213A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04B4BE4B211E1E030001213A /* Wireguard_Statusbar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wireguard_Statusbar.entitlements; sourceTree = "<group>"; };
+		04B4BE50211E1E030001213A /* Wireguard StatusbarTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Wireguard StatusbarTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04B4BE54211E1E030001213A /* Wireguard_StatusbarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wireguard_StatusbarTests.swift; sourceTree = "<group>"; };
+		04B4BE56211E1E030001213A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04B4BE5B211E1E030001213A /* Wireguard StatusbarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Wireguard StatusbarUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		04B4BE5F211E1E030001213A /* Wireguard_StatusbarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wireguard_StatusbarUITests.swift; sourceTree = "<group>"; };
+		04B4BE61211E1E030001213A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04B4BE3D211E1E010001213A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE4D211E1E030001213A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE58211E1E030001213A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04B4BE37211E1E010001213A = {
+			isa = PBXGroup;
+			children = (
+				04B4BE42211E1E010001213A /* Wireguard Statusbar */,
+				04B4BE53211E1E030001213A /* Wireguard StatusbarTests */,
+				04B4BE5E211E1E030001213A /* Wireguard StatusbarUITests */,
+				04B4BE41211E1E010001213A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		04B4BE41211E1E010001213A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				04B4BE40211E1E010001213A /* Wireguard Statusbar.app */,
+				04B4BE50211E1E030001213A /* Wireguard StatusbarTests.xctest */,
+				04B4BE5B211E1E030001213A /* Wireguard StatusbarUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		04B4BE42211E1E010001213A /* Wireguard Statusbar */ = {
+			isa = PBXGroup;
+			children = (
+				04B4BE43211E1E010001213A /* AppDelegate.swift */,
+				04B4BE45211E1E030001213A /* Assets.xcassets */,
+				04B4BE47211E1E030001213A /* MainMenu.xib */,
+				04B4BE4A211E1E030001213A /* Info.plist */,
+				04B4BE4B211E1E030001213A /* Wireguard_Statusbar.entitlements */,
+			);
+			path = "Wireguard Statusbar";
+			sourceTree = "<group>";
+		};
+		04B4BE53211E1E030001213A /* Wireguard StatusbarTests */ = {
+			isa = PBXGroup;
+			children = (
+				04B4BE54211E1E030001213A /* Wireguard_StatusbarTests.swift */,
+				04B4BE56211E1E030001213A /* Info.plist */,
+			);
+			path = "Wireguard StatusbarTests";
+			sourceTree = "<group>";
+		};
+		04B4BE5E211E1E030001213A /* Wireguard StatusbarUITests */ = {
+			isa = PBXGroup;
+			children = (
+				04B4BE5F211E1E030001213A /* Wireguard_StatusbarUITests.swift */,
+				04B4BE61211E1E030001213A /* Info.plist */,
+			);
+			path = "Wireguard StatusbarUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		04B4BE3F211E1E010001213A /* Wireguard Statusbar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04B4BE64211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard Statusbar" */;
+			buildPhases = (
+				04B4BE3C211E1E010001213A /* Sources */,
+				04B4BE3D211E1E010001213A /* Frameworks */,
+				04B4BE3E211E1E010001213A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Wireguard Statusbar";
+			productName = "Wireguard Statusbar";
+			productReference = 04B4BE40211E1E010001213A /* Wireguard Statusbar.app */;
+			productType = "com.apple.product-type.application";
+		};
+		04B4BE4F211E1E030001213A /* Wireguard StatusbarTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04B4BE67211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard StatusbarTests" */;
+			buildPhases = (
+				04B4BE4C211E1E030001213A /* Sources */,
+				04B4BE4D211E1E030001213A /* Frameworks */,
+				04B4BE4E211E1E030001213A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04B4BE52211E1E030001213A /* PBXTargetDependency */,
+			);
+			name = "Wireguard StatusbarTests";
+			productName = "Wireguard StatusbarTests";
+			productReference = 04B4BE50211E1E030001213A /* Wireguard StatusbarTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		04B4BE5A211E1E030001213A /* Wireguard StatusbarUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 04B4BE6A211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard StatusbarUITests" */;
+			buildPhases = (
+				04B4BE57211E1E030001213A /* Sources */,
+				04B4BE58211E1E030001213A /* Frameworks */,
+				04B4BE59211E1E030001213A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				04B4BE5D211E1E030001213A /* PBXTargetDependency */,
+			);
+			name = "Wireguard StatusbarUITests";
+			productName = "Wireguard StatusbarUITests";
+			productReference = 04B4BE5B211E1E030001213A /* Wireguard StatusbarUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		04B4BE38211E1E010001213A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = "Johan Bloemberg";
+				TargetAttributes = {
+					04B4BE3F211E1E010001213A = {
+						CreatedOnToolsVersion = 9.4.1;
+					};
+					04B4BE4F211E1E030001213A = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = 04B4BE3F211E1E010001213A;
+					};
+					04B4BE5A211E1E030001213A = {
+						CreatedOnToolsVersion = 9.4.1;
+						TestTargetID = 04B4BE3F211E1E010001213A;
+					};
+				};
+			};
+			buildConfigurationList = 04B4BE3B211E1E010001213A /* Build configuration list for PBXProject "Wireguard Statusbar" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 04B4BE37211E1E010001213A;
+			productRefGroup = 04B4BE41211E1E010001213A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				04B4BE3F211E1E010001213A /* Wireguard Statusbar */,
+				04B4BE4F211E1E030001213A /* Wireguard StatusbarTests */,
+				04B4BE5A211E1E030001213A /* Wireguard StatusbarUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		04B4BE3E211E1E010001213A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04B4BE46211E1E030001213A /* Assets.xcassets in Resources */,
+				04B4BE49211E1E030001213A /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE4E211E1E030001213A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE59211E1E030001213A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		04B4BE3C211E1E010001213A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04B4BE44211E1E010001213A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE4C211E1E030001213A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04B4BE55211E1E030001213A /* Wireguard_StatusbarTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		04B4BE57211E1E030001213A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				04B4BE60211E1E030001213A /* Wireguard_StatusbarUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		04B4BE52211E1E030001213A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04B4BE3F211E1E010001213A /* Wireguard Statusbar */;
+			targetProxy = 04B4BE51211E1E030001213A /* PBXContainerItemProxy */;
+		};
+		04B4BE5D211E1E030001213A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04B4BE3F211E1E010001213A /* Wireguard Statusbar */;
+			targetProxy = 04B4BE5C211E1E030001213A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		04B4BE47211E1E030001213A /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				04B4BE48211E1E030001213A /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		04B4BE62211E1E030001213A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		04B4BE63211E1E030001213A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		04B4BE65211E1E030001213A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Wireguard Statusbar/Wireguard_Statusbar.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard Statusbar/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-Statusbar";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		04B4BE66211E1E030001213A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Wireguard Statusbar/Wireguard_Statusbar.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard Statusbar/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-Statusbar";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		04B4BE68211E1E030001213A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard StatusbarTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-StatusbarTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard Statusbar.app/Contents/MacOS/Wireguard Statusbar";
+			};
+			name = Debug;
+		};
+		04B4BE69211E1E030001213A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard StatusbarTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-StatusbarTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Wireguard Statusbar.app/Contents/MacOS/Wireguard Statusbar";
+			};
+			name = Release;
+		};
+		04B4BE6B211E1E030001213A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard StatusbarUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-StatusbarUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_TARGET_NAME = "Wireguard Statusbar";
+			};
+			name = Debug;
+		};
+		04B4BE6C211E1E030001213A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = "Wireguard StatusbarUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.ijohan.Wireguard-StatusbarUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_TARGET_NAME = "Wireguard Statusbar";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		04B4BE3B211E1E010001213A /* Build configuration list for PBXProject "Wireguard Statusbar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04B4BE62211E1E030001213A /* Debug */,
+				04B4BE63211E1E030001213A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04B4BE64211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard Statusbar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04B4BE65211E1E030001213A /* Debug */,
+				04B4BE66211E1E030001213A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04B4BE67211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard StatusbarTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04B4BE68211E1E030001213A /* Debug */,
+				04B4BE69211E1E030001213A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		04B4BE6A211E1E030001213A /* Build configuration list for PBXNativeTarget "Wireguard StatusbarUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				04B4BE6B211E1E030001213A /* Debug */,
+				04B4BE6C211E1E030001213A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 04B4BE38211E1E010001213A /* Project object */;
+}

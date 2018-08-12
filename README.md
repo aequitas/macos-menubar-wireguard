@@ -1,6 +1,6 @@
 This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 
-![Screenshot](demo.png)
+![Screenshot](Misc/demo.png)
 
 
 # Features

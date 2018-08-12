@@ -4,10 +4,38 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>HelperTool.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 		<key>Wireguard Statusbar.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>nl.ijohan.WireguardStatusbarHelper.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>04B4BE3F211E1E010001213A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>04B4BE4F211E1E030001213A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>04B4BE5A211E1E030001213A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "wireguard 18x18.png",
+      "filename" : "logo-18.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "wireguard 36x36.png",
+      "filename" : "logo-36.png",
       "scale" : "2x"
     },
     {

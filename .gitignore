@@ -3,3 +3,5 @@
 /Packages
 /*.xcodeproj
 DerivedData
+Misc/logo*.png
+Misc/Wireguard.png

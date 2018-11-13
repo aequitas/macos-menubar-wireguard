@@ -191,8 +191,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         // for every configured tunnel check if a socket file exists (assume that indicates the tunnel is up)
         for (interface_name, _) in tunnels {
             // TODO: more idiomatic path building?
-            let socket = URL(string: "\(run_path)/\(interface_name).sock")
-            tunnels[interface_name]!.connected = FileManager.default.fileExists(atPath: socket!.path)
+            let name = URL(string: "\(run_path)/\(interface_name).name")
+            tunnels[interface_name]!.connected = FileManager.default.fileExists(atPath: name!.path)
         }
     }
     

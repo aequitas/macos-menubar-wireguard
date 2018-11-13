@@ -57,13 +57,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
-        shouldInstallHelper(callback: {
+        helperStatus {
             installed in
             if !installed {
                 self.installHelper()
                 self.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
             }
-        })
+        }
 
         // register watchers to respond to changes in wireguard config/runtime state
         let queue = SKQueue(delegate: self)!
@@ -212,29 +212,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
-    func shouldInstallHelper(callback: @escaping (Bool) -> Void){
+    func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
         
-        let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/\(HelperConstants.machServiceName)")
-        let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL?)
-        if helperBundleInfo != nil {
-            let helperInfo = helperBundleInfo! as NSDictionary
-            let helperVersion = helperInfo["CFBundleVersion"] as! String
-            
-            print("Helper: Bundle Version => \(helperVersion)")
-            
-            let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({
-                _ in callback(false)
-            }) as! HelperProtocol
-            
-            helper.getVersion(reply: {
-                installedVersion in
-                print("Helper: Installed Version => \(installedVersion)")
-                callback(helperVersion == installedVersion)
-            })
-        } else {
-            callback(false)
+        // Get the current helper connection and return the remote object (Helper.swift) as a proxy object to call functions on.
+        guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ error in
+            if let onCompletion = completion { onCompletion(false) }
+        }) as? HelperProtocol else { return nil }
+        return helper
+    }
+    
+    func helperStatus(completion: @escaping (_ installed: Bool) -> Void) {
+        
+        // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application bundle with the one on disk.
+        let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
+        guard
+            let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
+            let helperVersion = helperBundleInfo["CFBundleShortVersionString"] as? String,
+            let helper = self.helper(completion) else {
+                completion(false)
+                return
+        }
+        NSLog("Helper: Bundle Version => \(String(describing: helperVersion))")
+
+        helper.getVersion { installedHelperVersion in
+            NSLog("Helper: Installed Version => \(String(describing: installedHelperVersion))")
+
+            completion(installedHelperVersion == helperVersion)
         }
     }
+    
+
     
     // Uses SMJobBless to install or update the helper tool
     func installHelper(){

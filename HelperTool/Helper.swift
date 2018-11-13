@@ -67,7 +67,7 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
     
     /// Return daemon's bundle version
     /// Because communication over XPC is asynchronous, all methods in the protocol must have a return type of void
-    func getVersion(reply: (String) -> Void) {
+    func getVersion(_ reply: (String) -> Void) {
         reply(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)
     }
 

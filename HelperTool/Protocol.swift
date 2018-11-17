@@ -18,5 +18,5 @@ struct HelperConstants {
 protocol HelperProtocol {
     func tunnelUp(interface: String, reply: @escaping (NSNumber) -> Void)
     func tunnelDown(interface: String, reply: @escaping (NSNumber) -> Void)
-    func getVersion(_ reply: (String) -> Void)
+    func getVersion(_ reply: @escaping (String) -> Void)
 }

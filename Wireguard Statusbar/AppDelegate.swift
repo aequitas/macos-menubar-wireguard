@@ -164,7 +164,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
                 continue
             }
             let files = enumerator?.allObjects as! [String]
-            let config_files = files.filter{$0.hasSuffix(".conf")}
+            let config_files = files.filter{$0.hasSuffix(".conf")}.sorted()
             for config_file in config_files {
                 var config = parseConfig(config_path + "/" + config_file)
                 let interface = config_file.replacingOccurrences(of: ".conf", with: "")
@@ -223,13 +223,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     }
     
     func helperStatus(completion: @escaping (_ installed: Bool) -> Void) {
-        
         // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application bundle with the one on disk.
         let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
         guard
             let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
-            let helperVersion = helperBundleInfo["CFBundleShortVersionString"] as? String,
+            let helperVersion = helperBundleInfo["CFBundleVersion"] as? String,
             let helper = self.helper(completion) else {
+                NSLog("Helper: Failed to get Bundled helper version")
                 completion(false)
                 return
         }
@@ -237,12 +237,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         helper.getVersion { installedHelperVersion in
             NSLog("Helper: Installed Version => \(String(describing: installedHelperVersion))")
-
             completion(installedHelperVersion == helperVersion)
         }
     }
-    
-
     
     // Uses SMJobBless to install or update the helper tool
     func installHelper(){

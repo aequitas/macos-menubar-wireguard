@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>nl.ijohan.WireguardStatusbarHelper</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.3</string>
+	<string>1.0.4</string>
 	<key>SMAuthorizedClients</key>
 	<array>
 		<string>anchor apple generic and identifier &quot;nl.ijohan.WireguardStatusbar&quot;</string>

@@ -49,19 +49,19 @@ Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/%: ${TMPDIR}/%
 	cp "$<" "$@"
 
 %-dim.png: %.png | ${convert}
-	${convert} $< -channel A -evaluate Multiply 0.50 +channel $@
+	${convert} $< -strip -channel A -evaluate Multiply 0.50 +channel $@
 
 define resize
 %-${1}.png: %.png
-	$${convert} $$< -scale ${1}x${1} $$@
+	$${convert} $$< -strip -scale ${1}x${1} $$@
 endef
 $(foreach size,1024 512 256 128 64 36 32 18 16,$(eval $(call resize,${size})))
 
 ${TMPDIR}/logo.png: ${TMPDIR}/wireguard.png | ${convert}
-	${convert} $< -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 $@
+	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 $@
 
 ${TMPDIR}/wireguard.png: ${TMPDIR}/%.png: Misc/%.svg | ${convert}
-	${convert} -background transparent -density 400 $< $@
+	${convert} -strip -background transparent -density 400 $< $@
 
 ${convert}:
 	brew install imagemagick
@@ -71,8 +71,8 @@ ${xcpretty}:
 
 clean:
 	rm -rf \
-		WireguardStatusbar.zip
-		build/
+		WireguardStatusbar.* \
+		build/ \
 		DerivedData/ \
 		${TMPDIR}/logo*.png \
 		${TMPDIR}/wireguard.png Wireguard\ Statusbar/Assets.xcassets/connected.imageset/logo-*.png \

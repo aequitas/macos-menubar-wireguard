@@ -12,7 +12,11 @@
     },
     {
       "idiom" : "mac",
+<<<<<<< Updated upstream
       "size" : "32x32",
+=======
+      "filename" : "logo-32.png",
+>>>>>>> Stashed changes
       "scale" : "1x"
     },
     {

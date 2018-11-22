@@ -8,13 +8,13 @@ all: icons WireguardStatusbar.dmg
 
 build_dest=build/Release
 
-WireguardStatusbar.dmg: dist/WireguardStatusbar.app
+WireguardStatusbar.dmg: WireguardStatusbar/WireguardStatusbar.app
 	rm -rf "$@"
 	hdiutil create "$@" -srcfolder "${<D}" -ov
 
 sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
 
-dist/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
+WireguardStatusbar/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
 	rm -fr "${@D}/"
 	mkdir -p "${@D}/"
 	ln -sf /Applications "${@D}/Applications"
@@ -29,10 +29,10 @@ ${TMPDIR}/WireguardStatusbar.xcarchive: ${sources} | ${xcpretty}
 
 # Generate icons from Wireguard logo
 icons: \
-	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/logo-18.png \
-	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/logo-36.png \
-	Wireguard\ Statusbar/Assets.xcassets/disconnected.imageset/logo-18-dim.png \
-	Wireguard\ Statusbar/Assets.xcassets/disconnected.imageset/logo-36-dim.png \
+	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/silhouette-18.png \
+	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/silhouette-36.png \
+	Wireguard\ Statusbar/Assets.xcassets/disconnected.imageset/silhouette-18-dim.png \
+	Wireguard\ Statusbar/Assets.xcassets/disconnected.imageset/silhouette-36-dim.png \
 	Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/logo-16.png \
 	Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/logo-32.png \
 	Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/logo-64.png \
@@ -59,9 +59,20 @@ define resize
 endef
 $(foreach size,1024 512 256 128 64 36 32 18 16,$(eval $(call resize,${size})))
 
+# Extract the logo part from the banner, color it black and white
 ${TMPDIR}/logo.png: ${TMPDIR}/wireguard.png | ${convert}
-	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 $@
+	${convert} $< -strip -crop 1251x1251+0+0 colorspace gray +dither -colors 2 \
+		-floodfill +600+200 white -floodfill +600+400 white -floodfill +350+900 white \
+		-floodfill +400+200 black -floodfill +777+117 black\
+		$@
 
+# Extract the logo part from the banner, but keep the dragon transparent
+${TMPDIR}/silhouette.png: ${TMPDIR}/wireguard.png | ${convert}
+	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 \
+		-floodfill +400+200 black -floodfill +777+117 black\
+		$@
+
+# Convert SVG wireguard banner to png
 ${TMPDIR}/wireguard.png: ${TMPDIR}/%.png: Misc/%.svg | ${convert}
 	${convert} -strip -background transparent -density 400 $< $@
 

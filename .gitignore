@@ -1,6 +1,10 @@
 .DS_Store
-DerivedData
 *.xcodeproj/xcuserdata/
+
+# Build artifacts
+WireguardStatusbar.*
+build/
+DerivedData
 
 # Intermediate files
 Tmp/

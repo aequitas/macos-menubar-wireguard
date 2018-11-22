@@ -1,27 +1,27 @@
 {
   "images" : [
     {
-      "idiom" : "mac",
       "size" : "16x16",
+      "idiom" : "mac",
+      "filename" : "logo-16.png",
       "scale" : "1x"
     },
     {
-      "idiom" : "mac",
       "size" : "16x16",
+      "idiom" : "mac",
+      "filename" : "logo-32.png",
       "scale" : "2x"
     },
     {
-      "idiom" : "mac",
-<<<<<<< Updated upstream
       "size" : "32x32",
-=======
-      "filename" : "logo-32.png",
->>>>>>> Stashed changes
+      "idiom" : "mac",
+      "filename" : "logo-33.png",
       "scale" : "1x"
     },
     {
-      "idiom" : "mac",
       "size" : "32x32",
+      "idiom" : "mac",
+      "filename" : "logo-64.png",
       "scale" : "2x"
     },
     {
@@ -33,7 +33,7 @@
     {
       "size" : "128x128",
       "idiom" : "mac",
-      "filename" : "logo-257.png",
+      "filename" : "logo-256.png",
       "scale" : "2x"
     },
     {
@@ -51,7 +51,7 @@
     {
       "size" : "512x512",
       "idiom" : "mac",
-      "filename" : "logo-513.png",
+      "filename" : "logo-512.png",
       "scale" : "1x"
     },
     {

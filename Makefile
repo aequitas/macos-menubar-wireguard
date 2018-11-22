@@ -2,8 +2,25 @@ SHELL=/bin/bash
 
 brew_bin=$(shell brew --prefix)/bin
 convert=${brew_bin}/convert
+xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 
-all: icons
+all: icons WireguardStatusbar.zip
+
+build_dest=build/Release
+
+WireguardStatusbar.zip: WireguardStatusbar.app
+	cd "$(<D)"; zip -r "${PWD}/$@" "$(<F)"
+
+sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
+
+WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
+	cp -r $< $@
+
+${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app:  ${TMPDIR}/WireguardStatusbar.xcarchive | ${xcpretty}
+
+# Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
+${TMPDIR}/WireguardStatusbar.xcarchive: ${sources} | ${xcpretty}
+	xcodebuild -scheme Wireguard\ Statusbar -archivePath "$@" archive | ${xcpretty}
 
 # Generate icons from Wireguard logo
 icons: \
@@ -44,10 +61,16 @@ ${TMPDIR}/wireguard.png: ${TMPDIR}/%.png: Misc/%.svg | ${convert}
 	${convert} -background transparent -density 400 $< $@
 
 ${convert}:
-	brew install
+	brew install imagemagick
+
+${xcpretty}:
+	gem install --user xcpretty
 
 clean:
-	rm -f \
+	rm -rf \
+		WireguardStatusbar.zip
+		build/
+		DerivedData/ \
 		${TMPDIR}/logo*.png \
 		${TMPDIR}/wireguard.png Wireguard\ Statusbar/Assets.xcassets/connected.imageset/logo-*.png \
 		Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png

@@ -8,22 +8,24 @@ all: icons WireguardStatusbar.dmg
 
 build_dest=build/Release
 
-WireguardStatusbar.dmg: WireguardStatusbar.app
-	hdiutil create "$@" -srcfolder "$<" -ov
+WireguardStatusbar.dmg: dist/WireguardStatusbar.app
+	rm -rf "$@"
+	hdiutil create "$@" -srcfolder "${<D}" -ov
 
 sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
 
-WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
-	cp -r $< $@
-	touch $@
+dist/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
+	rm -fr "${@D}/"
+	mkdir -p "${@D}/"
+	ln -sf /Applications "${@D}/Applications"
+	cp -r "$<" "$@"
 
 ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive | ${xcpretty}
-	touch $@
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
 ${TMPDIR}/WireguardStatusbar.xcarchive: ${sources} | ${xcpretty}
+	rm -fr "$@"
 	xcodebuild -scheme Wireguard\ Statusbar -archivePath "$@" archive | ${xcpretty}
-	touch $@
 
 # Generate icons from Wireguard logo
 icons: \

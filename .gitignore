@@ -4,7 +4,8 @@
 # Build artifacts
 WireguardStatusbar.*
 build/
-DerivedData
+DerivedData/
+dist/
 
 # Intermediate files
 Tmp/

@@ -4,30 +4,27 @@ brew_bin=$(shell brew --prefix)/bin
 convert=${brew_bin}/convert
 xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 
-all: icons WireguardStatusbar.dmg
+all: WireguardStatusbar.dmg
 
-build_dest=build/Release
+# Location where xcodebuild puts .app when archiving
+build_dest=${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/
 
+# Create distributable .dmg
 WireguardStatusbar.dmg: WireguardStatusbar/WireguardStatusbar.app
-	rm -rf "$@"
 	hdiutil create "$@" -srcfolder "${<D}" -ov
-
-sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
-
-WireguardStatusbar/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app
-	rm -fr "${@D}/"
+WireguardStatusbar/WireguardStatusbar.app: ${build_dest}/WireguardStatusbar.app
 	mkdir -p "${@D}/"
 	ln -sf /Applications "${@D}/Applications"
-	cp -r "$<" "$@"
-
-${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/WireguardStatusbar.app: ${TMPDIR}/WireguardStatusbar.xcarchive | ${xcpretty}
+	rm -rf "$@"; cp -r "$<" "$@"
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
-${TMPDIR}/WireguardStatusbar.xcarchive: ${sources} | ${xcpretty}
-	rm -fr "$@"
+sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
+${build_dest}/WireguardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme Wireguard\ Statusbar -archivePath "$@" archive | ${xcpretty}
+	touch $@
 
-# Generate icons from Wireguard logo
+# Generate icons from Wireguard banner
+.PHONY: icons
 icons: \
 	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/silhouette-18.png \
 	Wireguard\ Statusbar/Assets.xcassets/connected.imageset/silhouette-36.png \
@@ -50,9 +47,11 @@ Wireguard\ Statusbar/Assets.xcassets/connected.imageset/%: ${TMPDIR}/%
 Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/%: ${TMPDIR}/%
 	cp "$<" "$@"
 
+# Create a 'dimmed' version of the silhouette
 %-dim.png: %.png | ${convert}
 	${convert} $< -strip -channel A -evaluate Multiply 0.50 +channel $@
 
+# Create multiple targets to resize .pngs to specific sizes required
 define resize
 %-${1}.png: %.png
 	$${convert} $$< -strip -scale ${1}x${1} $$@
@@ -73,8 +72,11 @@ ${TMPDIR}/silhouette.png: ${TMPDIR}/wireguard.png | ${convert}
 		$@
 
 # Convert SVG wireguard banner to png
-${TMPDIR}/wireguard.png: ${TMPDIR}/%.png: Misc/%.svg | ${convert}
+${TMPDIR}/%.png: Misc/%.svg | ${convert}
 	${convert} -strip -background transparent -density 400 $< $@
+
+Misc/wireguard.svg:
+	curl -s https://www.wireguard.com/img/wireguard.svg > $@
 
 ${convert}:
 	brew install imagemagick
@@ -82,6 +84,7 @@ ${convert}:
 ${xcpretty}:
 	gem install --user xcpretty
 
+.PHONY: clean
 clean:
 	rm -rf \
 		WireguardStatusbar.* \

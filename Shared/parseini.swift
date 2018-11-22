@@ -20,7 +20,7 @@ func trim(_ s: String) -> String {
 
 
 func stripComment(_ line: String) -> String {
-    let parts = line.characters.split(
+    let parts = line.split(
         separator: "#",
         maxSplits: 1,
         omittingEmptySubsequences: false)
@@ -34,12 +34,12 @@ func stripComment(_ line: String) -> String {
 func parseSectionHeader(_ line: String) -> String {
     let from = line.index(after: line.startIndex)
     let to = line.index(before: line.endIndex)
-    return line.substring(with: from..<to)
+    return String(line[from..<to])
 }
 
 
 func parseLine(_ line: String) -> (String, String)? {
-    let parts = stripComment(line).characters.split(separator: "=", maxSplits: 1)
+    let parts = stripComment(line).split(separator: "=", maxSplits: 1)
     if parts.count == 2 {
         let k = trim(String(parts[0]))
         let v = trim(String(parts[1]))

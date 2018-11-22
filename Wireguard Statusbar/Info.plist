@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.4</string>
+	<string>1.5</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSApplicationCategoryType</key>
@@ -35,7 +35,7 @@
 	<key>SMPrivilegedExecutables</key>
 	<dict>
 		<key>nl.ijohan.WireguardStatusbarHelper</key>
-		<string>anchor apple generic and identifier &quot;nl.ijohan.WireguardStatusbarHelper&quot; </string>
+		<string>anchor apple generic and identifier "nl.ijohan.WireguardStatusbarHelper" </string>
 	</dict>
 </dict>
 </plist>

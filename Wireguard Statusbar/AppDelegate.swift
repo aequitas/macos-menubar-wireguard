@@ -12,8 +12,8 @@ import ServiceManagement
 let run_path = "/var/run/wireguard/"
 
 extension NSImage.Name {
-    static let connected = NSImage.Name("connected")
-    static let disconnected = NSImage.Name("disconnected")
+    static let connected = "connected"
+    static let disconnected = "disconnected"
 }
 
 typealias Tunnels = [String: Tunnel]

@@ -181,9 +181,11 @@
 				TargetAttributes = {
 					0444B85E211F5CD700CA6ECA = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1010;
 					};
 					04B4BE3F211E1E010001213A = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1010;
 						SystemCapabilities = {
 							com.apple.Sandbox = {
 								enabled = 0;
@@ -309,7 +311,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireguardStatusbarHelper;
 				PRODUCT_NAME = $TARGET_NAME;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -333,7 +335,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireguardStatusbarHelper;
 				PRODUCT_NAME = $TARGET_NAME;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -468,7 +470,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireguardStatusbar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -490,7 +492,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireguardStatusbar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

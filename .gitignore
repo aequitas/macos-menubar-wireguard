@@ -6,6 +6,3 @@ WireguardStatusbar.*
 build/
 DerivedData/
 dist/
-
-# Intermediate files
-Tmp/

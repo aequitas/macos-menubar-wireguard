@@ -9,7 +9,7 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>Wireguard Statusbar.xcscheme</key>
+		<key>Wireguard Statusbar.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
@@ -17,16 +17,16 @@
 		<key>nl.ijohan.WireguardStatusbarHelper.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
-		</dict>
-		<key>nl.ijohan.WireguardStatusbarHelper.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>0444B85E211F5CD700CA6ECA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>04B4BE3F211E1E010001213A</key>
 		<dict>
 			<key>primary</key>
@@ -38,6 +38,11 @@
 			<true/>
 		</dict>
 		<key>04B4BE5A211E1E030001213A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>04C5529921A744BA000914D3</key>
 		<dict>
 			<key>primary</key>
 			<true/>

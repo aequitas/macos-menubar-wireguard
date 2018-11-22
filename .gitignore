@@ -1,5 +1,6 @@
 .DS_Store
 DerivedData
+*.xcodeproj/xcuserdata/
 
 # Intermediate files
 Tmp/

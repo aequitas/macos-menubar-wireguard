@@ -7,6 +7,7 @@ xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 all: WireguardStatusbar.dmg
 
 # Location where xcodebuild puts .app when archiving
+archive=${TMPDIR}/WireguardStatusbar.xcarchive/
 build_dest=${TMPDIR}/WireguardStatusbar.xcarchive/Products/Applications/
 
 # Create distributable .dmg
@@ -20,8 +21,7 @@ WireguardStatusbar/WireguardStatusbar.app: ${build_dest}/WireguardStatusbar.app
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
 sources=$(shell find "Wireguard Statusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
 ${build_dest}/WireguardStatusbar.app: ${sources} | icons ${xcpretty}
-	xcodebuild -scheme Wireguard\ Statusbar -archivePath "$@" archive | ${xcpretty}
-	touch $@
+	xcodebuild -scheme Wireguard\ Statusbar -archivePath "${archive}" archive | ${xcpretty}
 
 # Generate icons from Wireguard banner
 .PHONY: icons
@@ -87,9 +87,14 @@ ${xcpretty}:
 .PHONY: clean
 clean:
 	rm -rf \
+		${build_dest}/WireguardStatusbar.app \
+		WireguardStatusbar \
 		WireguardStatusbar.* \
 		build/ \
-		DerivedData/ \
+		DerivedData/
+
+mrproper: clean
+	rm -rf \
 		${TMPDIR}/logo*.png \
 		${TMPDIR}/wireguard.png Wireguard\ Statusbar/Assets.xcassets/connected.imageset/logo-*.png \
 		Wireguard\ Statusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png

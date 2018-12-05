@@ -166,22 +166,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             let files = enumerator?.allObjects as! [String]
             let config_files = files.filter{$0.hasSuffix(".conf")}.sorted()
             for config_file in config_files {
-                var config = parseConfig(config_path + "/" + config_file)
                 let interface = config_file.replacingOccurrences(of: ".conf", with: "")
-                // TODO: currently supports only one peer, need to pick a different method for parsing config
-                let peers = [Peer(
-                    endpoint: config["Peer"]!["Endpoint"]!,
-                    allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+
+                
+                // determine if config file can be read
+                if let _ = try? String(contentsOfFile: config_path + "/" + config_file) {
+                    var config = parseConfig(config_path + "/" + config_file)
+
+                    // TODO: currently supports only one peer, need to pick a different method for parsing config
+                    let peers = [Peer(
+                        endpoint: config["Peer"]!["Endpoint"]!,
+                        allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
+                        )
+                    ]
+                    let tunnel = Tunnel(
+                        name: "",
+                        interface: interface,
+                        connected: false,
+                        address: config["Interface"]!["Address"]!,
+                        peers: peers
                     )
-                ]
-                let tunnel = Tunnel(
-                    name: "",
-                    interface: interface,
-                    connected: false,
-                    address: config["Interface"]!["Address"]!,
-                    peers: peers
-                )
-                tunnels[interface] = tunnel
+                    tunnels[interface] = tunnel
+                } else {
+                    // could not read config, provide minimal details
+                    tunnels[interface] = Tunnel(
+                        name: "",
+                        interface: interface,
+                        connected: false,
+                        address: "",
+                        peers: []
+                    )
+                }
             }
         }
     }

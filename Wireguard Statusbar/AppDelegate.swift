@@ -127,7 +127,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
         } else {
-            for (id, tunnel) in tunnels {
+            for (id, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
                 let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
                 item.representedObject = id
                 if tunnel.connected {
@@ -164,7 +164,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
                 continue
             }
             let files = enumerator?.allObjects as! [String]
-            let config_files = files.filter{$0.hasSuffix(".conf")}.sorted()
+            let config_files = files.filter{$0.hasSuffix(".conf")}
             for config_file in config_files {
                 let interface = config_file.replacingOccurrences(of: ".conf", with: "")
 

@@ -60,7 +60,7 @@ $(foreach size,1024 512 256 128 64 36 32 18 16,$(eval $(call resize,${size})))
 
 # Extract the logo part from the banner, color it black and white
 ${TMPDIR}/logo.png: ${TMPDIR}/wireguard.png | ${convert}
-	${convert} $< -strip -crop 1251x1251+0+0 colorspace gray +dither -colors 2 \
+	${convert} $< -strip -crop 1251x1251+0+0 -colorspace gray +dither -colors 2 \
 		-floodfill +600+200 white -floodfill +600+400 white -floodfill +350+900 white \
 		-floodfill +400+200 black -floodfill +777+117 black\
 		$@

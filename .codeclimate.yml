@@ -1,3 +1,9 @@
+plugins:
+  swiftlint:
+    enabled: true
+  tailor:
+    enabled: true
+
 exclude_patterns:
   # vendor provided
   - Misc/SMJobBlessUtil.py

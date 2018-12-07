@@ -8,8 +8,6 @@
 
 import Cocoa
 
-let run_path = "/var/run/wireguard/"
-
 extension NSImage.Name {
     static let connected = "connected"
     static let disconnected = "disconnected"
@@ -29,12 +27,7 @@ struct Peer {
     var allowedIps: [String]
 }
 
-
 var username = NSUserName()
-let config_paths = [
-    "\(brew_prefix)/etc/wireguard",
-    "/etc/wireguard",
-]
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
@@ -79,9 +72,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
     }
 
-//    func applicationWillTerminate(_ aNotification: Notification) {
-//        TODO: disconnect and cleanup wireguard connections
-//    }
+    func applicationWillTerminate(_ aNotification: Notification) {
+//        TODO: configurable option to disable tunnels on shutdown
+        let xpcService = privileged_helper.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
+            print("XPCService error: %@", error)
+            } as? HelperProtocol
+
+        xpcService?.shutdown()
+    }
 
     // handle incoming file/directory change events
     func receivedNotification(_ notification: SKQueueNotification, path: String, queue: SKQueue) {

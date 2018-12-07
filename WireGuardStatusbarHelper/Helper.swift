@@ -71,6 +71,10 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
         reply(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)
     }
 
+    func shutdown() {
+        NSLog("Shutting down WireGuardStatusbar Helper....")
+        exit(0);
+    }
 //
 //
 //    /// Functions to run from the main app

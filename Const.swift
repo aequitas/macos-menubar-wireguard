@@ -9,3 +9,8 @@
 import Foundation
 
 let brew_prefix = "/usr/local"
+let run_path = "/var/run/wireguard/"
+let config_paths = [
+    "\(brew_prefix)/etc/wireguard",
+    "/etc/wireguard",
+]

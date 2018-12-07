@@ -29,6 +29,14 @@ This software as a whole is licensed under GPL-3.0
 
 "WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
 
+# Removing old Helpers
+
+The Privileged Helper has been renamed to `WireGuardStatusbarHelper`. The old Helper needs to be removed manually using the following commands:
+
+    sudo rm /Library//PrivilegedHelperTools/nl.ijohan.WireGuardStatusbarHelper /Library//LaunchDaemons/nl.ijohan.WireguardStatusbarHelper.plist
+    sudo pkill nl.ijohan.WireguardStatusbarHelper
+
+
 # Todo/Readmap
 
 - Tests!

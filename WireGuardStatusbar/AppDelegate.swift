@@ -117,40 +117,53 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         // TODO: currently just rebuilding the entire menu, maybe opt for replacing the tunnel entries instead?
         statusMenu.removeAllItems()
 
-        statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
         statusMenu.addItem(NSMenuItem.separator())
 
-        var connected = false
+        let fileManager = FileManager.default
+        
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
+        } else if fileManager.fileExists(atPath:wireguard_bin) != true {
+            NSLog("Wireguard binary not found at \(wireguard_bin)")
+            statusMenu.addItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions", action: #selector(AppDelegate.showInstallInstructions(_:)), keyEquivalent: ""))
         } else {
             for (id, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
-                let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-                item.representedObject = id
-                if tunnel.connected {
-                    item.state = NSControl.StateValue.on
-                    connected = true
-                }
-                statusMenu.addItem(item)
-                for peer in tunnel.peers {
-                    statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))", action: nil, keyEquivalent: ""))
-                }
+                addTunnelMenuItem(statusMenu: statusMenu, id: id, tunnel: tunnel)
             }
         }
         statusMenu.addItem(NSMenuItem.separator())
+        statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
 //        statusMenu.addItem(NSMenuItem(title: "Preferences...", action: #selector(AppDelegate.preferences(_:)), keyEquivalent: ","))
         statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
 
-        // TODO: find better way to do this, computed property or something?
-        if connected {
-            let icon = NSImage(named: .connected)
-            icon!.isTemplate = true
-            statusItem.image = icon
-        } else {
+        let connected_tunnels = tunnels.filter {$1.connected}
+        if connected_tunnels.isEmpty {
             let icon = NSImage(named: .disconnected)
             icon!.isTemplate = true
             statusItem.image = icon
+        } else {
+            let icon = NSImage(named: .connected)
+            icon!.isTemplate = true
+            statusItem.image = icon
         }
+    }
+
+    func addTunnelMenuItem(statusMenu: NSMenu, id: String, tunnel: Tunnel){
+        let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
+        item.representedObject = id
+        if tunnel.connected {
+            item.state = NSControl.StateValue.on
+        }
+        statusMenu.addItem(item)
+        for peer in tunnel.peers {
+            statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))", action: nil, keyEquivalent: ""))
+        }
+    }
+
+    @objc func showInstallInstructions(_ sender: NSMenuItem) {
+        let alert = NSAlert()
+        alert.messageText = install_instructions
+        alert.runModal()
     }
 
     // load tunnel from configuration files

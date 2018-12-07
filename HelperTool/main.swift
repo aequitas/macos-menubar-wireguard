@@ -10,6 +10,6 @@
 
 import Foundation
 
-NSLog("Starting Wireguard Statusbar Helper....")
+NSLog("Starting WireGuardStatusbar Helper....")
 let helper = Helper()
 helper.run()

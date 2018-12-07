@@ -3,10 +3,10 @@
 <plist version="1.0">
 <dict>
 	<key>Label</key>
-	<string>nl.ijohan.WireguardStatusbarHelper</string>
+	<string>nl.ijohan.WireGuardStatusbarHelper</string>
 	<key>MachServices</key>
 	<dict>
-		<key>nl.ijohan.WireguardStatusbarHelper</key>
+		<key>nl.ijohan.WireGuardStatusbarHelper</key>
 		<true/>
 	</dict>
 </dict>

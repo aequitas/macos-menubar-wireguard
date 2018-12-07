@@ -2,7 +2,7 @@
 *.xcodeproj/xcuserdata/
 
 # Build artifacts
-WireguardStatusbar.*
+WireGuardStatusbar.dmg
+WireGuardStatusbar.app
 build/
 DerivedData/
-WireguardStatusbar/

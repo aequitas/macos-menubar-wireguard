@@ -9,7 +9,7 @@
 import Foundation
 
 struct HelperConstants {
-    static let machServiceName = "nl.ijohan.WireguardStatusbarHelper"
+    static let machServiceName = "nl.ijohan.WireGuardStatusbarHelper"
 }
 
 /// Protocol with inter process method invocation methods that ProcessHelper supports

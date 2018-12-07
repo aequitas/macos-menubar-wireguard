@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Wireguard Statusbar
+//  WireGuardStatusbar
 //
 //  Created by Johan Bloemberg on 10/08/2018.
 //  Copyright © 2018 Johan Bloemberg. All rights reserved.
@@ -42,12 +42,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     var tunnels = Tunnels()
     @objc dynamic var connected = false
-    
+
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let statusMenu = NSMenu()
-    
+
     var xpcHelperConnection: NSXPCConnection?
-    
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // initialize menu bar
         let icon = NSImage(named: .disconnected)
@@ -92,7 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             DispatchQueue.main.async {self.buildMenu()}
         }
     }
-    
+
     // bring tunnel up/down
     @objc func toggleTunnel(_ sender: NSMenuItem) {
         let id = sender.representedObject as! String
@@ -113,13 +113,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             })
         }
     }
-    
+
     // contruct menu with all tunnels found in configuration
     // TODO: find out if it is possible to have a dynamic bound IB menu with variable contents
     func buildMenu() {
         // TODO: currently just rebuilding the entire menu, maybe opt for replacing the tunnel entries instead?
         statusMenu.removeAllItems()
-        
+
         statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
         statusMenu.addItem(NSMenuItem.separator())
 
@@ -143,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         statusMenu.addItem(NSMenuItem.separator())
 //        statusMenu.addItem(NSMenuItem(title: "Preferences...", action: #selector(AppDelegate.preferences(_:)), keyEquivalent: ","))
         statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
-        
+
         // TODO: find better way to do this, computed property or something?
         if connected {
             let icon = NSImage(named: .connected)
@@ -155,7 +155,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             statusItem.image = icon
         }
     }
-    
+
     // load tunnel from configuration files
     func loadConfiguration() {
         for config_path in config_paths {
@@ -168,7 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             for config_file in config_files {
                 let interface = config_file.replacingOccurrences(of: ".conf", with: "")
 
-                
+
                 // determine if config file can be read
                 if let _ = try? String(contentsOfFile: config_path + "/" + config_file) {
                     var config = parseConfig(config_path + "/" + config_file)
@@ -200,7 +200,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             }
         }
     }
-    
+
     // read runtime state of wg and update local state accordingly
     func loadState() {
         // for every configured tunnel check if a socket file exists (assume that indicates the tunnel is up)
@@ -211,13 +211,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             tunnels[interface_name]!.connected = FileManager.default.fileExists(atPath: name!.path)
         }
     }
-    
+
 // TODO: implement WireGuard settings as prefpane?
 //    @objc func preferences(_ sender: NSMenuItem)
 //    {
 //        NSWorkspace.shared.open(NSURL(fileURLWithPath: "/System/Library/PreferencePanes/Network.prefPane") as URL)
 //    }
-    
+
     @objc func quit(_ sender: NSMenuItem) {
         NSApplication.shared.terminate(self)
     }
@@ -229,14 +229,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     }
 
     func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
-        
+
         // Get the current helper connection and return the remote object (Helper.swift) as a proxy object to call functions on.
         guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ error in
             if let onCompletion = completion { onCompletion(false) }
         }) as? HelperProtocol else { return nil }
         return helper
     }
-    
+
     func helperStatus(completion: @escaping (_ installed: Bool) -> Void) {
         // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application bundle with the one on disk.
         let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
@@ -255,15 +255,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             completion(installedHelperVersion == helperVersion)
         }
     }
-    
+
     // Uses SMJobBless to install or update the helper tool
     func installHelper(){
-        
+
         var authRef:AuthorizationRef?
         var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0, value:UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
         var authRights:AuthorizationRights = AuthorizationRights(count: 1, items:&authItem)
         let authFlags: AuthorizationFlags = [ [], .extendRights, .interactionAllowed, .preAuthorize ]
-        
+
         let status = AuthorizationCreate(&authRights, nil, authFlags, &authRef)
         if (status != errAuthorizationSuccess){
             let error = NSError(domain:NSOSStatusErrorDomain, code:Int(status), userInfo:nil)
@@ -278,7 +278,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             }
         }
     }
-    
+
     func helperConnection() -> NSXPCConnection? {
         if (self.xpcHelperConnection == nil){
             self.xpcHelperConnection = NSXPCConnection(machServiceName:HelperConstants.machServiceName, options:NSXPCConnection.Options.privileged)
@@ -295,5 +295,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
         return self.xpcHelperConnection
     }
-    
+
 }

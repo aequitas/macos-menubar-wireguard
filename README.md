@@ -14,7 +14,7 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 
 # Installation
 
-- Follow the instruction to install Wireguard for macOS: https://www.wireguard.com/install/
+- Follow the instruction to install WireGuard for macOS: https://www.wireguard.com/install/
 - Create a tunnel configuration file (eg: `/usr/local/etc/wireguard/utun1.conf`)
 - Make sure the file is readable by your user (`sudo chown :staff /usr/local/etc/wireguard/utun1.conf; sudo chmod g+r /usr/local/etc/wireguard/utun1.conf`)
 - Download this App from [Releases](https://github.com/aequitas/macos-menubar-wireguard/releases)
@@ -29,7 +29,7 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 - Tunnel connectivity status
 - Error handling for when dependencies (wg-quick/brew) are missing or files cannot be read
 - Move config file reading to privilegedhelper
-- Bundle Wireguard (wireguard-go/wg-quick/bash4)
+- Bundle WireGuard (wireguard-go/wg-quick/bash4)
 - Configuration editor
 - Key management (via keychain)
 - Prefpane?

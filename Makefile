@@ -24,7 +24,7 @@ ${TMPDIR}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStat
 	rm -rf "$@" && cp -r "$<" "$@"
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
-sources=$(shell find "WireGuardStatusbar" Shared WireGuardStatusbarHelper *.swift|sed 's/ /\\ /')
+sources=$(shell find "WireGuardStatusbar" Shared WireGuardStatusbarHelper|sed 's/ /\\ /')
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 

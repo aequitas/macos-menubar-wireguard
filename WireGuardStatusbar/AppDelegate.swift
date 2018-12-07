@@ -121,9 +121,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         let fileManager = FileManager.default
         
+        // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
+        let wireguard_installed = fileManager.fileExists(atPath:wireguard_bin)
+        
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
-        } else if fileManager.fileExists(atPath:wireguard_bin) != true {
+        } else if !wireguard_installed {
             NSLog("Wireguard binary not found at \(wireguard_bin)")
             statusMenu.addItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions", action: #selector(AppDelegate.showInstallInstructions(_:)), keyEquivalent: ""))
         } else {
@@ -133,7 +136,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
         statusMenu.addItem(NSMenuItem.separator())
         statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
-//        statusMenu.addItem(NSMenuItem(title: "Preferences...", action: #selector(AppDelegate.preferences(_:)), keyEquivalent: ","))
         statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
 
         let connected_tunnels = tunnels.filter {$1.connected}
@@ -222,12 +224,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             tunnels[interface_name]!.connected = FileManager.default.fileExists(atPath: name!.path)
         }
     }
-
-// TODO: implement WireGuard settings as prefpane?
-//    @objc func preferences(_ sender: NSMenuItem)
-//    {
-//        NSWorkspace.shared.open(NSURL(fileURLWithPath: "/System/Library/PreferencePanes/Network.prefPane") as URL)
-//    }
 
     @objc func quit(_ sender: NSMenuItem) {
         NSApplication.shared.terminate(self)

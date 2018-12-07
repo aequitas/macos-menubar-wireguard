@@ -7,20 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040B4498212046FC00E87CF5 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B4497212046FC00E87CF5 /* Const.swift */; };
-		040B44992120471400E87CF5 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B4497212046FC00E87CF5 /* Const.swift */; };
 		040B449D2120474200E87CF5 /* SKQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449C2120474200E87CF5 /* SKQueue.swift */; };
 		0428EA0B21BAFF0200178BA0 /* PrivilegedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */; };
 		0428EA0D21BB066E00178BA0 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0C21BB066E00178BA0 /* WireGuard.swift */; };
 		0428EA1021BB081A00178BA0 /* INIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0E21BB07DB00178BA0 /* INIParser.swift */; };
 		0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0444B862211F5CD700CA6ECA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B861211F5CD700CA6ECA /* main.swift */; };
-		0444B867211F5D4D00CA6ECA /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B866211F5D4C00CA6ECA /* HelperProtocol.swift */; };
+		0456DA6421BB0C9000701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
+		0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
+		0456DA6621BB0C9A00701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
+		0456DA6721BB0C9C00701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
 		04B4BE44211E1E010001213A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE43211E1E010001213A /* AppDelegate.swift */; };
 		04B4BE46211E1E030001213A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE45211E1E030001213A /* Assets.xcassets */; };
 		04B4BE49211E1E030001213A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE47211E1E030001213A /* MainMenu.xib */; };
 		04B92495211F6A68008D964A /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B92494211F6A68008D964A /* Helper.swift */; };
-		04B92496211F6C81008D964A /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B866211F5D4C00CA6ECA /* HelperProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +57,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		040B4497212046FC00E87CF5 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		040B449C2120474200E87CF5 /* SKQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKQueue.swift; sourceTree = "<group>"; };
 		0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelper.swift; sourceTree = "<group>"; };
 		0428EA0C21BB066E00178BA0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
@@ -65,7 +64,8 @@
 		0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuardStatusbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireGuardStatusbarHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		0444B861211F5CD700CA6ECA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		0444B866211F5D4C00CA6ECA /* HelperProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperProtocol.swift; sourceTree = "<group>"; };
+		0456DA6221BB0C9000701CCE /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Const.swift; path = Shared/Const.swift; sourceTree = "<group>"; };
+		0456DA6321BB0C9000701CCE /* HelperProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelperProtocol.swift; path = Shared/HelperProtocol.swift; sourceTree = "<group>"; };
 		04B4BE43211E1E010001213A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		04B4BE45211E1E030001213A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B4BE48211E1E030001213A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -110,8 +110,8 @@
 		04B4BE37211E1E010001213A = {
 			isa = PBXGroup;
 			children = (
-				040B4497212046FC00E87CF5 /* Const.swift */,
-				0444B866211F5D4C00CA6ECA /* HelperProtocol.swift */,
+				0456DA6221BB0C9000701CCE /* Const.swift */,
+				0456DA6321BB0C9000701CCE /* HelperProtocol.swift */,
 				04B4BE42211E1E010001213A /* WireGuardStatusbar */,
 				0444B860211F5CD700CA6ECA /* WireGuardStatusbarHelper */,
 				0441E7ED211F76BC0035E4EF /* Products */,
@@ -251,10 +251,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0444B862211F5CD700CA6ECA /* main.swift in Sources */,
+				0456DA6621BB0C9A00701CCE /* HelperProtocol.swift in Sources */,
 				0428EA0D21BB066E00178BA0 /* WireGuard.swift in Sources */,
-				0444B867211F5D4D00CA6ECA /* HelperProtocol.swift in Sources */,
 				04B92495211F6A68008D964A /* Helper.swift in Sources */,
-				040B4498212046FC00E87CF5 /* Const.swift in Sources */,
+				0456DA6721BB0C9C00701CCE /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,12 +262,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				04B92496211F6C81008D964A /* HelperProtocol.swift in Sources */,
 				04B4BE44211E1E010001213A /* AppDelegate.swift in Sources */,
-				040B44992120471400E87CF5 /* Const.swift in Sources */,
 				040B449D2120474200E87CF5 /* SKQueue.swift in Sources */,
 				0428EA0B21BAFF0200178BA0 /* PrivilegedHelper.swift in Sources */,
 				0428EA1021BB081A00178BA0 /* INIParser.swift in Sources */,
+				0456DA6421BB0C9000701CCE /* Const.swift in Sources */,
+				0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

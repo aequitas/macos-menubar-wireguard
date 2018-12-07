@@ -41,6 +41,9 @@ let config_paths = [
 class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     var tunnels = Tunnels()
+    // TODO refactor as string array of IDs, and initialize with current connected tunnel
+    var recentTunnels = Tunnels()
+    
     @objc dynamic var connected = false
     
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -97,7 +100,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     @objc func toggleTunnel(_ sender: NSMenuItem) {
         let id = sender.representedObject as! String
         let tunnel = tunnels[id]!
-
+        // Duplicate toggled tunnel into recents list
+        recentTunnels[id] = tunnels[id]
+        // TODO: if length of recentTunnels > maxRecent, drop oldest - requires sorting
+        
         let xpcService = self.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
             print("XPCService error: %@", error)
         } as? HelperProtocol
@@ -124,10 +130,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         statusMenu.addItem(NSMenuItem.separator())
 
         var connected = false
+        
+        // First, recents (maybe these two passes could be refactored into nested loop)
+        if !recentTunnels.isEmpty {
+            for (id, _) in recentTunnels {
+                let tunnel = tunnels[id]
+                let item = NSMenuItem(title:"\(tunnel!.interface): \(tunnel!.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
+                item.representedObject = id
+                if tunnel!.connected {
+                    item.state = NSControl.StateValue.on
+                    connected = true
+                }
+                statusMenu.addItem(item)
+                for peer in tunnel!.peers {
+                    statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))", action: nil, keyEquivalent: ""))
+                }
+            }
+            statusMenu.addItem(NSMenuItem.separator())
+        }
+        // Then, main list
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
         } else {
             for (id, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
+                if recentTunnels[id] != nil {
+                    continue    // Don't duplicate tunnels shown in recents list
+                }
                 let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
                 item.representedObject = id
                 if tunnel.connected {

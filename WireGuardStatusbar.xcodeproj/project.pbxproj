@@ -11,6 +11,7 @@
 		040B44992120471400E87CF5 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B4497212046FC00E87CF5 /* Const.swift */; };
 		040B449B2120473B00E87CF5 /* parseini.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449A2120473B00E87CF5 /* parseini.swift */; };
 		040B449D2120474200E87CF5 /* SKQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449C2120474200E87CF5 /* SKQueue.swift */; };
+		0428EA0B21BAFF0200178BA0 /* PrivilegedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */; };
 		0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0441E7F92120293C0035E4EF /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441E7F82120293C0035E4EF /* Utils.swift */; };
 		0444B862211F5CD700CA6ECA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B861211F5CD700CA6ECA /* main.swift */; };
@@ -60,6 +61,7 @@
 		040B4497212046FC00E87CF5 /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		040B449A2120473B00E87CF5 /* parseini.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = parseini.swift; path = Shared/parseini.swift; sourceTree = "<group>"; };
 		040B449C2120474200E87CF5 /* SKQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SKQueue.swift; path = Shared/SKQueue.swift; sourceTree = "<group>"; };
+		0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivilegedHelper.swift; sourceTree = "<group>"; };
 		0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuardStatusbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireGuardStatusbarHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		0441E7F82120293C0035E4EF /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -126,8 +128,9 @@
 				04B4BE47211E1E030001213A /* MainMenu.xib */,
 				04B4BE4A211E1E030001213A /* Info.plist */,
 				0441E7F82120293C0035E4EF /* Utils.swift */,
+				0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */,
 			);
-			path = "WireGuardStatusbar";
+			path = WireGuardStatusbar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,7 +168,7 @@
 				0441E7F4211F7DD20035E4EF /* PBXTargetDependency */,
 			);
 			name = WireGuardStatusbar;
-			productName = "WireGuardStatusbar";
+			productName = WireGuardStatusbar;
 			productReference = 0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -266,6 +269,7 @@
 				040B44992120471400E87CF5 /* Const.swift in Sources */,
 				040B449B2120473B00E87CF5 /* parseini.swift in Sources */,
 				040B449D2120474200E87CF5 /* SKQueue.swift in Sources */,
+				0428EA0B21BAFF0200178BA0 /* PrivilegedHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -461,7 +465,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 385Q5683Q8;
-				INFOPLIST_FILE = "WireGuardStatusbar/Info.plist";
+				INFOPLIST_FILE = WireGuardStatusbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -483,7 +487,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 385Q5683Q8;
-				INFOPLIST_FILE = "WireGuardStatusbar/Info.plist";
+				INFOPLIST_FILE = WireGuardStatusbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

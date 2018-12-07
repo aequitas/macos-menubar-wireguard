@@ -7,7 +7,6 @@
 //
 
 import Cocoa
-import ServiceManagement
 
 let run_path = "/var/run/wireguard/"
 
@@ -46,7 +45,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let statusMenu = NSMenu()
 
-    var xpcHelperConnection: NSXPCConnection?
+    let privileged_helper = PrivilegedHelper()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // initialize menu bar
@@ -54,14 +53,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         icon!.isTemplate = true
         statusItem.image = icon
         statusItem.menu = statusMenu
-
+        
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
-        helperStatus {
+        privileged_helper.helperStatus {
             installed in
             if !installed {
-                self.installHelper()
-                self.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
+                self.privileged_helper.installHelper()
+                self.privileged_helper.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
             }
         }
 
@@ -98,7 +97,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         let id = sender.representedObject as! String
         let tunnel = tunnels[id]!
 
-        let xpcService = self.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
+        let xpcService = privileged_helper.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
             print("XPCService error: %@", error)
         } as? HelperProtocol
 
@@ -227,73 +226,4 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
-
-    func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
-
-        // Get the current helper connection and return the remote object (Helper.swift) as a proxy object to call functions on.
-        guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ error in
-            if let onCompletion = completion { onCompletion(false) }
-        }) as? HelperProtocol else { return nil }
-        return helper
-    }
-
-    func helperStatus(completion: @escaping (_ installed: Bool) -> Void) {
-        // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application bundle with the one on disk.
-        let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
-        guard
-            let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
-            let helperVersion = helperBundleInfo["CFBundleVersion"] as? String,
-            let helper = self.helper(completion) else {
-                NSLog("Helper: Failed to get Bundled helper version")
-                completion(false)
-                return
-        }
-        NSLog("Helper: Bundle Version => \(String(describing: helperVersion))")
-
-        helper.getVersion { installedHelperVersion in
-            NSLog("Helper: Installed Version => \(String(describing: installedHelperVersion))")
-            completion(installedHelperVersion == helperVersion)
-        }
-    }
-
-    // Uses SMJobBless to install or update the helper tool
-    func installHelper(){
-
-        var authRef:AuthorizationRef?
-        var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0, value:UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
-        var authRights:AuthorizationRights = AuthorizationRights(count: 1, items:&authItem)
-        let authFlags: AuthorizationFlags = [ [], .extendRights, .interactionAllowed, .preAuthorize ]
-
-        let status = AuthorizationCreate(&authRights, nil, authFlags, &authRef)
-        if (status != errAuthorizationSuccess){
-            let error = NSError(domain:NSOSStatusErrorDomain, code:Int(status), userInfo:nil)
-            NSLog("Authorization error: \(error)")
-        } else {
-            var cfError: Unmanaged<CFError>? = nil
-            if !SMJobBless(kSMDomainSystemLaunchd, HelperConstants.machServiceName as CFString, authRef, &cfError) {
-                let blessError = cfError!.takeRetainedValue() as Error
-                NSLog("Bless Error: \(blessError)")
-            } else {
-                NSLog("\(HelperConstants.machServiceName) installed successfully")
-            }
-        }
-    }
-
-    func helperConnection() -> NSXPCConnection? {
-        if (self.xpcHelperConnection == nil){
-            self.xpcHelperConnection = NSXPCConnection(machServiceName:HelperConstants.machServiceName, options:NSXPCConnection.Options.privileged)
-            self.xpcHelperConnection!.exportedObject = self
-            self.xpcHelperConnection!.remoteObjectInterface = NSXPCInterface(with:HelperProtocol.self)
-            self.xpcHelperConnection!.invalidationHandler = {
-                self.xpcHelperConnection?.invalidationHandler = nil
-                OperationQueue.main.addOperation(){
-                    self.xpcHelperConnection = nil
-                    NSLog("XPC Connection Invalidated\n")
-                }
-            }
-            self.xpcHelperConnection?.resume()
-        }
-        return self.xpcHelperConnection
-    }
-
 }

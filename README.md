@@ -23,6 +23,12 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
     - Start the App and get a dialog indicating the app is not signed
     - Go to: Preferences->Security & Privacy->General and click "Open Anyway"
 
+# License
+
+This software as a whole is licensed under GPL-3.0
+
+"WireGuard" and the "WireGuard" logo are registered trademarks of Jason A. Donenfeld.
+
 # Todo/Readmap
 
 - Tests!

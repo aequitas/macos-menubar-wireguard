@@ -168,7 +168,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
                 // determine if config file can be read
                 if let _ = try? String(contentsOfFile: config_path + "/" + config_file) {
-                    var config = parseConfig(config_path + "/" + config_file)
+                    let ini = try! INIParser(config_path + "/" + config_file)
+                    let config = ini.sections
 
                     // TODO: currently supports only one peer, need to pick a different method for parsing config
                     let peers = [Peer(

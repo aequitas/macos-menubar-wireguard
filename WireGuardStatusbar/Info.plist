@@ -34,8 +34,8 @@
 	<string>NSApplication</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
-		<key>nl.ijohan.WireGuardStatusbarHelper</key>
-		<string>anchor apple generic and identifier &quot;nl.ijohan.WireGuardStatusbarHelper&quot; </string>
+		<key>WireGuardStatusbarHelper</key>
+		<string>anchor apple generic and identifier &quot;WireGuardStatusbarHelper&quot; </string>
 	</dict>
 </dict>
 </plist>

@@ -11,7 +11,7 @@
 		040B44992120471400E87CF5 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B4497212046FC00E87CF5 /* Const.swift */; };
 		040B449B2120473B00E87CF5 /* parseini.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449A2120473B00E87CF5 /* parseini.swift */; };
 		040B449D2120474200E87CF5 /* SKQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449C2120474200E87CF5 /* SKQueue.swift */; };
-		0441E7EF211F78590035E4EF /* nl.ijohan.WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* nl.ijohan.WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0441E7F92120293C0035E4EF /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0441E7F82120293C0035E4EF /* Utils.swift */; };
 		0444B862211F5CD700CA6ECA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B861211F5CD700CA6ECA /* main.swift */; };
 		0444B867211F5D4D00CA6ECA /* Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B866211F5D4C00CA6ECA /* Protocol.swift */; };
@@ -29,7 +29,7 @@
 			containerPortal = 04B4BE38211E1E010001213A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0444B85E211F5CD700CA6ECA;
-			remoteInfo = nl.ijohan.WireGuardStatusbarHelper;
+			remoteInfo = WireGuardStatusbarHelper;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -49,7 +49,7 @@
 			dstPath = Contents/Library/LaunchServices;
 			dstSubfolderSpec = 1;
 			files = (
-				0441E7EF211F78590035E4EF /* nl.ijohan.WireGuardStatusbarHelper in Copy Helper */,
+				0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */,
 			);
 			name = "Copy Helper";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -61,7 +61,7 @@
 		040B449A2120473B00E87CF5 /* parseini.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = parseini.swift; path = Shared/parseini.swift; sourceTree = "<group>"; };
 		040B449C2120474200E87CF5 /* SKQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SKQueue.swift; path = Shared/SKQueue.swift; sourceTree = "<group>"; };
 		0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuardStatusbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0441E7EC211F76B60035E4EF /* nl.ijohan.WireGuardStatusbarHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = nl.ijohan.WireGuardStatusbarHelper; sourceTree = BUILT_PRODUCTS_DIR; };
+		0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireGuardStatusbarHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		0441E7F82120293C0035E4EF /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		0444B861211F5CD700CA6ECA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0444B866211F5D4C00CA6ECA /* Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocol.swift; sourceTree = "<group>"; };
@@ -89,12 +89,12 @@
 			isa = PBXGroup;
 			children = (
 				0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */,
-				0441E7EC211F76B60035E4EF /* nl.ijohan.WireGuardStatusbarHelper */,
+				0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */,
 			);
 			path = Products;
 			sourceTree = "<group>";
 		};
-		0444B860211F5CD700CA6ECA /* HelperTool */ = {
+		0444B860211F5CD700CA6ECA /* WireGuardStatusbarHelper */ = {
 			isa = PBXGroup;
 			children = (
 				0444B861211F5CD700CA6ECA /* main.swift */,
@@ -103,7 +103,7 @@
 				04B9249B211F7200008D964A /* Launchd.plist */,
 				04B9249C211F7215008D964A /* Info.plist */,
 			);
-			path = HelperTool;
+			path = WireGuardStatusbarHelper;
 			sourceTree = "<group>";
 		};
 		04B4BE37211E1E010001213A = {
@@ -113,7 +113,7 @@
 				040B449A2120473B00E87CF5 /* parseini.swift */,
 				040B4497212046FC00E87CF5 /* Const.swift */,
 				04B4BE42211E1E010001213A /* WireGuardStatusbar */,
-				0444B860211F5CD700CA6ECA /* HelperTool */,
+				0444B860211F5CD700CA6ECA /* WireGuardStatusbarHelper */,
 				0441E7ED211F76BC0035E4EF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -133,9 +133,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		0444B85E211F5CD700CA6ECA /* nl.ijohan.WireGuardStatusbarHelper */ = {
+		0444B85E211F5CD700CA6ECA /* WireGuardStatusbarHelper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0444B863211F5CD700CA6ECA /* Build configuration list for PBXNativeTarget "nl.ijohan.WireGuardStatusbarHelper" */;
+			buildConfigurationList = 0444B863211F5CD700CA6ECA /* Build configuration list for PBXNativeTarget "WireGuardStatusbarHelper" */;
 			buildPhases = (
 				0444B85B211F5CD700CA6ECA /* Sources */,
 				0444B85C211F5CD700CA6ECA /* Frameworks */,
@@ -145,9 +145,9 @@
 			);
 			dependencies = (
 			);
-			name = nl.ijohan.WireGuardStatusbarHelper;
-			productName = HelperTool;
-			productReference = 0441E7EC211F76B60035E4EF /* nl.ijohan.WireGuardStatusbarHelper */;
+			name = WireGuardStatusbarHelper;
+			productName = WireGuardStatusbarHelper;
+			productReference = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */;
 			productType = "com.apple.product-type.tool";
 		};
 		04B4BE3F211E1E010001213A /* WireGuardStatusbar */ = {
@@ -208,7 +208,7 @@
 			projectRoot = "";
 			targets = (
 				04B4BE3F211E1E010001213A /* WireGuardStatusbar */,
-				0444B85E211F5CD700CA6ECA /* nl.ijohan.WireGuardStatusbarHelper */,
+				0444B85E211F5CD700CA6ECA /* WireGuardStatusbarHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -274,7 +274,7 @@
 /* Begin PBXTargetDependency section */
 		0441E7F4211F7DD20035E4EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0444B85E211F5CD700CA6ECA /* nl.ijohan.WireGuardStatusbarHelper */;
+			target = 0444B85E211F5CD700CA6ECA /* WireGuardStatusbarHelper */;
 			targetProxy = 0441E7F3211F7DD20035E4EF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -302,13 +302,13 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"\"$(SRCROOT)/HelperTool/Info.plist\"",
+					"\"$(SRCROOT)/WireGuardStatusbarHelper/Info.plist\"",
 					"-sectcreate",
 					__TEXT,
 					__launchd_plist,
-					"\"$(SRCROOT)/HelperTool/Launchd.plist\"",
+					"\"$(SRCROOT)/WireGuardStatusbarHelper/Launchd.plist\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireGuardStatusbarHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbarHelper;
 				PRODUCT_NAME = $TARGET_NAME;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
@@ -326,13 +326,13 @@
 					"-sectcreate",
 					__TEXT,
 					__info_plist,
-					"\"$(SRCROOT)/HelperTool/Info.plist\"",
+					"\"$(SRCROOT)/WireGuardStatusbarHelper/Info.plist\"",
 					"-sectcreate",
 					__TEXT,
 					__launchd_plist,
-					"\"$(SRCROOT)/HelperTool/Launchd.plist\"",
+					"\"$(SRCROOT)/WireGuardStatusbarHelper/Launchd.plist\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireGuardStatusbarHelper;
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbarHelper;
 				PRODUCT_NAME = $TARGET_NAME;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
@@ -467,7 +467,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireGuardStatusbar;
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
@@ -489,7 +489,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.WireGuardStatusbar;
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
@@ -499,7 +499,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0444B863211F5CD700CA6ECA /* Build configuration list for PBXNativeTarget "nl.ijohan.WireGuardStatusbarHelper" */ = {
+		0444B863211F5CD700CA6ECA /* Build configuration list for PBXNativeTarget "WireGuardStatusbarHelper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0444B864211F5CD700CA6ECA /* Debug */,

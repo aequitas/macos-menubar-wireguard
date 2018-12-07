@@ -1,6 +1,6 @@
 //
 //  Protocol.swift
-//  HelperTool
+//  WireGuardStatusbarHelper
 //
 //  Created by Johan Bloemberg on 11/08/2018.
 //  Copyright © 2018 Johan Bloemberg. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 
 struct HelperConstants {
-    static let machServiceName = "nl.ijohan.WireGuardStatusbarHelper"
+    static let machServiceName = "WireGuardStatusbarHelper"
 }
 
 /// Protocol with inter process method invocation methods that ProcessHelper supports

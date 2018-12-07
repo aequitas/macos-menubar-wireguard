@@ -8,7 +8,7 @@ all: WireGuardStatusbar.dmg
 
 # Location where xcodebuild puts .app when archiving
 archive=${TMPDIR}/WireGuardStatusbar.xcarchive/
-build_dest=${TMPDIR}/WireGuardStatusbar.xcarchive/Products/Applications/
+build_dest=${archive}/Products/Applications/
 
 # Create just the .app in the current working directory
 WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
@@ -24,7 +24,7 @@ ${TMPDIR}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStat
 	rm -rf "$@" && cp -r "$<" "$@"
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
-sources=$(shell find "WireGuardStatusbar" Shared HelperTool *.swift|sed 's/ /\\ /')
+sources=$(shell find "WireGuardStatusbar" Shared WireGuardStatusbarHelper *.swift|sed 's/ /\\ /')
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 
@@ -93,7 +93,7 @@ ${xcpretty}:
 # cleanup build artifacts
 clean:
 	rm -rf \
-		${build_dest}/WireGuardStatusbar.app \
+		${archive} \
 		WireGuardStatusbar.{dmg,app} \
 		DerivedData/
 

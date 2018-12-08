@@ -39,7 +39,7 @@ assets=WireGuardStatusbar/Assets.xcassets
 icons: appicon imagesets
 
 # The icon used by the application
-appicon:
+appicon: \
 	${assets}/AppIcon.appiconset/16.png \
 	${assets}/AppIcon.appiconset/32.png \
 	${assets}/AppIcon.appiconset/64.png \
@@ -53,7 +53,7 @@ ${assets}/AppIcon.appiconset/%.png: ${tmp}/logo.png
 	${convert} $< -strip -scale $*x$* $@
 
 # Icons used for the menubar
-imagesets:
+imagesets: \
 	${assets}/silhouette.imageset/ \
 	${assets}/silhouette.imageset/Contents.json \
 	${assets}/silhouette.imageset/18.png \

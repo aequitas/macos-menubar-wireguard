@@ -9,8 +9,9 @@
 import Cocoa
 
 extension NSImage.Name {
-    static let connected = "connected"
-    static let disconnected = "disconnected"
+    static let connected = "silhouette"
+    static let enabled = "silhouette-dim"
+    static let disabled = "dragon"
 }
 
 typealias Tunnels = [String: Tunnel]
@@ -42,11 +43,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // initialize menu bar
-        let icon = NSImage(named: .disconnected)
+        let icon = NSImage(named: .disabled)
         icon!.isTemplate = true
         statusItem.image = icon
         statusItem.menu = statusMenu
-        
+
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
         privileged_helper.helperStatus {
@@ -120,10 +121,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         statusMenu.addItem(NSMenuItem.separator())
 
         let fileManager = FileManager.default
-        
+
         // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
         let wireguard_installed = fileManager.fileExists(atPath:wireguard_bin)
-        
+
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
         } else if !wireguard_installed {
@@ -140,7 +141,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         let connected_tunnels = tunnels.filter {$1.connected}
         if connected_tunnels.isEmpty {
-            let icon = NSImage(named: .disconnected)
+            let icon = NSImage(named: .disabled)
             icon!.isTemplate = true
             statusItem.image = icon
         } else {

@@ -1,13 +1,17 @@
 SHELL=/bin/bash
 
+tmp=${TMPDIR:/=}
 brew_bin=$(shell brew --prefix)/bin
 convert=${brew_bin}/convert
 xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 
+.PHONY: all
 all: WireGuardStatusbar.dmg
 
+## Building and distribution
+
 # Location where xcodebuild puts .app when archiving
-archive=${TMPDIR}/WireGuardStatusbar.xcarchive/
+archive=${tmp}/WireGuardStatusbar.xcarchive/
 build_dest=${archive}/Products/Applications/
 
 # Create just the .app in the current working directory
@@ -15,10 +19,10 @@ WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 	rm -rf "$@" && cp -r "${<}" "$@"
 
 # Create distributable .dmg in current working directory
-WireGuardStatusbar.dmg: ${TMPDIR}/WireGuardStatusbar/WireGuardStatusbar.app
+WireGuardStatusbar.dmg: ${tmp}/WireGuardStatusbar/WireGuardStatusbar.app
 	hdiutil create "$@" -srcfolder "${<D}" -ov
 # Generate contents for distributable .dmg
-${TMPDIR}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
+${tmp}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 	mkdir -p "${@D}/"
 	ln -sf /Applications "${@D}/Applications"
 	rm -rf "$@" && cp -r "$<" "$@"
@@ -28,68 +32,97 @@ sources=$(shell find "WireGuardStatusbar" Shared WireGuardStatusbarHelper|sed 's
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 
-# Generate icons from WireGuard banner
-.PHONY: icons
-icons: \
-	WireGuardStatusbar/Assets.xcassets/connected.imageset/silhouette-18.png \
-	WireGuardStatusbar/Assets.xcassets/connected.imageset/silhouette-36.png \
-	WireGuardStatusbar/Assets.xcassets/disconnected.imageset/silhouette-18-dim.png \
-	WireGuardStatusbar/Assets.xcassets/disconnected.imageset/silhouette-36-dim.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-16.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-32.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-64.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-128.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-256.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-512.png \
-	WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-1024.png
+## Icon/image generation
 
-WireGuardStatusbar/Assets.xcassets/disconnected.imageset/%: ${TMPDIR}/%
-	cp "$<" "$@"
+assets=WireGuardStatusbar/Assets.xcassets
+.PHONY: icons appicon imagesets
+icons: appicon imagesets
 
-WireGuardStatusbar/Assets.xcassets/connected.imageset/%: ${TMPDIR}/%
-	cp "$<" "$@"
+# The icon used by the application
+appicon:
+	${assets}/AppIcon.appiconset/16.png \
+	${assets}/AppIcon.appiconset/32.png \
+	${assets}/AppIcon.appiconset/64.png \
+	${assets}/AppIcon.appiconset/128.png \
+	${assets}/AppIcon.appiconset/256.png \
+	${assets}/AppIcon.appiconset/512.png \
+	${assets}/AppIcon.appiconset/1024.png \
 
-WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/%: ${TMPDIR}/%
-	cp "$<" "$@"
+# Provide different sizes of appicon
+${assets}/AppIcon.appiconset/%.png: ${tmp}/logo.png
+	${convert} $< -strip -scale $*x$* $@
 
-# Create a 'dimmed' version of the silhouette
+# Icons used for the menubar
+imagesets:
+	${assets}/silhouette.imageset/ \
+	${assets}/silhouette.imageset/Contents.json \
+	${assets}/silhouette.imageset/18.png \
+	${assets}/silhouette.imageset/36.png \
+	${assets}/silhouette-dim.imageset/ \
+	${assets}/silhouette-dim.imageset/Contents.json \
+	${assets}/silhouette-dim.imageset/18.png \
+	${assets}/silhouette-dim.imageset/36.png \
+	${assets}/dragon.imageset/ \
+	${assets}/dragon.imageset/Contents.json \
+	${assets}/dragon.imageset/18.png \
+	${assets}/dragon.imageset/36.png \
+	${assets}/dragon-dim.imageset/ \
+	${assets}/dragon-dim.imageset/Contents.json \
+	${assets}/dragon-dim.imageset/18.png \
+	${assets}/dragon-dim.imageset/36.png
+
+# Provide 2 required sizes for any imageset variant
+${assets}/%.imageset/18.png: ${tmp}/%.png
+	${convert} $< -strip -scale 18x18 $@
+${assets}/%.imageset/36.png: ${tmp}/%.png
+	${convert} $< -strip -scale 36x36 $@
+# Provide standard imageset definition
+${assets}/%.imageset/Contents.json: Misc/imageset.Contents.json | ${assets}/%.imageset/
+	mkdir -p $@
+	cp $< $@
+
+# Create a dimmed version of a image
 %-dim.png: %.png | ${convert}
 	${convert} $< -strip -channel A -evaluate Multiply 0.50 +channel $@
 
-# Create multiple targets to resize .pngs to specific sizes required
-define resize
-%-${1}.png: %.png
-	$${convert} $$< -strip -scale ${1}x${1} $$@
-endef
-$(foreach size,1024 512 256 128 64 36 32 18 16,$(eval $(call resize,${size})))
-
 # Extract the logo part from the banner, color it black and white
-${TMPDIR}/logo.png: ${TMPDIR}/wireguard.png | ${convert}
+${tmp}/logo.png: ${tmp}/wireguard.png | ${convert}
 	${convert} $< -strip -crop 1251x1251+0+0 -colorspace gray +dither -colors 2 \
 		-floodfill +600+200 white -floodfill +600+400 white -floodfill +350+900 white \
 		-floodfill +400+200 black -floodfill +777+117 black\
 		$@
 
+# Extract the logo part from the banner, invert to keep only the dragon
+${tmp}/dragon.png: ${tmp}/wireguard.png | ${convert}
+	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0\
+		-floodfill +600+200 black -floodfill +600+400 black -floodfill +350+900 black\
+		-floodfill +400+200 transparent -floodfill +777+117 transparent \
+		$@
+
 # Extract the logo part from the banner, but keep the dragon transparent
-${TMPDIR}/silhouette.png: ${TMPDIR}/wireguard.png | ${convert}
+${tmp}/silhouette.png: ${tmp}/wireguard.png | ${convert}
 	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 \
 		-floodfill +400+200 black -floodfill +777+117 black\
 		$@
 
 # Convert SVG wireguard banner to png
-${TMPDIR}/%.png: Misc/%.svg | ${convert}
+${tmp}/%.png: Misc/%.svg | ${convert}
 	${convert} -strip -background transparent -density 400 $< $@
 
+# Download the official logo
 Misc/wireguard.svg:
 	curl -s https://www.wireguard.com/img/wireguard.svg > $@
+
+## Setup and maintenance
 
 ${convert}:
 	brew install imagemagick
 
+# Used to generate less verbose xcodebuild output
 ${xcpretty}:
 	gem install --user xcpretty
 
-.PHONY: clean
+.PHONY: clean mrproper
 # cleanup build artifacts
 clean:
 	rm -rf \
@@ -100,6 +133,6 @@ clean:
 # cleanup most artifacts that could be generated by the Makefile
 mrproper: clean
 	rm -rf \
-		${TMPDIR}/logo*.png \
-		${TMPDIR}/wireguard.png WireGuardStatusbar/Assets.xcassets/connected.imageset/logo-*.png \
+		${tmp}/logo*.png \
+		${tmp}/wireguard.png WireGuardStatusbar/Assets.xcassets/connected.imageset/logo-*.png \
 		WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png

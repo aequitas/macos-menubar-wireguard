@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "silhouette-18-dim.png",
+      "filename" : "18.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "silhouette-36-dim.png",
+      "filename" : "36.png",
       "scale" : "2x"
     },
     {

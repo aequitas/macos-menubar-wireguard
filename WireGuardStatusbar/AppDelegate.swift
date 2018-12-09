@@ -50,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
-        privilegedHelper.helperStatus {installed in
+        privilegedHelper.helperStatus { installed in
             if !installed {
                 self.privilegedHelper.installHelper()
                 self.privilegedHelper.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
@@ -100,12 +100,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             } as? HelperProtocol
 
             if !tunnel.connected {
-                xpcService?.tunnelUp(interface: tunnel.interface, reply: {(exitStatus) in
+                xpcService?.tunnelUp(interface: tunnel.interface, reply: { (exitStatus) in
                     print("Tunnel \(tunnelId) up exit status: \(exitStatus)")
                 })
 
             } else {
-                xpcService?.tunnelDown(interface: tunnel.interface, reply: {(exitStatus) in
+                xpcService?.tunnelDown(interface: tunnel.interface, reply: { (exitStatus) in
                     print("Tunnel \(tunnelId) down exit status: \(exitStatus)")
                 })
             }
@@ -231,4 +231,5 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
+
 }

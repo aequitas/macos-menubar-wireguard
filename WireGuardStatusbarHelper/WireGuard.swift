@@ -9,6 +9,7 @@
 import Foundation
 
 public class WireGuard {
+
     func wg(_ arguments: [String]) -> NSNumber {
         let task = Process()
         task.launchPath = wgquickBin
@@ -30,4 +31,5 @@ public class WireGuard {
 
         return task.terminationStatus as NSNumber
     }
+
 }

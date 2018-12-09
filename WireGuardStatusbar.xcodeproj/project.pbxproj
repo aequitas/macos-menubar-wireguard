@@ -257,6 +257,7 @@
 			buildConfigurationList = 04B4BE64211E1E030001213A /* Build configuration list for PBXNativeTarget "WireGuardStatusbar" */;
 			buildPhases = (
 				04B2BD4B21BDA95800CCAE2F /* Swiftlint */,
+				04B2BD4C21BDBD2B00CCAE2F /* Tailor */,
 				04B4BE3C211E1E010001213A /* Sources */,
 				04B4BE3E211E1E010001213A /* Resources */,
 				04B92498211F70AF008D964A /* Copy Helper */,
@@ -386,7 +387,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$HOME/.brew/bin:$PATH\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "PATH=$HOME/.brew/bin:$PATH\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm SwiftLint\"\nfi\n";
+		};
+		04B2BD4C21BDBD2B00CCAE2F /* Tailor */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Tailor;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PATH=$HOME/.brew/bin:$PATH\nif which tailor >/dev/null; then\n    tailor\nelse\n    echo \"warning: Please install Tailor from https://tailor.sh\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

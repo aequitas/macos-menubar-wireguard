@@ -1,3 +1,6 @@
+// TODO: figure out how to get this using package manager (Cocoapods/SwiftPM)
+// or switch to DispatchSource https://github.com/daniel-pedersen/SKQueue/issues/11
+
 // https://github.com/daniel-pedersen/SKQueue
 // The MIT License (MIT)
 

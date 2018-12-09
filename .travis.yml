@@ -1,0 +1,10 @@
+# https://docs.travis-ci.com/user/customizing-the-build/
+# https://github.com/travis-ci/travis-build/blob/master/lib/travis/build/script/objective_c.rb
+# https://gist.github.com/gdavis/6670468
+language: swift
+osx_image: xcode10.1
+xcode_project: WireguardStatusbar.xcodeproj
+xcode_scheme: Travis
+xcode_destination: platform=macOS
+# Disable code signing
+xcodebuild_args: CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""

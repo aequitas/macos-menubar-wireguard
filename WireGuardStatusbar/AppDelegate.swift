@@ -11,7 +11,7 @@ import Cocoa
 extension NSImage.Name {
     static let connected = "silhouette"
     static let enabled = "silhouette-dim"
-    static let disabled = "dragon"
+    static let disabled = "dragon-dim"
 }
 
 typealias Tunnels = [String: Tunnel]

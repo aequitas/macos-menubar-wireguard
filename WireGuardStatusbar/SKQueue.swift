@@ -67,12 +67,12 @@ public struct SKQueueNotification: OptionSet {
 
   public func toStrings() -> [SKQueueNotificationString] {
     var s = [SKQueueNotificationString]()
-    if contains(.Rename)           { s.append(.Rename) }
-    if contains(.Write)            { s.append(.Write) }
-    if contains(.Delete)           { s.append(.Delete) }
-    if contains(.AttributeChange)  { s.append(.AttributeChange) }
-    if contains(.SizeIncrease)     { s.append(.SizeIncrease) }
-    if contains(.LinkCountChange)  { s.append(.LinkCountChange) }
+    if contains(.Rename) { s.append(.Rename) }
+    if contains(.Write) { s.append(.Write) }
+    if contains(.Delete) { s.append(.Delete) }
+    if contains(.AttributeChange) { s.append(.AttributeChange) }
+    if contains(.SizeIncrease) { s.append(.SizeIncrease) }
+    if contains(.LinkCountChange) { s.append(.LinkCountChange) }
     if contains(.AccessRevocation) { s.append(.AccessRevocation) }
     return s
   }

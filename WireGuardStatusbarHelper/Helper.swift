@@ -10,12 +10,12 @@ import Foundation
 
 class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
 
-    var listener:NSXPCListener
+    var listener: NSXPCListener
 
     let wireguard = WireGuard()
-    
+
     override init() {
-        self.listener = NSXPCListener(machServiceName:HelperConstants.machServiceName)
+        self.listener = NSXPCListener(machServiceName: HelperConstants.machServiceName)
         super.init()
         self.listener.delegate = self
     }
@@ -28,9 +28,9 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
     }
 
     /// Called when the client connects to the helper daemon
-    func listener(_ listener:NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
+    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
         connection.exportedInterface = NSXPCInterface(with: HelperProtocol.self)
-        connection.exportedObject = self;
+        connection.exportedObject = self
         connection.resume()
 
         return true
@@ -40,7 +40,7 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
         NSLog("Bringing interface \(interface) up")
         reply(wireguard.wg(["up", interface]))
     }
-    
+
     func tunnelDown(interface: String, reply: @escaping (NSNumber) -> Void) {
         NSLog("Bringing interface \(interface) down")
         reply(wireguard.wg(["down", interface]))
@@ -49,12 +49,17 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
     /// Return daemon's bundle version
     /// Because communication over XPC is asynchronous, all methods in the protocol must have a return type of void
     func getVersion(_ reply: (String) -> Void) {
-        reply(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String)
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+        if version != nil {
+            reply(version!)
+        } else {
+            reply("")
+        }
     }
 
     func shutdown() {
         NSLog("Shutting down WireGuardStatusbar Helper....")
-        exit(0);
+        exit(0)
     }
 
 }

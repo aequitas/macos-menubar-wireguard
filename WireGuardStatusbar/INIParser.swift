@@ -1,3 +1,6 @@
+// TODO: figure out how to get this using package manager (Cocoapods/SwiftPM)
+// or get rid of config file parsing altogether?
+
 //
 //  INIParser.swift
 //  Perfect-INIParser

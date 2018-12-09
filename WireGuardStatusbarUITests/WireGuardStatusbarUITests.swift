@@ -36,4 +36,5 @@ class WireGuardStatusbarUITests: XCTestCase {
         menuBarsQuery.menuItems["Quit"].click()
         XCTAssert(app.state == XCUIApplication.State.notRunning)
     }
+
 }

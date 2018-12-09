@@ -4,6 +4,8 @@ tmp=${TMPDIR:/=}
 brew_bin=$(shell brew --prefix)/bin
 convert=${brew_bin}/convert
 xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
+swiftlint=${brew_bin}/swiftlint
+tailor=${brew_bin}/tailor
 
 .PHONY: all
 all: WireGuardStatusbar.dmg
@@ -13,8 +15,9 @@ all: WireGuardStatusbar.dmg
 test: | ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 
-check: fix | ${swiftlint}
+check: fix | ${swiftlint} ${tailor}
 	swiftlint
+	tailor
 
 fix: | ${swiftlint}
 	swiftlint autocorrect
@@ -126,7 +129,7 @@ Misc/wireguard.svg:
 
 ## Setup and maintenance
 
-${convert} ${swiftlint}:
+${convert} ${swiftlint} ${tailor}:
 	brew bundle install --verbose --no-upgrade
 
 # Used to generate less verbose xcodebuild output

@@ -1,4 +1,5 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/66efb09de55fafe897e0/maintainability)](https://codeclimate.com/github/aequitas/macos-menubar-wireguard/maintainability)
+[![Build Status](https://travis-ci.org/aequitas/macos-menubar-wireguard.svg?branch=master)](https://travis-ci.org/aequitas/macos-menubar-wireguard)
 
 This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 

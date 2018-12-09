@@ -8,6 +8,10 @@ xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 .PHONY: all
 all: WireGuardStatusbar.dmg
 
+## Testing
+test: | ${xcpretty}
+	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
+
 ## Building and distribution
 
 # Location where xcodebuild puts .app when archiving

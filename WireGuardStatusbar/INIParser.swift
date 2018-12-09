@@ -41,7 +41,7 @@ public class INIParser {
   internal var _sections: [String: [String: String]] = [:]
   internal var _anonymousSection: [String: String] = [:]
 
-  public var sections: [String:[String:String]] { return _sections }
+  public var sections: [String: [String: String]] { return _sections }
   public var anonymousSection: [String: String] { return _anonymousSection }
 
   public enum Exception: Error {
@@ -62,7 +62,7 @@ public class INIParser {
     var state = State.Variable
     let stack = Stack<State>()
 
-    var variable: String? = nil
+    var variable: String?
     for c in line {
       switch c {
       case " ", "\t":
@@ -147,7 +147,7 @@ public class INIParser {
       throw Exception.InvalidFile
     }
     let lines: [String] = text.split(separator: "\n").map { String($0) }
-    var title: String? = nil
+    var title: String?
     for line in lines {
       if let content = try parse(line: line) {
         switch content {

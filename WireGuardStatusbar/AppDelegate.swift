@@ -39,7 +39,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
     let statusMenu = NSMenu()
 
-    let privileged_helper = PrivilegedHelper()
+    let privilegedHelper = PrivilegedHelper()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // initialize menu bar
@@ -50,19 +50,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
-        privileged_helper.helperStatus {
-            installed in
+        privilegedHelper.helperStatus {installed in
             if !installed {
-                self.privileged_helper.installHelper()
-                self.privileged_helper.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
+                self.privilegedHelper.installHelper()
+                self.privilegedHelper.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
             }
         }
 
         // register watchers to respond to changes in wireguard config/runtime state
         let queue = SKQueue(delegate: self)!
-        queue.addPath(run_path)
-        for config_path in config_paths {
-            queue.addPath(config_path)
+        queue.addPath(runPath)
+        for configPath in configPaths {
+            queue.addPath(configPath)
         }
 
         // do an initial state update from current configuration and runtime state
@@ -75,7 +74,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
 //        TODO: configurable option to disable tunnels on shutdown
-        let xpcService = privileged_helper.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
+        let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
             print("XPCService error: %@", error)
             } as? HelperProtocol
 
@@ -85,7 +84,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     // handle incoming file/directory change events
     func receivedNotification(_ notification: SKQueueNotification, path: String, queue: SKQueue) {
         print("\(notification.toStrings().map { $0.rawValue }) @ \(path)")
-        if path == run_path {
+        if path == runPath {
             loadState()
             DispatchQueue.main.async {self.buildMenu()}
         }
@@ -93,22 +92,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     // bring tunnel up/down
     @objc func toggleTunnel(_ sender: NSMenuItem) {
-        let id = sender.representedObject as! String
-        let tunnel = tunnels[id]!
+        if let tunnelId = sender.representedObject as? String {
+            let tunnel = tunnels[tunnelId]!
 
-        let xpcService = privileged_helper.helperConnection()?.remoteObjectProxyWithErrorHandler() { error -> Void in
-            print("XPCService error: %@", error)
-        } as? HelperProtocol
+            let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+                print("XPCService error: %@", error)
+            } as? HelperProtocol
 
-        if !tunnel.connected {
-            xpcService?.tunnelUp(interface: tunnel.interface, reply: {
-                (exitStatus) in print("Tunnel \(id) up exit status: \(exitStatus)")
-            })
+            if !tunnel.connected {
+                xpcService?.tunnelUp(interface: tunnel.interface, reply: {(exitStatus) in
+                    print("Tunnel \(tunnelId) up exit status: \(exitStatus)")
+                })
 
+            } else {
+                xpcService?.tunnelDown(interface: tunnel.interface, reply: {(exitStatus) in
+                    print("Tunnel \(tunnelId) down exit status: \(exitStatus)")
+                })
+            }
         } else {
-            xpcService?.tunnelDown(interface: tunnel.interface, reply: {
-                (exitStatus) in print("Tunnel \(id) down exit status: \(exitStatus)")
-            })
+            NSLog("Sender not convertable to String: \(sender.representedObject.debugDescription)")
         }
     }
 
@@ -123,24 +125,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         let fileManager = FileManager.default
 
         // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
-        let wireguard_installed = fileManager.fileExists(atPath:wireguard_bin)
+        let wireguardInstalled = fileManager.fileExists(atPath: wireguardBin)
 
         if tunnels.isEmpty {
             statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
-        } else if !wireguard_installed {
-            NSLog("Wireguard binary not found at \(wireguard_bin)")
-            statusMenu.addItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions", action: #selector(AppDelegate.showInstallInstructions(_:)), keyEquivalent: ""))
+        } else if !wireguardInstalled {
+            NSLog("Wireguard binary not found at \(wireguardBin)")
+            statusMenu.addItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions",
+                                          action: #selector(AppDelegate.showInstallInstructions(_:)),
+                                          keyEquivalent: ""))
         } else {
-            for (id, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
-                addTunnelMenuItem(statusMenu: statusMenu, id: id, tunnel: tunnel)
+            for (tunnelID, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
+                addTunnelMenuItem(statusMenu: statusMenu, tunnelId: tunnelID, tunnel: tunnel)
             }
         }
         statusMenu.addItem(NSMenuItem.separator())
         statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
         statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
 
-        let connected_tunnels = tunnels.filter {$1.connected}
-        if connected_tunnels.isEmpty {
+        let connectedTunnels = tunnels.filter {$1.connected}
+        if connectedTunnels.isEmpty {
             let icon = NSImage(named: .disabled)
             icon!.isTemplate = true
             statusItem.image = icon
@@ -151,65 +155,58 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
     }
 
-    func addTunnelMenuItem(statusMenu: NSMenu, id: String, tunnel: Tunnel){
-        let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)", action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-        item.representedObject = id
+    func addTunnelMenuItem(statusMenu: NSMenu, tunnelId: String, tunnel: Tunnel) {
+        let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)",
+            action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
+        item.representedObject = tunnelId
         if tunnel.connected {
             item.state = NSControl.StateValue.on
         }
         statusMenu.addItem(item)
         for peer in tunnel.peers {
-            statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))", action: nil, keyEquivalent: ""))
+            statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
+                action: nil, keyEquivalent: ""))
         }
     }
 
     @objc func showInstallInstructions(_ sender: NSMenuItem) {
         let alert = NSAlert()
-        alert.messageText = install_instructions
+        alert.messageText = installInstructions
         alert.runModal()
     }
 
     // load tunnel from configuration files
     func loadConfiguration() {
-        for config_path in config_paths {
-            let enumerator = FileManager.default.enumerator(atPath: config_path)
-            if enumerator == nil {
-                continue
-            }
-            let files = enumerator?.allObjects as! [String]
-            let config_files = files.filter{$0.hasSuffix(".conf")}
-            for config_file in config_files {
-                let interface = config_file.replacingOccurrences(of: ".conf", with: "")
+        for configPath in configPaths {
+            let enumerator = FileManager.default.enumerator(atPath: configPath)
+            while let configFile = enumerator?.nextObject() as? String {
+                if !configFile.hasSuffix(".conf") {
+                    continue
+                }
+                NSLog("Reading config file: \(configPath)/\(configFile)")
+                let interface = configFile.replacingOccurrences(of: ".conf", with: "")
 
+                tunnels[interface] = Tunnel(
+                    name: "",
+                    interface: interface,
+                    connected: false,
+                    address: "",
+                    peers: []
+                )
 
                 // determine if config file can be read
-                if let _ = try? String(contentsOfFile: config_path + "/" + config_file) {
-                    let ini = try! INIParser(config_path + "/" + config_file)
+                if let ini = try? INIParser(configPath + "/" + configFile) {
                     let config = ini.sections
-
-                    // TODO: currently supports only one peer, need to pick a different method for parsing config
-                    let peers = [Peer(
-                        endpoint: config["Peer"]!["Endpoint"]!,
-                        allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-                        )
-                    ]
-                    let tunnel = Tunnel(
-                        name: "",
-                        interface: interface,
-                        connected: false,
-                        address: config["Interface"]!["Address"]!,
-                        peers: peers
-                    )
-                    tunnels[interface] = tunnel
-                } else {
-                    // could not read config, provide minimal details
-                    tunnels[interface] = Tunnel(
-                        name: "",
-                        interface: interface,
-                        connected: false,
-                        address: "",
-                        peers: []
-                    )
+                    if !config.isEmpty {
+                        // TODO: currently supports only one peer, need to pick a different method for parsing config
+                        tunnels[interface]!.peers = [Peer(
+                            endpoint: config["Peer"]!["Endpoint"]!,
+                            allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map {
+                                $0.trimmingCharacters(in: .whitespaces)
+                            })
+                        ]
+                        tunnels[interface]!.address = config["Interface"]!["Address"]!
+                    }
                 }
             }
         }
@@ -219,10 +216,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     func loadState() {
         // for every configured tunnel check if a socket file exists (assume that indicates the tunnel is up)
         for tunnel in tunnels {
-            let interface_name = tunnel.key
+            let interfaceName = tunnel.key
             // TODO: more idiomatic path building?
-            let name = URL(string: "\(run_path)/\(interface_name).name")
-            tunnels[interface_name]!.connected = FileManager.default.fileExists(atPath: name!.path)
+            let name = URL(string: "\(runPath)/\(interfaceName).name")
+            tunnels[interfaceName]!.connected = FileManager.default.fileExists(atPath: name!.path)
         }
     }
 
@@ -230,8 +227,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         NSApplication.shared.terminate(self)
     }
 
-    @objc func about(_ sender: NSMenuItem)
-    {
+    @objc func about(_ sender: NSMenuItem) {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }

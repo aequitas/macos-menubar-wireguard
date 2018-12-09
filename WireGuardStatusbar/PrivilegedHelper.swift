@@ -24,22 +24,24 @@
 import Foundation
 import ServiceManagement
 
-
 public class PrivilegedHelper {
     var xpcHelperConnection: NSXPCConnection?
 
     func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
-        
-        // Get the current helper connection and return the remote object (Helper.swift) as a proxy object to call functions on.
-        guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ error in
+
+        // Get the current helper connection and return the remote object (Helper.swift)
+        // as a proxy object to call functions on.
+        guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ _ in
             if let onCompletion = completion { onCompletion(false) }
         }) as? HelperProtocol else { return nil }
         return helper
     }
-    
+
     func helperStatus(completion: @escaping (_ installed: Bool) -> Void) {
-        // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application bundle with the one on disk.
-        let helperURL = Bundle.main.bundleURL.appendingPathComponent("Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
+        // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application
+        // bundle with the one on disk.
+        let helperURL = Bundle.main.bundleURL.appendingPathComponent(
+            "Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
         guard
             let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
             let helperVersion = helperBundleInfo["CFBundleVersion"] as? String,
@@ -49,27 +51,28 @@ public class PrivilegedHelper {
                 return
         }
         NSLog("Helper: Bundle Version => \(String(describing: helperVersion))")
-        
+
         helper.getVersion { installedHelperVersion in
             NSLog("Helper: Installed Version => \(String(describing: installedHelperVersion))")
             completion(installedHelperVersion == helperVersion)
         }
     }
-    
+
     // Uses SMJobBless to install or update the helper tool
-    func installHelper(){
-        
-        var authRef:AuthorizationRef?
-        var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0, value:UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
-        var authRights:AuthorizationRights = AuthorizationRights(count: 1, items:&authItem)
+    func installHelper() {
+
+        var authRef: AuthorizationRef?
+        var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0,
+                                         value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
+        var authRights: AuthorizationRights = AuthorizationRights(count: 1, items: &authItem)
         let authFlags: AuthorizationFlags = [ [], .extendRights, .interactionAllowed, .preAuthorize ]
-        
+
         let status = AuthorizationCreate(&authRights, nil, authFlags, &authRef)
-        if (status != errAuthorizationSuccess){
-            let error = NSError(domain:NSOSStatusErrorDomain, code:Int(status), userInfo:nil)
+        if status != errAuthorizationSuccess {
+            let error = NSError(domain: NSOSStatusErrorDomain, code: Int(status), userInfo: nil)
             NSLog("Authorization error: \(error)")
         } else {
-            var cfError: Unmanaged<CFError>? = nil
+            var cfError: Unmanaged<CFError>?
             if !SMJobBless(kSMDomainSystemLaunchd, HelperConstants.machServiceName as CFString, authRef, &cfError) {
                 let blessError = cfError!.takeRetainedValue() as Error
                 NSLog("Bless Error: \(blessError)")
@@ -78,15 +81,16 @@ public class PrivilegedHelper {
             }
         }
     }
-    
+
     func helperConnection() -> NSXPCConnection? {
-        if (self.xpcHelperConnection == nil){
-            self.xpcHelperConnection = NSXPCConnection(machServiceName:HelperConstants.machServiceName, options:NSXPCConnection.Options.privileged)
+        if self.xpcHelperConnection == nil {
+            self.xpcHelperConnection = NSXPCConnection(machServiceName: HelperConstants.machServiceName,
+                                                       options: NSXPCConnection.Options.privileged)
             self.xpcHelperConnection!.exportedObject = self
-            self.xpcHelperConnection!.remoteObjectInterface = NSXPCInterface(with:HelperProtocol.self)
+            self.xpcHelperConnection!.remoteObjectInterface = NSXPCInterface(with: HelperProtocol.self)
             self.xpcHelperConnection!.invalidationHandler = {
                 self.xpcHelperConnection?.invalidationHandler = nil
-                OperationQueue.main.addOperation(){
+                OperationQueue.main.addOperation {
                     self.xpcHelperConnection = nil
                     NSLog("XPC Connection Invalidated\n")
                 }

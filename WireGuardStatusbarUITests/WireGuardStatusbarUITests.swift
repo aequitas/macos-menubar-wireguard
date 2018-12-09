@@ -11,10 +11,7 @@ import XCTest
 class WireGuardStatusbarUITests: XCTestCase {
 
     override func setUp() {
-        // In UI tests it is usually best to stop immediately when a failure occurs.
         continueAfterFailure = false
-
-        // UI tests must launch the application that they test. Doing this in setup will make sure it happens for each test method.
         XCUIApplication().launch()
     }
 
@@ -27,8 +24,8 @@ class WireGuardStatusbarUITests: XCTestCase {
         let app = XCUIApplication()
         let menuBarsQuery = app.menuBars
         menuBarsQuery.children(matching: .statusItem).element.click()
-        menuBarsQuery/*@START_MENU_TOKEN@*/.menuItems["About"]/*[[".statusItems",".menus.menuItems[\"About\"]",".menuItems[\"About\"]"],[[[-1,2],[-1,1],[-1,0,1]],[[-1,2],[-1,1]]],[0]]@END_MENU_TOKEN@*/.click()
-        app/*@START_MENU_TOKEN@*/.buttons[XCUIIdentifierCloseWindow]/*[[".dialogs.buttons[XCUIIdentifierCloseWindow]",".buttons[XCUIIdentifierCloseWindow]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.click()
+        menuBarsQuery.menuItems["About"].click()
+        app.buttons[XCUIIdentifierCloseWindow].click()
     }
 
     // Simple test to make sure the application can quit

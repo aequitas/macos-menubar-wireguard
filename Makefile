@@ -8,9 +8,16 @@ xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 .PHONY: all
 all: WireGuardStatusbar.dmg
 
-## Testing
+## Testing & Code quality
+
 test: | ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
+
+check: fix | ${swiftlint}
+	swiftlint
+
+fix: | ${swiftlint}
+	swiftlint autocorrect
 
 ## Building and distribution
 
@@ -119,8 +126,8 @@ Misc/wireguard.svg:
 
 ## Setup and maintenance
 
-${convert}:
-	brew install imagemagick
+${convert} ${swiftlint}:
+	brew bundle install --verbose --no-upgrade
 
 # Used to generate less verbose xcodebuild output
 ${xcpretty}:

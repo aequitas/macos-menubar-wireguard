@@ -8,3 +8,4 @@ xcode_scheme: Travis
 xcode_destination: platform=macOS
 # Disable code signing
 xcodebuild_args: CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""
+

@@ -82,7 +82,7 @@ appicon: \
 	${assets}/AppIcon.appiconset/128.png \
 	${assets}/AppIcon.appiconset/256.png \
 	${assets}/AppIcon.appiconset/512.png \
-	${assets}/AppIcon.appiconset/1024.png \
+	${assets}/AppIcon.appiconset/1024.png
 
 # Provide different sizes of appicon
 ${assets}/AppIcon.appiconset/%.png: ${tmp}/logo.png
@@ -163,6 +163,7 @@ ${xcpretty}:
 clean:
 	rm -rf \
 		${archive} \
+		${dist} \
 		WireGuardStatusbar.{dmg,app} \
 		DerivedData/
 

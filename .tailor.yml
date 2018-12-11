@@ -1,7 +1,11 @@
 include:
   - "**"
 exclude:
+  # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift
   - WireGuardStatusbar/SKQueue.swift
 except:
+  # its better to keep todos in code than to loose track of them somewhere else
   - todo-syntax
+  # there is no autocorrect for this, so ignoring it due to being annoying
+  - function-whitespace

@@ -1,5 +1,10 @@
 disabled_rules:
+  # its better to keep todos in code than to loose track of them somewhere else
   - todo
 excluded:
+  # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift
   - WireGuardStatusbar/SKQueue.swift
+trailing_comma:
+  # conflicts with swiftformat's default
+  mandatory_comma: true

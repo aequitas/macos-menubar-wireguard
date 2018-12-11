@@ -14,18 +14,15 @@ all: WireGuardStatusbar.dmg
 
 ## Testing & Code quality
 
-test: .make.check | ${xcpretty}
+test: check | ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 
-check .make.check: .make.fix | ${swiftlint} ${tailor}
-	swiftlint $?
-	tailor $?
-	touch .make.check
+check: fix | ${swiftlint} ${tailor}
+	swiftlint
+	tailor .
 
-fix .make.fix: ${sources} | ${swiftlint} ${swiftformat}
-	swiftlint autocorrect $?
-	swiftformat $?
-	touch .make.fix
+fix:| ${swiftlint} ${swiftformat}
+	swiftformat .
 
 ## Building and distribution
 

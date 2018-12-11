@@ -1,0 +1,2 @@
+# ignore vendor files, will be removed in the future
+--exclude WireGuardStatusbar/SKQueue.swift,WireGuardStatusbar/INIParser.swift

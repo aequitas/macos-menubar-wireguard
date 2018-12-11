@@ -1,26 +1,31 @@
 SHELL=/bin/bash
 
 tmp=${TMPDIR:/=}
-brew_bin=$(shell brew --prefix)/bin
+brew_bin:=$(shell brew --prefix || echo /usr/local)/bin
 convert=${brew_bin}/convert
 xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 swiftlint=${brew_bin}/swiftlint
 tailor=${brew_bin}/tailor
+
+sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
 
 .PHONY: all
 all: WireGuardStatusbar.dmg
 
 ## Testing & Code quality
 
-test: | ${xcpretty}
+test: .make.check | ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 
-check: fix | ${swiftlint} ${tailor}
-	swiftlint
-	tailor
+check .make.check: .make.fix | ${swiftlint} ${tailor}
+	swiftlint $?
+	tailor $?
+	touch .make.check
 
-fix: | ${swiftlint}
-	swiftlint autocorrect
+fix .make.fix: ${sources} | ${swiftlint} ${swiftformat}
+	swiftlint autocorrect $?
+	swiftformat $?
+	touch .make.fix
 
 ## Building and distribution
 
@@ -42,7 +47,6 @@ ${tmp}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusb
 	rm -rf "$@" && cp -r "$<" "$@"
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
-sources=$(shell find "WireGuardStatusbar" Shared WireGuardStatusbarHelper|sed 's/ /\\ /')
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 

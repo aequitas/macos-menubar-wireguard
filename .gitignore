@@ -1,5 +1,6 @@
 .DS_Store
 *.xcodeproj/xcuserdata/
+.make.*
 
 # Build artifacts
 WireGuardStatusbar.dmg

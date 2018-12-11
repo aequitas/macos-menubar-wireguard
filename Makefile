@@ -7,7 +7,9 @@ xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 swiftlint=${brew_bin}/swiftlint
 tailor=${brew_bin}/tailor
 
-sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
+swift_sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
+other_sources=$(shell find * -name *.plist)
+sources=${swift_sources} ${other_sources}
 
 .PHONY: all
 all: test test-integration WireGuardStatusbar.dmg
@@ -23,7 +25,7 @@ check: fix .check.tailor | ${swiftlint}
 	swiftlint --strict
 
 # only run tailor on changed files as it is slow
-.check.tailor: ${sources} | fix ${tailor}
+.check.tailor: ${swift_sources} | fix ${tailor}
 	tailor $?
 	touch $@
 

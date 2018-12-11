@@ -9,7 +9,6 @@
 import XCTest
 
 class WireGuardStatusbarUITests: XCTestCase {
-
     override func setUp() {
         continueAfterFailure = false
         XCUIApplication().launch()
@@ -36,5 +35,4 @@ class WireGuardStatusbarUITests: XCTestCase {
         menuBarsQuery.menuItems["Quit"].click()
         XCTAssert(app.state == XCUIApplication.State.notRunning)
     }
-
 }

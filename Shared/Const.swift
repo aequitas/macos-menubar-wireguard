@@ -12,7 +12,7 @@ let brewPrefix = "/usr/local"
 let runPath = "/var/run/wireguard/"
 let configPaths = [
     "\(brewPrefix)/etc/wireguard",
-    "/etc/wireguard"
+    "/etc/wireguard",
 ]
 let wireguardBin = "\(brewPrefix)/bin/wg"
 let wgquickBin = "\(brewPrefix)/bin/wg-quick"

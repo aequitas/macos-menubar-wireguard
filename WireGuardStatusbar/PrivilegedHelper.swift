@@ -28,7 +28,6 @@ public class PrivilegedHelper {
     var xpcHelperConnection: NSXPCConnection?
 
     func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
-
         // Get the current helper connection and return the remote object (Helper.swift)
         // as a proxy object to call functions on.
         guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ _ in
@@ -41,14 +40,15 @@ public class PrivilegedHelper {
         // Comppare the CFBundleShortVersionString from the Info.plisin the helper inside our application
         // bundle with the one on disk.
         let helperURL = Bundle.main.bundleURL.appendingPathComponent(
-            "Contents/Library/LaunchServices/" + HelperConstants.machServiceName)
+            "Contents/Library/LaunchServices/" + HelperConstants.machServiceName
+        )
         guard
             let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
             let helperVersion = helperBundleInfo["CFBundleVersion"] as? String,
             let helper = self.helper(completion) else {
-                NSLog("Helper: Failed to get Bundled helper version")
-                completion(false)
-                return
+            NSLog("Helper: Failed to get Bundled helper version")
+            completion(false)
+            return
         }
         NSLog("Helper: Bundle Version => \(String(describing: helperVersion))")
 
@@ -60,12 +60,11 @@ public class PrivilegedHelper {
 
     // Uses SMJobBless to install or update the helper tool
     func installHelper() {
-
         var authRef: AuthorizationRef?
         var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0,
                                          value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
         var authRights: AuthorizationRights = AuthorizationRights(count: 1, items: &authItem)
-        let authFlags: AuthorizationFlags = [ [], .extendRights, .interactionAllowed, .preAuthorize ]
+        let authFlags: AuthorizationFlags = [[], .extendRights, .interactionAllowed, .preAuthorize]
 
         let status = AuthorizationCreate(&authRights, nil, authFlags, &authRef)
         if status != errAuthorizationSuccess {
@@ -83,21 +82,20 @@ public class PrivilegedHelper {
     }
 
     func helperConnection() -> NSXPCConnection? {
-        if self.xpcHelperConnection == nil {
-            self.xpcHelperConnection = NSXPCConnection(machServiceName: HelperConstants.machServiceName,
-                                                       options: NSXPCConnection.Options.privileged)
-            self.xpcHelperConnection!.exportedObject = self
-            self.xpcHelperConnection!.remoteObjectInterface = NSXPCInterface(with: HelperProtocol.self)
-            self.xpcHelperConnection!.invalidationHandler = {
+        if xpcHelperConnection == nil {
+            xpcHelperConnection = NSXPCConnection(machServiceName: HelperConstants.machServiceName,
+                                                  options: NSXPCConnection.Options.privileged)
+            xpcHelperConnection!.exportedObject = self
+            xpcHelperConnection!.remoteObjectInterface = NSXPCInterface(with: HelperProtocol.self)
+            xpcHelperConnection!.invalidationHandler = {
                 self.xpcHelperConnection?.invalidationHandler = nil
                 OperationQueue.main.addOperation {
                     self.xpcHelperConnection = nil
                     NSLog("XPC Connection Invalidated\n")
                 }
             }
-            self.xpcHelperConnection?.resume()
+            xpcHelperConnection?.resume()
         }
-        return self.xpcHelperConnection
+        return xpcHelperConnection
     }
-
 }

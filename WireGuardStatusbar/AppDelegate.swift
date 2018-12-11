@@ -16,13 +16,14 @@ extension NSImage.Name {
 
 typealias Tunnels = [String: Tunnel]
 struct Tunnel {
-    var title: String { return name}
+    var title: String { return name }
     var name: String
     var interface: String
     var connected = false
     var address: String
     var peers: [Peer]
 }
+
 struct Peer {
     var endpoint: String
     var allowedIps: [String]
@@ -32,7 +33,6 @@ var username = NSUserName()
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
-
     var tunnels = Tunnels()
     @objc dynamic var connected = false
 
@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     let privilegedHelper = PrivilegedHelper()
 
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         // initialize menu bar
         let icon = NSImage(named: .disabled)
         icon!.isTemplate = true
@@ -53,7 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         privilegedHelper.helperStatus { installed in
             if !installed {
                 self.privilegedHelper.installHelper()
-                self.privilegedHelper.xpcHelperConnection = nil  //  Nulls the connection to force a reconnection
+                self.privilegedHelper.xpcHelperConnection = nil //  Nulls the connection to force a reconnection
             }
         }
 
@@ -68,25 +68,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         DispatchQueue.global(qos: .background).async {
             self.loadConfiguration()
             self.loadState()
-            DispatchQueue.main.async {self.buildMenu()}
+            DispatchQueue.main.async { self.buildMenu() }
         }
     }
 
-    func applicationWillTerminate(_ aNotification: Notification) {
+    func applicationWillTerminate(_: Notification) {
 //        TODO: configurable option to disable tunnels on shutdown
         let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
             print("XPCService error: %@", error)
-            } as? HelperProtocol
+        } as? HelperProtocol
 
         xpcService?.shutdown()
     }
 
     // handle incoming file/directory change events
-    func receivedNotification(_ notification: SKQueueNotification, path: String, queue: SKQueue) {
+    func receivedNotification(_ notification: SKQueueNotification, path: String, queue _: SKQueue) {
         print("\(notification.toStrings().map { $0.rawValue }) @ \(path)")
         if path == runPath {
             loadState()
-            DispatchQueue.main.async {self.buildMenu()}
+            DispatchQueue.main.async { self.buildMenu() }
         }
     }
 
@@ -100,12 +100,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             } as? HelperProtocol
 
             if !tunnel.connected {
-                xpcService?.tunnelUp(interface: tunnel.interface, reply: { (exitStatus) in
+                xpcService?.tunnelUp(interface: tunnel.interface, reply: { exitStatus in
                     print("Tunnel \(tunnelId) up exit status: \(exitStatus)")
                 })
 
             } else {
-                xpcService?.tunnelDown(interface: tunnel.interface, reply: { (exitStatus) in
+                xpcService?.tunnelDown(interface: tunnel.interface, reply: { exitStatus in
                     print("Tunnel \(tunnelId) down exit status: \(exitStatus)")
                 })
             }
@@ -143,7 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
         statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
 
-        let connectedTunnels = tunnels.filter {$1.connected}
+        let connectedTunnels = tunnels.filter { $1.connected }
         if connectedTunnels.isEmpty {
             let icon = NSImage(named: .disabled)
             icon!.isTemplate = true
@@ -157,7 +157,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     func addTunnelMenuItem(statusMenu: NSMenu, tunnelId: String, tunnel: Tunnel) {
         let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)",
-            action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
+                              action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
         item.representedObject = tunnelId
         if tunnel.connected {
             item.state = NSControl.StateValue.on
@@ -165,11 +165,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         statusMenu.addItem(item)
         for peer in tunnel.peers {
             statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
-                action: nil, keyEquivalent: ""))
+                                          action: nil, keyEquivalent: ""))
         }
     }
 
-    @objc func showInstallInstructions(_ sender: NSMenuItem) {
+    @objc func showInstallInstructions(_: NSMenuItem) {
         let alert = NSAlert()
         alert.messageText = installInstructions
         alert.runModal()
@@ -203,8 +203,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
                             endpoint: config["Peer"]!["Endpoint"]!,
                             allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map {
                                 $0.trimmingCharacters(in: .whitespaces)
-                            })
-                        ]
+                            }
+                        )]
                         tunnels[interface]!.address = config["Interface"]!["Address"]!
                     }
                 }
@@ -223,13 +223,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
     }
 
-    @objc func quit(_ sender: NSMenuItem) {
+    @objc func quit(_: NSMenuItem) {
         NSApplication.shared.terminate(self)
     }
 
-    @objc func about(_ sender: NSMenuItem) {
+    @objc func about(_: NSMenuItem) {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
-
 }

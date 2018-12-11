@@ -9,26 +9,25 @@
 import Foundation
 
 class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
-
     var listener: NSXPCListener
 
     let wireguard = WireGuard()
 
     override init() {
-        self.listener = NSXPCListener(machServiceName: HelperConstants.machServiceName)
+        listener = NSXPCListener(machServiceName: HelperConstants.machServiceName)
         super.init()
-        self.listener.delegate = self
+        listener.delegate = self
     }
 
     /// Starts the helper daemon
     func run() {
-        self.listener.resume()
+        listener.resume()
 
         RunLoop.current.run()
     }
 
     /// Called when the client connects to the helper daemon
-    func listener(_ listener: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
+    func listener(_: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
         connection.exportedInterface = NSXPCInterface(with: HelperProtocol.self)
         connection.exportedObject = self
         connection.resume()
@@ -61,5 +60,4 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
         NSLog("Shutting down WireGuardStatusbar Helper....")
         exit(0)
     }
-
 }

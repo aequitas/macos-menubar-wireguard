@@ -10,13 +10,13 @@ tailor=${brew_bin}/tailor
 sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
 
 .PHONY: all
-all: WireGuardStatusbar.dmg
+all: test test-integration WireGuardStatusbar.dmg
 
 ## Testing & Code quality
 
 # run tests
 test: check | ${xcpretty}
-	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 
 # verify code quality
 check: fix .check.tailor | ${swiftlint}
@@ -33,7 +33,7 @@ fix: | ${swiftformat}
 
 # setup requirements and run integration tests
 test-integration: prep-integration
-	xcodebuild -scheme IntegrationTests test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
 
 prep-integration: /etc/wireguard/test.conf
 
@@ -43,20 +43,23 @@ prep-integration: /etc/wireguard/test.conf
 ## Building and distribution
 
 # Location where xcodebuild puts .app when archiving
-archive=${tmp}/WireGuardStatusbar.xcarchive/
-build_dest=${archive}/Products/Applications/
+archive=${tmp}/WireGuardStatusbar.xcarchive
+build_dest=${archive}/Products/Applications
+dist=${tmp}/WireGuardStatusbar
 
 # Create just the .app in the current working directory
 WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 	rm -rf "$@" && cp -r "${<}" "$@"
 
 # Create distributable .dmg in current working directory
-WireGuardStatusbar.dmg: ${tmp}/WireGuardStatusbar/WireGuardStatusbar.app
+WireGuardStatusbar.dmg: ${dist}/WireGuardStatusbar.app
 	hdiutil create "$@" -srcfolder "${<D}" -ov
+
 # Generate contents for distributable .dmg
-${tmp}/WireGuardStatusbar/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
-	mkdir -p "${@D}/"
+${dist}/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app Misc/Uninstall.sh
+	rm -rf "${@D}/"; mkdir -p "${@D}/"
 	ln -sf /Applications "${@D}/Applications"
+	cp Misc/Uninstall.sh "${@D}/Uninstall"
 	rm -rf "$@" && cp -r "$<" "$@"
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)

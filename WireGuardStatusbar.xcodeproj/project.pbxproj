@@ -13,10 +13,12 @@
 		0428EA1021BB081A00178BA0 /* INIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0E21BB07DB00178BA0 /* INIParser.swift */; };
 		0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0444B862211F5CD700CA6ECA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B861211F5CD700CA6ECA /* main.swift */; };
+		0454759721BEFD0900EAF58F /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
 		0456DA6421BB0C9000701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
 		0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6621BB0C9A00701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6721BB0C9C00701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
+		0490168021C04B3900299400 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490167F21C04B3900299400 /* IntegrationTests.swift */; };
 		04B2BD2E21BD5DC800CCAE2F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B2BD2C21BD5DC800CCAE2F /* README.md */; };
 		04B2BD3621BD654C00CCAE2F /* WireGuardStatusbarUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2BD3521BD654C00CCAE2F /* WireGuardStatusbarUITests.swift */; };
 		04B2BD4421BDA69000CCAE2F /* WireGuardStatusbarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2BD4321BDA69000CCAE2F /* WireGuardStatusbarTests.swift */; };
@@ -34,6 +36,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0444B85E211F5CD700CA6ECA;
 			remoteInfo = WireGuardStatusbarHelper;
+		};
+		0490168221C04B3900299400 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 04B4BE38211E1E010001213A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 04B4BE3F211E1E010001213A;
+			remoteInfo = WireGuardStatusbar;
 		};
 		04B2BD3821BD654C00CCAE2F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -84,6 +93,9 @@
 		0444B861211F5CD700CA6ECA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		0456DA6221BB0C9000701CCE /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Const.swift; path = Shared/Const.swift; sourceTree = "<group>"; };
 		0456DA6321BB0C9000701CCE /* HelperProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelperProtocol.swift; path = Shared/HelperProtocol.swift; sourceTree = "<group>"; };
+		0490167D21C04B3800299400 /* IntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0490167F21C04B3900299400 /* IntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
+		0490168121C04B3900299400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		04B2BD2C21BD5DC800CCAE2F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		04B2BD3321BD654C00CCAE2F /* WireGuardStatusbarUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WireGuardStatusbarUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B2BD3521BD654C00CCAE2F /* WireGuardStatusbarUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuardStatusbarUITests.swift; sourceTree = "<group>"; };
@@ -103,6 +115,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		0444B85C211F5CD700CA6ECA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0490167A21C04B3800299400 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -147,6 +166,15 @@
 			path = WireGuardStatusbarHelper;
 			sourceTree = "<group>";
 		};
+		0490167E21C04B3800299400 /* IntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				0490167F21C04B3900299400 /* IntegrationTests.swift */,
+				0490168121C04B3900299400 /* Info.plist */,
+			);
+			path = IntegrationTests;
+			sourceTree = "<group>";
+		};
 		04B2BD3421BD654C00CCAE2F /* WireGuardStatusbarUITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -175,9 +203,11 @@
 				0444B860211F5CD700CA6ECA /* WireGuardStatusbarHelper */,
 				04B2BD3421BD654C00CCAE2F /* WireGuardStatusbarUITests */,
 				04B2BD4221BDA69000CCAE2F /* WireGuardStatusbarTests */,
+				0490167E21C04B3800299400 /* IntegrationTests */,
 				0441E7ED211F76BC0035E4EF /* Products */,
 				04B2BD3321BD654C00CCAE2F /* WireGuardStatusbarUITests.xctest */,
 				04B2BD4121BDA69000CCAE2F /* WireGuardStatusbarTests.xctest */,
+				0490167D21C04B3800299400 /* IntegrationTests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -215,6 +245,24 @@
 			productName = WireGuardStatusbarHelper;
 			productReference = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */;
 			productType = "com.apple.product-type.tool";
+		};
+		0490167C21C04B3800299400 /* IntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0490168621C04B3900299400 /* Build configuration list for PBXNativeTarget "IntegrationTests" */;
+			buildPhases = (
+				0490167921C04B3800299400 /* Sources */,
+				0490167A21C04B3800299400 /* Frameworks */,
+				0490167B21C04B3800299400 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0490168321C04B3900299400 /* PBXTargetDependency */,
+			);
+			name = IntegrationTests;
+			productName = IntegrationTests;
+			productReference = 0490167D21C04B3800299400 /* IntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 		04B2BD3221BD654C00CCAE2F /* WireGuardStatusbarUITests */ = {
 			isa = PBXNativeTarget;
@@ -285,6 +333,10 @@
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1010;
 					};
+					0490167C21C04B3800299400 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = 04B4BE3F211E1E010001213A;
+					};
 					04B2BD3221BD654C00CCAE2F = {
 						CreatedOnToolsVersion = 10.1;
 						TestTargetID = 04B4BE3F211E1E010001213A;
@@ -321,11 +373,19 @@
 				0444B85E211F5CD700CA6ECA /* WireGuardStatusbarHelper */,
 				04B2BD3221BD654C00CCAE2F /* WireGuardStatusbarUITests */,
 				04B2BD4021BDA69000CCAE2F /* WireGuardStatusbarTests */,
+				0490167C21C04B3800299400 /* IntegrationTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0490167B21C04B3800299400 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B2BD3121BD654C00CCAE2F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -384,11 +444,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0490167921C04B3800299400 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0490168021C04B3900299400 /* IntegrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		04B2BD2F21BD654C00CCAE2F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				04B2BD3621BD654C00CCAE2F /* WireGuardStatusbarUITests.swift in Sources */,
+				0454759721BEFD0900EAF58F /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +489,11 @@
 			isa = PBXTargetDependency;
 			target = 0444B85E211F5CD700CA6ECA /* WireGuardStatusbarHelper */;
 			targetProxy = 0441E7F3211F7DD20035E4EF /* PBXContainerItemProxy */;
+		};
+		0490168321C04B3900299400 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 04B4BE3F211E1E010001213A /* WireGuardStatusbar */;
+			targetProxy = 0490168221C04B3900299400 /* PBXContainerItemProxy */;
 		};
 		04B2BD3921BD654C00CCAE2F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -490,6 +564,49 @@
 				PRODUCT_NAME = $TARGET_NAME;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
+			};
+			name = Release;
+		};
+		0490168421C04B3900299400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = IntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.IntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TEST_TARGET_NAME = WireGuardStatusbar;
+			};
+			name = Debug;
+		};
+		0490168521C04B3900299400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
+				INFOPLIST_FILE = IntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.ijohan.IntegrationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TEST_TARGET_NAME = WireGuardStatusbar;
 			};
 			name = Release;
 		};
@@ -746,6 +863,15 @@
 			buildConfigurations = (
 				0444B864211F5CD700CA6ECA /* Debug */,
 				0444B865211F5CD700CA6ECA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0490168621C04B3900299400 /* Build configuration list for PBXNativeTarget "IntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0490168421C04B3900299400 /* Debug */,
+				0490168521C04B3900299400 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

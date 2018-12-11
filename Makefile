@@ -31,6 +31,13 @@ check: fix .check.tailor | ${swiftlint}
 fix: | ${swiftformat}
 	swiftformat .
 
+# setup requirements and run integration tests
+integration-test: /etc/wireguard/test.conf
+	xcodebuild -scheme IntegrationTests test | ${xcpretty}
+
+/etc/wireguard/test.conf: Misc/test.conf
+	sudo cp $< $@
+
 ## Building and distribution
 
 # Location where xcodebuild puts .app when archiving

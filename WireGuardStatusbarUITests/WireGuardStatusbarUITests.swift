@@ -14,23 +14,15 @@ class WireGuardStatusbarUITests: XCTestCase {
         XCUIApplication().launch()
     }
 
-//    override func tearDown() {
-//        // Put teardown code here. This method is called after the invocation of each test method in the class.
-//    }
-
-    // Simple test to make sure about dialog exists
-    func testAboutDialog() {
+    // Simple test to make sure basic functionality works
+    func testBasic() {
         let app = XCUIApplication()
         let menuBarsQuery = app.menuBars
+
         menuBarsQuery.children(matching: .statusItem).element.click()
         menuBarsQuery.menuItems["About"].click()
         app.buttons[XCUIIdentifierCloseWindow].click()
-    }
 
-    // Simple test to make sure the application can quit
-    func testQuit() {
-        let app = XCUIApplication()
-        let menuBarsQuery = app.menuBars
         menuBarsQuery.children(matching: .statusItem).element.click()
         menuBarsQuery.menuItems["Quit"].click()
         XCTAssert(app.state == XCUIApplication.State.notRunning)

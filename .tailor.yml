@@ -1,7 +1,7 @@
 include:
   - "**"
+# ignore vendor files, will be removed in the future
 exclude:
-  # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift
   - WireGuardStatusbar/SKQueue.swift
 except:

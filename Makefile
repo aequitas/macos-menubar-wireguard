@@ -14,14 +14,21 @@ all: WireGuardStatusbar.dmg
 
 ## Testing & Code quality
 
+# run tests
 test: check | ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 
-check: fix | ${swiftlint} ${tailor}
-	swiftlint
-	tailor .
+# verify code quality
+check: fix .check.tailor | ${swiftlint}
+	swiftlint --strict
 
-fix:| ${swiftlint} ${swiftformat}
+# only run tailor on changed files as it is slow
+.check.tailor: ${sources} | fix ${tailor}
+	tailor $?
+	touch $@
+
+# automatically fix all trivial code quality issues
+fix: | ${swiftformat}
 	swiftformat .
 
 ## Building and distribution
@@ -130,7 +137,7 @@ Misc/wireguard.svg:
 
 ## Setup and maintenance
 
-${convert} ${swiftlint} ${tailor}:
+${convert} ${swiftlint} ${tailor} ${swiftformat}:
 	brew bundle install --verbose --no-upgrade
 
 # Used to generate less verbose xcodebuild output

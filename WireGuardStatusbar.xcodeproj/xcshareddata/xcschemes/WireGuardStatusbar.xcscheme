@@ -34,8 +34,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04B2BD3221BD654C00CCAE2F"
-               BuildableName = "WireGuardStatusbarUITests.xctest"
-               BlueprintName = "WireGuardStatusbarUITests"
+               BuildableName = "UITests.xctest"
+               BlueprintName = "UITests"
                ReferencedContainer = "container:WireGuardStatusbar.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -44,8 +44,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04B2BD4021BDA69000CCAE2F"
-               BuildableName = "WireGuardStatusbarTests.xctest"
-               BlueprintName = "WireGuardStatusbarTests"
+               BuildableName = "UnitTests.xctest"
+               BlueprintName = "UnitTests"
                ReferencedContainer = "container:WireGuardStatusbar.xcodeproj">
             </BuildableReference>
          </TestableReference>

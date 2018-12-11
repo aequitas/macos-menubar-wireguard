@@ -1,6 +1,6 @@
 //
-//  WireGuardStatusbarUITests.swift
-//  WireGuardStatusbarUITests
+//  UITests.swift
+//  UITests
 //
 //  Created by Johan Bloemberg on 09/12/2018.
 //  Copyright © 2018 Johan Bloemberg. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class WireGuardStatusbarUITests: XCTestCase {
+class UITests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
         XCUIApplication().launch()

@@ -11,6 +11,14 @@ import XCTest
 class IntegrationTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
+
+        // Verify the proper configuration file for testing is installed.
+        let bundle = Bundle(for: type(of: self).self)
+        let testConfig = bundle.path(forResource: "test", ofType: "conf")
+        if !FileManager.default.contentsEqual(atPath: testConfig!, andPath: "/etc/wireguard/test.conf") {
+            XCTFail("Integration test environment not prepared. Please run `make prep-integration`.")
+        }
+
         XCUIApplication().launch()
     }
 

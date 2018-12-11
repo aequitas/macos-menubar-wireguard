@@ -33,8 +33,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "04B2BD4021BDA69000CCAE2F"
-               BuildableName = "WireGuardStatusbarTests.xctest"
-               BlueprintName = "WireGuardStatusbarTests"
+               BuildableName = "UnitTests.xctest"
+               BlueprintName = "UnitTests"
                ReferencedContainer = "container:WireGuardStatusbar.xcodeproj">
             </BuildableReference>
          </TestableReference>

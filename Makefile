@@ -32,10 +32,12 @@ fix: | ${swiftformat}
 	swiftformat .
 
 # setup requirements and run integration tests
-integration-test: /etc/wireguard/test.conf
+test-integration: prep-integration
 	xcodebuild -scheme IntegrationTests test | ${xcpretty}
 
-/etc/wireguard/test.conf: Misc/test.conf
+prep-integration: /etc/wireguard/test.conf
+
+/etc/wireguard/test.conf: IntegrationTests/test.conf
 	sudo cp $< $@
 
 ## Building and distribution
@@ -165,3 +167,4 @@ mrproper: clean
 		${tmp}/logo*.png \
 		${tmp}/wireguard.png WireGuardStatusbar/Assets.xcassets/connected.imageset/logo-*.png \
 		WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png
+	sudo rm -rf /etc/wireguard/test.conf

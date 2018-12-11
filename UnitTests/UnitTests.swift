@@ -1,6 +1,6 @@
 //
-//  WireGuardStatusbarTests.swift
-//  WireGuardStatusbarTests
+//  UnitTests.swift
+//  UnitTests
 //
 //  Created by Johan Bloemberg on 09/12/2018.
 //  Copyright © 2018 Johan Bloemberg. All rights reserved.
@@ -8,7 +8,7 @@
 
 import XCTest
 
-class WireGuardStatusbarTests: XCTestCase {
+class UnitTests: XCTestCase {
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }

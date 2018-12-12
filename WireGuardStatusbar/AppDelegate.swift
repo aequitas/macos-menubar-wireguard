@@ -16,8 +16,7 @@ extension NSImage.Name {
 
 typealias Tunnels = [String: Tunnel]
 struct Tunnel {
-    var title: String { return name }
-    var name: String
+    var title: String { return interface }
     var interface: String
     var connected = false
     var address: String
@@ -34,7 +33,9 @@ var username = NSUserName()
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     var tunnels = Tunnels()
-    @objc dynamic var connected = false
+
+    // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
+    var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBin)
 
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
 
@@ -68,7 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             self.tunnels = loadConfiguration()
             self.loadState()
             DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels)
+                self.statusItem.menu = buildMenu(tunnels: self.tunnels, showInstallInstructions: !self.wireguardInstalled)
                 self.statusItem.image = menuImage(tunnels: self.tunnels)
             }
         }
@@ -100,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         if path == runPath {
             loadState()
             DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels)
+                self.statusItem.menu = buildMenu(tunnels: self.tunnels, showInstallInstructions: !self.wireguardInstalled)
                 self.statusItem.image = menuImage(tunnels: self.tunnels)
             }
         }
@@ -159,7 +160,6 @@ func loadConfiguration() -> Tunnels {
             let interface = configFile.replacingOccurrences(of: ".conf", with: "")
 
             tunnels[interface] = Tunnel(
-                name: "",
                 interface: interface,
                 connected: false,
                 address: "",
@@ -187,48 +187,41 @@ func loadConfiguration() -> Tunnels {
 
 // contruct menu with all tunnels found in configuration
 // TODO: find out if it is possible to have a dynamic bound IB menu with variable contents
-func buildMenu(tunnels: Tunnels) -> NSMenu {
+func buildMenu(tunnels: Tunnels, showInstallInstructions: Bool = false) -> NSMenu {
     // TODO: currently just rebuilding the entire menu, maybe opt for replacing the tunnel entries instead?
     let statusMenu = NSMenu()
 
     statusMenu.addItem(NSMenuItem.separator())
-
-    let fileManager = FileManager.default
-
-    // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
-    let wireguardInstalled = fileManager.fileExists(atPath: wireguardBin)
-
-    if tunnels.isEmpty {
-        statusMenu.addItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""))
-    } else if !wireguardInstalled {
-        NSLog("Wireguard binary not found at \(wireguardBin)")
-        statusMenu.addItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions",
-                                      action: #selector(AppDelegate.showInstallInstructions(_:)),
-                                      keyEquivalent: ""))
-    } else {
-        for (tunnelID, tunnel) in tunnels.sorted(by: { $0.0 < $1.0 }) {
-            addTunnelMenuItem(statusMenu: statusMenu, tunnelId: tunnelID, tunnel: tunnel)
-        }
-    }
-    statusMenu.addItem(NSMenuItem.separator())
     statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
     statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
 
-    return statusMenu
-}
+    if showInstallInstructions {
+        NSLog("Wireguard binary not found at \(wireguardBin)")
+        statusMenu.insertItem(NSMenuItem(title: "Wireguard not installed! Click here for instructions",
+                                         action: #selector(AppDelegate.showInstallInstructions(_:)),
+                                         keyEquivalent: ""), at: 0)
+        return statusMenu
+    }
 
-func addTunnelMenuItem(statusMenu: NSMenu, tunnelId: String, tunnel: Tunnel) {
-    let item = NSMenuItem(title: "\(tunnel.interface): \(tunnel.address)",
-                          action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-    item.representedObject = tunnelId
-    if tunnel.connected {
-        item.state = NSControl.StateValue.on
+    if tunnels.isEmpty {
+        statusMenu.insertItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""), at: 0)
+    } else {
+        for (id, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
+            let item = NSMenuItem(title: "\(tunnel.title): \(tunnel.address)",
+                                  action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
+            item.representedObject = id
+            if tunnel.connected {
+                item.state = NSControl.StateValue.on
+            }
+            for peer in tunnel.peers {
+                statusMenu.insertItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
+                                                 action: nil, keyEquivalent: ""), at: 0)
+            }
+            statusMenu.insertItem(item, at: 0)
+        }
     }
-    statusMenu.addItem(item)
-    for peer in tunnel.peers {
-        statusMenu.addItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
-                                      action: nil, keyEquivalent: ""))
-    }
+
+    return statusMenu
 }
 
 func menuImage(tunnels: Tunnels) -> NSImage {

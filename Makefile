@@ -8,7 +8,7 @@ swiftlint=${brew_bin}/swiftlint
 tailor=${brew_bin}/tailor
 
 swift_sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
-other_sources=$(shell find * -name *.plist)
+other_sources=$(shell find * -name *.plist) WireGuardStatusbar.xcodeproj/project.pbxproj
 sources=${swift_sources} ${other_sources}
 
 .PHONY: all

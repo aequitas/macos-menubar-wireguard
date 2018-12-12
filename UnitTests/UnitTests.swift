@@ -9,23 +9,26 @@
 import XCTest
 
 class UnitTests: XCTestCase {
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    // menu image should properly represent state of tunnels
+    func testMenuImage() {
+        var tunnels = [
+            "test": Tunnel(
+                name: "test",
+                interface: "test",
+                connected: false,
+                address: "",
+                peers: []
+            ),
+        ]
+        XCTAssertEqual(menuImage(tunnels: tunnels).name(), "dragon-dim")
+        tunnels["test"]!.connected = true
+        XCTAssertEqual(menuImage(tunnels: tunnels).name(), "silhouette")
     }
 
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+//    func testPerformanceExample() {
+//        // This is an example of a performance test case.
+//        measure {
+//            // Put the code you want to measure the time of here.
+//        }
+//    }
 }

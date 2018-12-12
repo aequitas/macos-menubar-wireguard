@@ -19,6 +19,12 @@
 		0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6621BB0C9A00701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6721BB0C9C00701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
+		0466E5B821C1AB2D00113B45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE43211E1E010001213A /* AppDelegate.swift */; };
+		0466E5B921C1AB5700113B45 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
+		0466E5BA21C1AB5700113B45 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
+		0466E5BB21C1AB5700113B45 /* SKQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449C2120474200E87CF5 /* SKQueue.swift */; };
+		0466E5BC21C1AB5700113B45 /* INIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0E21BB07DB00178BA0 /* INIParser.swift */; };
+		0466E5BD21C1AB5700113B45 /* PrivilegedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */; };
 		0490168021C04B3900299400 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490167F21C04B3900299400 /* IntegrationTests.swift */; };
 		04B2BD2E21BD5DC800CCAE2F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B2BD2C21BD5DC800CCAE2F /* README.md */; };
 		04B2BD3621BD654C00CCAE2F /* UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2BD3521BD654C00CCAE2F /* UITests.swift */; };
@@ -469,7 +475,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0466E5BB21C1AB5700113B45 /* SKQueue.swift in Sources */,
+				0466E5BC21C1AB5700113B45 /* INIParser.swift in Sources */,
+				0466E5B821C1AB2D00113B45 /* AppDelegate.swift in Sources */,
+				0466E5BA21C1AB5700113B45 /* HelperProtocol.swift in Sources */,
 				04B2BD4421BDA69000CCAE2F /* UnitTests.swift in Sources */,
+				0466E5BD21C1AB5700113B45 /* PrivilegedHelper.swift in Sources */,
+				0466E5B921C1AB5700113B45 /* Const.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -6,5 +6,6 @@
 # Build artifacts
 WireGuardStatusbar.dmg
 WireGuardStatusbar.app
+WireGuardStatusbar-*.zip
 build/
 DerivedData/

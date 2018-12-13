@@ -14,13 +14,13 @@ other_sources=$(shell find * -name *.plist) WireGuardStatusbar.xcodeproj/project
 sources=${swift_sources} ${other_sources}
 
 .PHONY: all
-all: test test-integration WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app/
+all: test WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app/
 
 ## Testing & Code quality
 
 # run tests
-test: .test
-.test: ${sources} .check | ${xcpretty}
+test: .test-unit .test-integration
+.test-unit: ${sources} .check | ${xcpretty}
 	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 	@touch $@
 
@@ -37,8 +37,8 @@ check: .check
 
 # automatically fix all trivial code quality issues
 fix: .fix
-.fix: ${swift_source} | ${swiftformat}
-	swiftformat .
+.fix: ${swift_sources} | ${swiftformat}
+	swiftformat $?
 	@touch $@
 
 # setup requirements and run integration tests

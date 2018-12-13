@@ -42,12 +42,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     let privilegedHelper = PrivilegedHelper()
 
     func applicationDidFinishLaunching(_: Notification) {
-        // initialize menu bar
-        let icon = NSImage(named: .disabled)
-        icon!.isTemplate = true
-        statusItem.image = icon
-        statusItem.menu = NSMenu()
-
         // Check if the application can connect to the helper, or if the helper has to be updated with a newer version.
         // If the helper should be updated or installed, prompt the user to do so
         privilegedHelper.helperStatus { installed in
@@ -59,20 +53,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
         // register watchers to respond to changes in wireguard config/runtime state
         let queue = SKQueue(delegate: self)!
-        queue.addPath(runPath)
-        for configPath in configPaths {
-            queue.addPath(configPath)
+        for directory in configPaths + [runPath] {
+            if FileManager.default.fileExists(atPath: directory) {
+                NSLog("Watching \(directory) for changes")
+                queue.addPath(directory)
+            } else {
+                NSLog("Not watching \(directory) as it doesn't exist")
+            }
         }
 
         // do an initial state update from current configuration and runtime state
-        DispatchQueue.global(qos: .background).async {
-            self.tunnels = loadConfiguration()
-            self.loadState()
-            DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels,
-                                                 showInstallInstructions: !self.wireguardInstalled)
-                self.statusItem.image = menuImage(tunnels: self.tunnels)
-            }
+        tunnels = loadConfiguration()
+        loadState()
+        DispatchQueue.main.async {
+            self.statusItem.menu = buildMenu(tunnels: self.tunnels,
+                                             showInstallInstructions: !self.wireguardInstalled)
+            self.statusItem.image = menuImage(tunnels: self.tunnels)
         }
     }
 
@@ -98,14 +94,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     // handle incoming file/directory change events
     func receivedNotification(_ notification: SKQueueNotification, path: String, queue _: SKQueue) {
-        print("\(notification.toStrings().map { $0.rawValue }) @ \(path)")
+        if configPaths.contains(path) {
+            NSLog("Configuration files changed, reloading")
+            tunnels = loadConfiguration()
+        }
         if path == runPath {
-            loadState()
-            DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels,
-                                                 showInstallInstructions: !self.wireguardInstalled)
-                self.statusItem.image = menuImage(tunnels: self.tunnels)
-            }
+            NSLog("Tunnel state changed, reloading")
+        }
+        loadState()
+        DispatchQueue.main.async {
+            self.statusItem.menu = buildMenu(tunnels: self.tunnels,
+                                             showInstallInstructions: !self.wireguardInstalled)
+            self.statusItem.image = menuImage(tunnels: self.tunnels)
         }
     }
 

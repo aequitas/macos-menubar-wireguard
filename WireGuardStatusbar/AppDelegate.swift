@@ -37,7 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
     var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBin)
 
-    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    var menu = NSMenu()
+    var detailedMenu = NSMenu()
 
     let privilegedHelper = PrivilegedHelper()
 
@@ -65,10 +67,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         // do an initial state update from current configuration and runtime state
         tunnels = loadConfiguration()
         loadState()
-        DispatchQueue.main.async {
-            self.statusItem.menu = buildMenu(tunnels: self.tunnels,
-                                             showInstallInstructions: !self.wireguardInstalled)
-            self.statusItem.image = menuImage(tunnels: self.tunnels)
+        buildMenus()
+
+        // override mouse click handling to enable option-click for details
+        if let button = self.statusItem.button {
+            button.action = #selector(statusBarButtonClicked(sender:))
+            button.sendAction(on: [NSEvent.EventTypeMask.leftMouseUp, NSEvent.EventTypeMask.rightMouseUp])
+        }
+    }
+
+    func buildMenus() {
+        menu = buildMenu(tunnels: tunnels, details: false,
+                         showInstallInstructions: !wireguardInstalled)
+        detailedMenu = buildMenu(tunnels: tunnels, details: true,
+                                 showInstallInstructions: !wireguardInstalled)
+        DispatchQueue.main.async { self.statusItem.image = menuImage(tunnels: self.tunnels) }
+    }
+
+    @objc func statusBarButtonClicked(sender _: NSStatusBarButton) {
+        let event = NSApp.currentEvent!
+        if event.modifierFlags.contains(.option) {
+            statusItem.popUpMenu(detailedMenu)
+        } else {
+            statusItem.popUpMenu(menu)
         }
     }
 
@@ -102,11 +123,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             NSLog("Tunnel state changed, reloading")
         }
         loadState()
-        DispatchQueue.main.async {
-            self.statusItem.menu = buildMenu(tunnels: self.tunnels,
-                                             showInstallInstructions: !self.wireguardInstalled)
-            self.statusItem.image = menuImage(tunnels: self.tunnels)
-        }
+        buildMenus()
     }
 
     // bring tunnel up/down
@@ -204,9 +221,10 @@ func parseConfig(configFilePath: String) -> Tunnel {
 
 // contruct menu with all tunnels found in configuration
 // TODO: find out if it is possible to have a dynamic bound IB menu with variable contents
-func buildMenu(tunnels: Tunnels, showInstallInstructions: Bool = false) -> NSMenu {
+func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions: Bool = false) -> NSMenu {
     // TODO: currently just rebuilding the entire menu, maybe opt for replacing the tunnel entries instead?
     let statusMenu = NSMenu()
+    statusMenu.minimumWidth = 200
 
     statusMenu.addItem(NSMenuItem.separator())
     statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
@@ -225,17 +243,21 @@ func buildMenu(tunnels: Tunnels, showInstallInstructions: Bool = false) -> NSMen
                                          action: nil, keyEquivalent: ""), at: 0)
     } else {
         for (tunnelId, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
-            let item = NSMenuItem(title: "\(tunnel.title): \(tunnel.address)",
+            let item = NSMenuItem(title: "\(tunnel.title)",
                                   action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
             item.representedObject = tunnelId
             if tunnel.connected {
                 item.state = NSControl.StateValue.on
             }
-            for peer in tunnel.peers {
-                statusMenu.insertItem(NSMenuItem(
-                    title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
-                    action: nil, keyEquivalent: ""
-                ), at: 0)
+            if tunnel.connected || details {
+                for peer in tunnel.peers {
+                    statusMenu.insertItem(NSMenuItem(title: "  Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
+                                                     action: nil, keyEquivalent: ""), at: 0)
+                    statusMenu.insertItem(NSMenuItem(title: "  Endpoint: \(peer.endpoint)",
+                                                     action: nil, keyEquivalent: ""), at: 0)
+                }
+                statusMenu.insertItem(NSMenuItem(title: "  Address: \(tunnel.address)",
+                                                 action: nil, keyEquivalent: ""), at: 0)
             }
             statusMenu.insertItem(item, at: 0)
         }

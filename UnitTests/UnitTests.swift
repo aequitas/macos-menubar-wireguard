@@ -13,8 +13,11 @@ class UnitTests: XCTestCase {
         "test": Tunnel(
             interface: "Tunnel Name",
             connected: false,
-            address: "",
-            peers: []
+            address: "192.0.2.0/32",
+            peers: [Peer(
+                endpoint: "192.0.2.1/32:51820",
+                allowedIps: ["198.51.100.0/24"]
+            )]
         ),
     ]
 
@@ -29,7 +32,7 @@ class UnitTests: XCTestCase {
 
     func testMenu() {
         let menu = buildMenu(tunnels: testTunnels)
-        XCTAssertEqual(menu.items[0].title, "Tunnel Name: ")
+        XCTAssertEqual(menu.items[0].title, "Tunnel Name")
         XCTAssertEqual(menu.items[0].state, NSControl.StateValue.off)
     }
 
@@ -38,8 +41,23 @@ class UnitTests: XCTestCase {
         tunnels["test"]!.connected = true
 
         let menu = buildMenu(tunnels: tunnels)
-        XCTAssertEqual(menu.items[0].title, "Tunnel Name: ")
+        XCTAssertEqual(menu.items[0].title, "Tunnel Name")
         XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
+        XCTAssertEqual(menu.items[1].title, "  Address: 192.0.2.0/32")
+        XCTAssertEqual(menu.items[2].title, "  Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(menu.items[3].title, "  Allowed IPs: 198.51.100.0/24")
+    }
+
+    func testMenuDetails() {
+        var tunnels = testTunnels
+        tunnels["test"]!.connected = true
+
+        let menu = buildMenu(tunnels: tunnels, details: true)
+        XCTAssertEqual(menu.items[0].title, "Tunnel Name")
+        XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
+        XCTAssertEqual(menu.items[1].title, "  Address: 192.0.2.0/32")
+        XCTAssertEqual(menu.items[2].title, "  Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(menu.items[3].title, "  Allowed IPs: 198.51.100.0/24")
     }
 
     func testMenuNoTunnels() {
@@ -54,7 +72,7 @@ class UnitTests: XCTestCase {
         ]
         let menu = buildMenu(tunnels: tunnels)
         // tunnels should be sorted alphabetically
-        XCTAssertEqual(menu.items[0].title, "A Tunnel Name: ")
+        XCTAssertEqual(menu.items[0].title, "A Tunnel Name")
     }
 
     func testConfigParsing() {

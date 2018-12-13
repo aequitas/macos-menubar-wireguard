@@ -14,7 +14,7 @@ other_sources=$(shell find * -name *.plist) WireGuardStatusbar.xcodeproj/project
 sources=${swift_sources} ${other_sources}
 
 .PHONY: all
-all: test WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app/
+all: test WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app
 
 ## Testing & Code quality
 
@@ -86,13 +86,12 @@ ${dist}/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app Misc/Uninst
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 
-/Applications/WireGuardStatusbar.app/: WireGuardStatusbar.dmg
+/Applications/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app | WireGuardStatusbar.dmg
 	-osascript -e 'tell application "WireGuardStatusbar" to quit'
 	-diskutil umount /Volumes/WireGuardStatusbar
-	hdiutil attach -quiet $<
-	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app/ /Volumes/WireGuardStatusbar/Applications/
-	-hdiutil attach -quiet $<
-	touch $@
+	hdiutil attach -quiet WireGuardStatusbar.dmg
+	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app /Volumes/WireGuardStatusbar/Applications/
+	hdiutil detach -quiet /Volumes/WireGuardStatusbar/
 	open "$@"
 
 ## Icon/image generation
@@ -189,6 +188,7 @@ ${xcpretty}:
 # cleanup build artifacts
 clean:
 	rm -rf \
+		.{fix,check,test}* \
 		${archive} \
 		${dist} \
 		WireGuardStatusbar.{dmg,app} \

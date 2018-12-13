@@ -26,6 +26,6 @@ class IntegrationTests: XCTestCase {
     func testLoadConfiguration() {
         let menuBarsQuery = XCUIApplication().menuBars
         menuBarsQuery.children(matching: .statusItem).element.click()
-        menuBarsQuery.menuItems["test: 192.0.2.0/32"].click()
+        menuBarsQuery.menuItems["test"].click()
     }
 }

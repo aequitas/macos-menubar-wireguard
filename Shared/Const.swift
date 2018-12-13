@@ -28,3 +28,11 @@ Please follow the instructions on:
 
 and restart this Application afterwards.
 """
+
+// make logging in debug more compact (no timestamp/process name/pid)
+#if DEBUG
+let NSLog = CustomLog
+public func CustomLog(_ format: String, _ args: CVarArg...) {
+    withVaList(args) { print(NSString(format: format, arguments: $0)) }
+}
+#endif

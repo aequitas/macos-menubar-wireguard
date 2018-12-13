@@ -13,3 +13,15 @@ addons:
   homebrew:
     packages:
       - tailor
+
+env:
+  global:
+    - CC_TEST_REPORTER_ID=24db83f5822f8a29c5bbd0a1f821d03ced47b3407e426f7b18fc3443ddc970d1
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

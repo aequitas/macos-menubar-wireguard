@@ -34,16 +34,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "04B2BD3221BD654C00CCAE2F"
-               BuildableName = "UITests.xctest"
-               BlueprintName = "UITests"
-               ReferencedContainer = "container:WireGuardStatusbar.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "04B2BD4021BDA69000CCAE2F"
                BuildableName = "UnitTests.xctest"
                BlueprintName = "UnitTests"

@@ -69,7 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             self.tunnels = loadConfiguration()
             self.loadState()
             DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels, showInstallInstructions: !self.wireguardInstalled)
+                self.statusItem.menu = buildMenu(tunnels: self.tunnels,
+                                                 showInstallInstructions: !self.wireguardInstalled)
                 self.statusItem.image = menuImage(tunnels: self.tunnels)
             }
         }
@@ -101,7 +102,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         if path == runPath {
             loadState()
             DispatchQueue.main.async {
-                self.statusItem.menu = buildMenu(tunnels: self.tunnels, showInstallInstructions: !self.wireguardInstalled)
+                self.statusItem.menu = buildMenu(tunnels: self.tunnels,
+                                                 showInstallInstructions: !self.wireguardInstalled)
                 self.statusItem.image = menuImage(tunnels: self.tunnels)
             }
         }
@@ -151,38 +153,53 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 func loadConfiguration() -> Tunnels {
     var tunnels = Tunnels()
     for configPath in configPaths {
+        // TODO: directories with restricted permissions won't be iterated over without warning
         let enumerator = FileManager.default.enumerator(atPath: configPath)
         while let configFile = enumerator?.nextObject() as? String {
+            // ignore non config file
             if !configFile.hasSuffix(".conf") {
                 continue
             }
-            NSLog("Reading config file: \(configPath)/\(configFile)")
+
             let interface = configFile.replacingOccurrences(of: ".conf", with: "")
 
-            tunnels[interface] = Tunnel(
-                interface: interface,
-                connected: false,
-                address: "",
-                peers: []
-            )
-
-            // determine if config file can be read
-            if let ini = try? INIParser(configPath + "/" + configFile) {
-                let config = ini.sections
-                if !config.isEmpty {
-                    // TODO: currently supports only one peer, need to pick a different method for parsing config
-                    tunnels[interface]!.peers = [Peer(
-                        endpoint: config["Peer"]!["Endpoint"]!,
-                        allowedIps: config["Peer"]!["AllowedIPs"]!.split(separator: ",").map {
-                            $0.trimmingCharacters(in: .whitespaces)
-                        }
-                    )]
-                    tunnels[interface]!.address = config["Interface"]!["Address"]!
-                }
-            }
+            NSLog("Reading config file: \(configPath)/\(configFile)")
+            var tunnel = parseConfig(configFilePath: configPath + "/" + configFile)
+            tunnel.interface = interface
+            tunnels[interface] = tunnel
         }
     }
     return tunnels
+}
+
+func parseConfig(configFilePath: String) -> Tunnel {
+    var tunnel = Tunnel(
+        interface: "",
+        connected: false,
+        address: "",
+        peers: []
+    )
+
+    // determine if config file can be read
+    if let ini = try? INIParser(configFilePath) {
+        let config = ini.sections
+        if !config.isEmpty {
+            // TODO: currently supports only one peer, need to pick a different method for parsing config
+            let peer = config["Peer"] ?? [:]
+            tunnel.peers = [Peer(
+                endpoint: peer["Endpoint"] ?? "",
+                allowedIps: (peer["AllowedIPs"] ?? "").split(separator: ",").map {
+                    $0.trimmingCharacters(in: .whitespaces)
+                }
+            )]
+            let interface = config["Interface"] ?? [:]
+            tunnel.address = interface["Address"] ?? ""
+        }
+    } else {
+        NSLog("Failed to read configuration file")
+    }
+
+    return tunnel
 }
 
 // contruct menu with all tunnels found in configuration
@@ -204,18 +221,21 @@ func buildMenu(tunnels: Tunnels, showInstallInstructions: Bool = false) -> NSMen
     }
 
     if tunnels.isEmpty {
-        statusMenu.insertItem(NSMenuItem(title: "No tunnel configurations found", action: nil, keyEquivalent: ""), at: 0)
+        statusMenu.insertItem(NSMenuItem(title: "No tunnel configurations found",
+                                         action: nil, keyEquivalent: ""), at: 0)
     } else {
-        for (id, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
+        for (tunnelId, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
             let item = NSMenuItem(title: "\(tunnel.title): \(tunnel.address)",
                                   action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-            item.representedObject = id
+            item.representedObject = tunnelId
             if tunnel.connected {
                 item.state = NSControl.StateValue.on
             }
             for peer in tunnel.peers {
-                statusMenu.insertItem(NSMenuItem(title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
-                                                 action: nil, keyEquivalent: ""), at: 0)
+                statusMenu.insertItem(NSMenuItem(
+                    title: "  \(peer.endpoint): \(peer.allowedIps.joined(separator: ", "))",
+                    action: nil, keyEquivalent: ""
+                ), at: 0)
             }
             statusMenu.insertItem(item, at: 0)
         }

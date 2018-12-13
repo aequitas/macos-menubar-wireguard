@@ -25,6 +25,6 @@ class UITests: XCTestCase {
 
         menuBarsQuery.children(matching: .statusItem).element.click()
         menuBarsQuery.menuItems["Quit"].click()
-        XCTAssert(app.state == XCUIApplication.State.notRunning)
+        XCTAssertTrue(app.wait(for: XCUIApplication.State.notRunning, timeout: 5))
     }
 }

@@ -25,6 +25,8 @@
 		0466E5BB21C1AB5700113B45 /* SKQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040B449C2120474200E87CF5 /* SKQueue.swift */; };
 		0466E5BC21C1AB5700113B45 /* INIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0E21BB07DB00178BA0 /* INIParser.swift */; };
 		0466E5BD21C1AB5700113B45 /* PrivilegedHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0A21BAFF0200178BA0 /* PrivilegedHelper.swift */; };
+		0466E5BF21C2C30600113B45 /* different-case-section.conf in Resources */ = {isa = PBXBuildFile; fileRef = 0466E5BE21C2C30600113B45 /* different-case-section.conf */; };
+		0466E5C121C2C31500113B45 /* test.conf in Resources */ = {isa = PBXBuildFile; fileRef = 0466E5C021C2C31100113B45 /* test.conf */; };
 		0490168021C04B3900299400 /* IntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0490167F21C04B3900299400 /* IntegrationTests.swift */; };
 		04B2BD2E21BD5DC800CCAE2F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04B2BD2C21BD5DC800CCAE2F /* README.md */; };
 		04B2BD3621BD654C00CCAE2F /* UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B2BD3521BD654C00CCAE2F /* UITests.swift */; };
@@ -101,6 +103,8 @@
 		04554CBB21C0515900A08A17 /* test.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.conf; sourceTree = "<group>"; };
 		0456DA6221BB0C9000701CCE /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Const.swift; path = Shared/Const.swift; sourceTree = "<group>"; };
 		0456DA6321BB0C9000701CCE /* HelperProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelperProtocol.swift; path = Shared/HelperProtocol.swift; sourceTree = "<group>"; };
+		0466E5BE21C2C30600113B45 /* different-case-section.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "different-case-section.conf"; sourceTree = "<group>"; };
+		0466E5C021C2C31100113B45 /* test.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.conf; sourceTree = "<group>"; };
 		0490167D21C04B3800299400 /* IntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0490167F21C04B3900299400 /* IntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
 		0490168121C04B3900299400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -197,6 +201,8 @@
 			isa = PBXGroup;
 			children = (
 				04B2BD4321BDA69000CCAE2F /* UnitTests.swift */,
+				0466E5C021C2C31100113B45 /* test.conf */,
+				0466E5BE21C2C30600113B45 /* different-case-section.conf */,
 				04B2BD4521BDA69000CCAE2F /* Info.plist */,
 			);
 			path = UnitTests;
@@ -313,6 +319,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 04B4BE64211E1E030001213A /* Build configuration list for PBXNativeTarget "WireGuardStatusbar" */;
 			buildPhases = (
+				0466E5C221C2C97500113B45 /* Swiftlint */,
 				04B4BE3C211E1E010001213A /* Sources */,
 				04B4BE3E211E1E010001213A /* Resources */,
 				04B92498211F70AF008D964A /* Copy Helper */,
@@ -407,6 +414,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0466E5BF21C2C30600113B45 /* different-case-section.conf in Resources */,
+				0466E5C121C2C31500113B45 /* test.conf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +447,24 @@
 			shellPath = /bin/sh;
 			shellScript = "#./SMJobBlessUtil.py check \"$CODESIGNING_FOLDER_PATH\"";
 			showEnvVarsInLog = 0;
+		};
+		0466E5C221C2C97500113B45 /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=~/.brew/bin:$PATH\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

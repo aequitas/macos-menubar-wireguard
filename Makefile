@@ -14,32 +14,38 @@ other_sources=$(shell find * -name *.plist) WireGuardStatusbar.xcodeproj/project
 sources=${swift_sources} ${other_sources}
 
 .PHONY: all
-all: test test-integration WireGuardStatusbar.dmg
+all: test test-integration WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app/
 
 ## Testing & Code quality
 
 # run tests
-test: check | ${xcpretty}
+test: .test
+.test: ${sources} .check | ${xcpretty}
 	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
+	@touch $@
 
 # verify code quality
-check: fix .check.tailor | ${swiftlint}
+check: .check
+.check: ${swift_sources} .fix .check.tailor | ${swiftlint}
 	swiftlint --strict
+	@touch $@
 
 # only run tailor on changed files as it is slow
-.check.tailor: ${swift_sources} | fix ${tailor}
+.check.tailor: ${swift_sources} | .fix ${tailor}
 	tailor $?
-	touch $@
+	@touch $@
 
 # automatically fix all trivial code quality issues
-fix: | ${swiftformat}
+fix: .fix
+.fix: ${swift_source} | ${swiftformat}
 	swiftformat .
+	@touch $@
 
 # setup requirements and run integration tests
-test-integration: prep-integration
+test-integration: .test-integration
+.test-integration: ${sources} /etc/wireguard/test.conf
 	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
-
-prep-integration: /etc/wireguard/test.conf
+	@touch $@
 
 /etc/wireguard/test.conf: IntegrationTests/test.conf
 	sudo cp $< $@
@@ -79,6 +85,15 @@ ${dist}/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app Misc/Uninst
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
+
+/Applications/WireGuardStatusbar.app/: WireGuardStatusbar.dmg
+	-osascript -e 'tell application "WireGuardStatusbar" to quit'
+	-diskutil umount /Volumes/WireGuardStatusbar
+	hdiutil attach -quiet $<
+	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app/ /Volumes/WireGuardStatusbar/Applications/
+	-hdiutil attach -quiet $<
+	touch $@
+	open "$@"
 
 ## Icon/image generation
 

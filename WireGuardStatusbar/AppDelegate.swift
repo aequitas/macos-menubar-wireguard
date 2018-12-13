@@ -107,7 +107,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     func applicationWillTerminate(_: Notification) {
 //        TODO: configurable option to disable tunnels on shutdown
         let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
-            print("XPCService error: %@", error)
+            NSLog("XPCService error: \(error)")
         } as? HelperProtocol
 
         xpcService?.shutdown()
@@ -132,17 +132,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             let tunnel = tunnels[tunnelId]!
 
             let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
-                print("XPCService error: %@", error)
+                NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 
             if !tunnel.connected {
                 xpcService?.tunnelUp(interface: tunnel.interface, reply: { exitStatus in
-                    print("Tunnel \(tunnelId) up exit status: \(exitStatus)")
+                    NSLog("Tunnel \(tunnelId) up exit status: \(exitStatus)")
                 })
 
             } else {
                 xpcService?.tunnelDown(interface: tunnel.interface, reply: { exitStatus in
-                    print("Tunnel \(tunnelId) down exit status: \(exitStatus)")
+                    NSLog("Tunnel \(tunnelId) down exit status: \(exitStatus)")
                 })
             }
         } else {

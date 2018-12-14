@@ -144,11 +144,14 @@ public class INIParser {
   ///   - path: path of INI file to load
   /// - throws:
   ///   Exception
-  public init(_ path: String) throws {
+  public convenience init(_ path: String) throws {
     let data = try Data(contentsOf: URL(fileURLWithPath: path))
     guard let text = String(bytes: data, encoding: .utf8) else {
       throw Exception.InvalidFile
     }
+    try self.init(text: text)
+  }
+  public init(text: String) throws {
     let lines: [String] = text.split(separator: "\n").map { String($0) }
     var title: String?
     for line in lines {

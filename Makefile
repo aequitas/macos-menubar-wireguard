@@ -15,7 +15,7 @@ sources=${swift_sources} ${other_sources}
 
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
 .PHONY: all
-all: test WireGuardStatusbar.dmg /Applications/WireGuardStatusbar.app
+all: test dist install
 
 ## Testing & Code quality
 
@@ -88,6 +88,7 @@ ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 
 # install and run the App /Application using the distributable .dmg
+install: /Applications/WireGuardStatusbar.app
 /Applications/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app | WireGuardStatusbar.dmg
 	-osascript -e 'tell application "WireGuardStatusbar" to quit'
 	-diskutil umount /Volumes/WireGuardStatusbar

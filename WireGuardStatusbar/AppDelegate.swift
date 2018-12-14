@@ -16,11 +16,45 @@ extension NSImage.Name {
 
 typealias Tunnels = [String: Tunnel]
 struct Tunnel {
-    var title: String { return interface }
-    var interface: String
+    var interface = ""
     var connected = false
-    var address: String
-    var peers: [Peer]
+    var address = ""
+    var peers: [Peer] = []
+
+    var title: String { return interface }
+}
+
+extension Tunnel {
+    init?(fromConfig configFile: String) {
+        // determine if config file can be read
+        if let ini = try? INIParser(text: configFile) {
+            let config = ini.sections
+            if !config.isEmpty {
+                // TODO: currently supports only one peer, need to pick a different method for parsing config
+                let peer = config["Peer"] ?? [:]
+                peers = [Peer(
+                    endpoint: peer["Endpoint"] ?? "",
+                    allowedIps: (peer["AllowedIPs"] ?? "").split(separator: ",").map {
+                        $0.trimmingCharacters(in: .whitespaces)
+                    }
+                )]
+                let interface = config["Interface"] ?? [:]
+                address = interface["Address"] ?? ""
+            }
+        } else {
+            NSLog("Failed to read configuration file")
+            return nil
+        }
+    }
+
+    init?(fromFile filePath: String) {
+        if let configFile = try? String(contentsOfFile: filePath, encoding: .utf8) {
+            self.init(fromConfig: configFile)
+        } else {
+            NSLog("Failed to read configuration file \(filePath)")
+            return nil
+        }
+    }
 }
 
 struct Peer {
@@ -181,42 +215,15 @@ func loadConfiguration() -> Tunnels {
             let interface = configFile.replacingOccurrences(of: ".conf", with: "")
 
             NSLog("Reading config file: \(configPath)/\(configFile)")
-            var tunnel = parseConfig(configFilePath: configPath + "/" + configFile)
-            tunnel.interface = interface
-            tunnels[interface] = tunnel
+
+            var tunnel = Tunnel(fromFile: configPath + "/" + configFile)
+            if tunnel != nil {
+                tunnel!.interface = interface
+                tunnels[interface] = tunnel
+            }
         }
     }
     return tunnels
-}
-
-func parseConfig(configFilePath: String) -> Tunnel {
-    var tunnel = Tunnel(
-        interface: "",
-        connected: false,
-        address: "",
-        peers: []
-    )
-
-    // determine if config file can be read
-    if let ini = try? INIParser(configFilePath) {
-        let config = ini.sections
-        if !config.isEmpty {
-            // TODO: currently supports only one peer, need to pick a different method for parsing config
-            let peer = config["Peer"] ?? [:]
-            tunnel.peers = [Peer(
-                endpoint: peer["Endpoint"] ?? "",
-                allowedIps: (peer["AllowedIPs"] ?? "").split(separator: ",").map {
-                    $0.trimmingCharacters(in: .whitespaces)
-                }
-            )]
-            let interface = config["Interface"] ?? [:]
-            tunnel.address = interface["Address"] ?? ""
-        }
-    } else {
-        NSLog("Failed to read configuration file")
-    }
-
-    return tunnel
 }
 
 // contruct menu with all tunnels found in configuration

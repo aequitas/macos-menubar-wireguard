@@ -101,7 +101,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         // do an initial state update from current configuration and runtime state
         tunnels = loadConfiguration()
         loadState()
-        buildMenus()
+        updateState()
 
         // override mouse click handling to enable option-click for details
         if let button = self.statusItem.button {
@@ -110,20 +110,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         }
     }
 
-    func buildMenus() {
-        menu = buildMenu(tunnels: tunnels, details: false,
-                         showInstallInstructions: !wireguardInstalled)
-        detailedMenu = buildMenu(tunnels: tunnels, details: true,
-                                 showInstallInstructions: !wireguardInstalled)
+    // update the icon depending on the tunnel states
+    func updateState() {
         DispatchQueue.main.async { self.statusItem.image = menuImage(tunnels: self.tunnels) }
     }
 
     @objc func statusBarButtonClicked(sender _: NSStatusBarButton) {
         let event = NSApp.currentEvent!
         if event.modifierFlags.contains(.option) {
-            statusItem.popUpMenu(detailedMenu)
+            statusItem.popUpMenu(buildMenu(tunnels: tunnels, details: true,
+                                           showInstallInstructions: !wireguardInstalled))
         } else {
-            statusItem.popUpMenu(menu)
+            statusItem.popUpMenu(buildMenu(tunnels: tunnels, details: false,
+                                           showInstallInstructions: !wireguardInstalled))
         }
     }
 
@@ -154,7 +153,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
             NSLog("Tunnel state changed, reloading")
         }
         loadState()
-        buildMenus()
+        updateState()
     }
 
     // bring tunnel up/down

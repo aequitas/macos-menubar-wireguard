@@ -130,11 +130,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     // read runtime state of wg and update local state accordingly
     func loadState() {
         // for every configured tunnel check if a socket file exists (assume that indicates the tunnel is up)
-        for tunnel in tunnels {
-            let interfaceName = tunnel.key
-            // TODO: more idiomatic path building?
-            let name = URL(string: "\(runPath)/\(interfaceName).name")
-            tunnels[interfaceName]!.connected = FileManager.default.fileExists(atPath: name!.path)
+        for var tunnel in tunnels {
+            tunnel.value.connected = FileManager.default.fileExists(atPath: "\(runPath)/\(tunnel.key).name")
         }
     }
 

@@ -45,6 +45,8 @@ fix: .fix
 # setup requirements and run integration tests
 test-integration: .test-integration
 .test-integration: ${sources} /etc/wireguard/test.conf
+	# application running in Xcode will hang the test
+	-osascript -e 'tell application "Xcode" to set actionResult to stop workspace document 1'
 	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
 	@touch $@
 

@@ -44,13 +44,14 @@ fix: .fix
 
 # setup requirements and run integration tests
 test-integration: .test-integration
-.test-integration: ${sources} /etc/wireguard/test.conf | icons
+.test-integration: ${sources} /etc/wireguard/test-localhost.conf | icons
 	# application running in Xcode will hang the test
 	-osascript -e 'tell application "Xcode" to set actionResult to stop workspace document 1'
 	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
 	@touch $@
 
-/etc/wireguard/test.conf: IntegrationTests/test.conf
+prep-integration: /etc/wireguard/test-localhost.conf
+/etc/wireguard/test-localhost.conf: IntegrationTests/test-localhost.conf
 	sudo cp $< $@
 
 ## Building and distribution
@@ -206,4 +207,4 @@ mrproper: clean
 		${tmp}/logo*.png \
 		${tmp}/wireguard.png WireGuardStatusbar/Assets.xcassets/*.imageset/ \
 		WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png
-	sudo rm -rf /etc/wireguard/test.conf
+	sudo rm -rf /etc/wireguard/test-localhost.conf

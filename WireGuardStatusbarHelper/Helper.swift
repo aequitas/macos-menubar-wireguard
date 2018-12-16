@@ -35,14 +35,10 @@ class Helper: NSObject, HelperProtocol, NSXPCListenerDelegate {
         return true
     }
 
-    func tunnelUp(interface: String, reply: @escaping (NSNumber) -> Void) {
-        NSLog("Bringing interface \(interface) up")
-        reply(wireguard.wg(["up", interface]))
-    }
-
-    func tunnelDown(interface: String, reply: @escaping (NSNumber) -> Void) {
-        NSLog("Bringing interface \(interface) down")
-        reply(wireguard.wg(["down", interface]))
+    func setTunnel(tunnelName: String, enable: Bool, reply: @escaping (NSNumber) -> Void) {
+        let state = enable ? "up" : "down"
+        NSLog("Set tunnel \(tunnelName) \(state)")
+        reply(wireguard.wg([state, tunnelName]))
     }
 
     /// Return daemon's bundle version

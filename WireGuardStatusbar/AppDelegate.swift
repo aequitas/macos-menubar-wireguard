@@ -14,9 +14,8 @@ extension NSImage.Name {
     static let disabled = "dragon-dim"
 }
 
-// List of all tunnels known by this application
+// List of all tunnels known by this application, used to build menu
 // Tunnels are referenced by their configuration file name similar to how wg-quick would
-//
 typealias Tunnels = [TunnelName: Tunnel]
 typealias TunnelName = String
 struct Tunnel {
@@ -186,16 +185,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
                 NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 
-            if !tunnel.connected {
-                xpcService?.tunnelUp(interface: tunnelName, reply: { exitStatus in
-                    NSLog("Tunnel \(tunnelName) up exit status: \(exitStatus)")
-                })
-
-            } else {
-                xpcService?.tunnelDown(interface: tunnelName, reply: { exitStatus in
-                    NSLog("Tunnel \(tunnelName) down exit status: \(exitStatus)")
-                })
-            }
+            xpcService?.setTunnel(tunnelName: tunnelName, enable: !tunnel.connected, reply: { exitStatus in
+                NSLog("setTunnel \(tunnelName) exit status: \(exitStatus)")
+            })
         } else {
             NSLog("Sender not convertable to String: \(sender.representedObject.debugDescription)")
         }

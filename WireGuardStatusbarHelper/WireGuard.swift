@@ -19,10 +19,10 @@ public class WireGuard {
         task.standardOutput = outpipe
         let errpipe = Pipe()
         task.standardError = errpipe
-
+        NSLog("Running command: \(task.description)")
         task.launch()
         task.waitUntilExit()
-        NSLog("\(task.terminationStatus)")
+        NSLog("Exit code: \(task.terminationStatus)")
         let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
         NSLog(String(data: outdata, encoding: String.Encoding.utf8)!)
         let errdata = errpipe.fileHandleForReading.readDataToEndOfFile()

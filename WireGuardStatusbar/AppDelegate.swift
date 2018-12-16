@@ -14,17 +14,40 @@ extension NSImage.Name {
     static let disabled = "dragon-dim"
 }
 
-typealias Tunnels = [String: Tunnel]
+// List of all tunnels known by this application
+// Tunnels are referenced by their configuration file name similar to how wg-quick would
+//
+typealias Tunnels = [TunnelName: Tunnel]
+typealias TunnelName = String
 struct Tunnel {
-    var interface = ""
-    var connected = false
+    // name of the interface associated with this tunnel (if connected)
+    var interface: String?
+
+    // tunnel configuration read from configuration file or `wg showconf`
+    var config: TunnelConfig?
+
+    // TODO: var stats: TunnelStats?
+
+    var connected: Bool { return interface != nil }
+}
+
+struct TunnelConfig {
     var address = ""
     var peers: [Peer] = []
+}
 
-    var title: String { return interface }
+struct Peer {
+    var endpoint: String
+    var allowedIps: [String]
 }
 
 extension Tunnel {
+    init(config: TunnelConfig?) {
+        self.config = config
+    }
+}
+
+extension TunnelConfig {
     init?(fromConfig configFile: String) {
         // determine if config file can be read
         if let ini = try? INIParser(text: configFile) {
@@ -57,23 +80,15 @@ extension Tunnel {
     }
 }
 
-struct Peer {
-    var endpoint: String
-    var allowedIps: [String]
-}
-
-var username = NSUserName()
-
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
+    // keep the existence and state of all tunnel(configuration)s
     var tunnels = Tunnels()
 
     // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
     var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBin)
 
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-    var menu = NSMenu()
-    var detailedMenu = NSMenu()
 
     let privilegedHelper = PrivilegedHelper()
 
@@ -83,7 +98,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
         privilegedHelper.helperStatus { installed in
             if !installed {
                 self.privilegedHelper.installHelper()
-                self.privilegedHelper.xpcHelperConnection = nil //  Nulls the connection to force a reconnection
+                //  Nulls the connection to force a reconnection
+                self.privilegedHelper.xpcHelperConnection = nil
             }
         }
 
@@ -129,8 +145,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
     // read runtime state of wg and update local state accordingly
     func loadState() {
         // for every configured tunnel check if a socket file exists (assume that indicates the tunnel is up)
-        for var tunnel in tunnels {
-            tunnel.value.connected = FileManager.default.fileExists(atPath: "\(runPath)/\(tunnel.key).name")
+        for tunnel in tunnels {
+            if FileManager.default.fileExists(atPath: "\(runPath)/\(tunnel.key).name") {
+                // TODO: interface should be the contents of the .name file, this logic needs to be in helper
+                tunnels[tunnel.key]!.interface = tunnel.key
+            } else {
+                tunnels[tunnel.key]!.interface = nil
+            }
         }
     }
 
@@ -158,21 +179,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, SKQueueDelegate {
 
     // bring tunnel up/down
     @objc func toggleTunnel(_ sender: NSMenuItem) {
-        if let tunnelId = sender.representedObject as? String {
-            let tunnel = tunnels[tunnelId]!
+        if let tunnelName = sender.representedObject as? String {
+            let tunnel = tunnels[tunnelName]!
 
             let xpcService = privilegedHelper.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
                 NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 
             if !tunnel.connected {
-                xpcService?.tunnelUp(interface: tunnel.interface, reply: { exitStatus in
-                    NSLog("Tunnel \(tunnelId) up exit status: \(exitStatus)")
+                xpcService?.tunnelUp(interface: tunnelName, reply: { exitStatus in
+                    NSLog("Tunnel \(tunnelName) up exit status: \(exitStatus)")
                 })
 
             } else {
-                xpcService?.tunnelDown(interface: tunnel.interface, reply: { exitStatus in
-                    NSLog("Tunnel \(tunnelId) down exit status: \(exitStatus)")
+                xpcService?.tunnelDown(interface: tunnelName, reply: { exitStatus in
+                    NSLog("Tunnel \(tunnelName) down exit status: \(exitStatus)")
                 })
             }
         } else {
@@ -208,15 +229,11 @@ func loadConfiguration() -> Tunnels {
                 continue
             }
 
-            let interface = configFile.replacingOccurrences(of: ".conf", with: "")
+            let tunnelName = configFile.replacingOccurrences(of: ".conf", with: "")
 
             NSLog("Reading config file: \(configPath)/\(configFile)")
 
-            var tunnel = Tunnel(fromFile: configPath + "/" + configFile)
-            if tunnel != nil {
-                tunnel!.interface = interface
-                tunnels[interface] = tunnel
-            }
+            tunnels[tunnelName] = Tunnel(config: TunnelConfig(fromFile: configPath + "/" + configFile))
         }
     }
     return tunnels
@@ -245,21 +262,21 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
         statusMenu.insertItem(NSMenuItem(title: "No tunnel configurations found",
                                          action: nil, keyEquivalent: ""), at: 0)
     } else {
-        for (tunnelId, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
-            let item = NSMenuItem(title: "\(tunnel.title)",
+        for (tunnelName, tunnel) in tunnels.sorted(by: { $0.0 > $1.0 }) {
+            let item = NSMenuItem(title: "\(tunnelName)",
                                   action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-            item.representedObject = tunnelId
+            item.representedObject = tunnelName
             if tunnel.connected {
                 item.state = NSControl.StateValue.on
             }
-            if tunnel.connected || details {
-                for peer in tunnel.peers {
+            if tunnel.connected || details, let config = tunnel.config {
+                for peer in config.peers {
                     statusMenu.insertItem(NSMenuItem(title: "  Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
                                                      action: nil, keyEquivalent: ""), at: 0)
                     statusMenu.insertItem(NSMenuItem(title: "  Endpoint: \(peer.endpoint)",
                                                      action: nil, keyEquivalent: ""), at: 0)
                 }
-                statusMenu.insertItem(NSMenuItem(title: "  Address: \(tunnel.address)",
+                statusMenu.insertItem(NSMenuItem(title: "  Address: \(config.address)",
                                                  action: nil, keyEquivalent: ""), at: 0)
             }
             statusMenu.insertItem(item, at: 0)

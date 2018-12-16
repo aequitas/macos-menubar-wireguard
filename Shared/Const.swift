@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Const.swift
 //  WireGuardStatusbar
 //
 //  Created by Johan Bloemberg on 12/08/2018.
@@ -10,9 +10,11 @@ import Foundation
 
 let brewPrefix = "/usr/local"
 let runPath = "/var/run/wireguard"
+
+// paths to search for tunnel configurations, ordered by wg-quick's preferences
 let configPaths = [
-    "\(brewPrefix)/etc/wireguard",
     "/etc/wireguard",
+    "\(brewPrefix)/etc/wireguard",
 ]
 
 let wireguardBin = "\(brewPrefix)/bin/wg"

@@ -10,15 +10,13 @@ import XCTest
 
 class UnitTests: XCTestCase {
     let testTunnels = [
-        "test": Tunnel(
-            interface: "Tunnel Name",
-            connected: false,
+        "Tunnel Name": Tunnel(config: TunnelConfig(
             address: "192.0.2.0/32",
             peers: [Peer(
                 endpoint: "192.0.2.1/32:51820",
                 allowedIps: ["198.51.100.0/24"]
             )]
-        ),
+        )),
     ]
 
     let testConfig = """
@@ -52,7 +50,7 @@ class UnitTests: XCTestCase {
         var tunnels = testTunnels
 
         XCTAssertEqual(menuImage(tunnels: tunnels).name(), "dragon-dim")
-        tunnels["test"]!.connected = true
+        tunnels["Tunnel Name"]!.interface = "utun1"
         XCTAssertEqual(menuImage(tunnels: tunnels).name(), "silhouette")
     }
 
@@ -64,7 +62,7 @@ class UnitTests: XCTestCase {
 
     func testMenuEnabledTunnel() {
         var tunnels = testTunnels
-        tunnels["test"]!.connected = true
+        tunnels["Tunnel Name"]!.interface = "utun1"
 
         let menu = buildMenu(tunnels: tunnels)
         XCTAssertEqual(menu.items[0].title, "Tunnel Name")
@@ -76,7 +74,7 @@ class UnitTests: XCTestCase {
 
     func testMenuDetails() {
         var tunnels = testTunnels
-        tunnels["test"]!.connected = true
+        tunnels["Tunnel Name"]!.interface = "utun1"
 
         let menu = buildMenu(tunnels: tunnels, details: true)
         XCTAssertEqual(menu.items[0].title, "Tunnel Name")
@@ -93,8 +91,8 @@ class UnitTests: XCTestCase {
 
     func testMenuSorting() {
         let tunnels = [
-            "Z": Tunnel(interface: "Z Tunnel Name", connected: false, address: "", peers: []),
-            "A": Tunnel(interface: "A Tunnel Name", connected: false, address: "", peers: []),
+            "Z Tunnel Name": Tunnel(),
+            "A Tunnel Name": Tunnel(),
         ]
         let menu = buildMenu(tunnels: tunnels)
         // tunnels should be sorted alphabetically
@@ -105,10 +103,10 @@ class UnitTests: XCTestCase {
         let bundle = Bundle(for: type(of: self).self)
         let testConfigFile = bundle.path(forResource: "test", ofType: "conf")!
 
-        if let tunnel = Tunnel(fromFile: testConfigFile) {
-            XCTAssertEqual(tunnel.address, "192.0.2.0/32")
-            XCTAssertEqual(tunnel.peers[0].endpoint, "192.0.2.1/32:51820")
-            XCTAssertEqual(tunnel.peers[0].allowedIps, ["198.51.100.0/24"])
+        if let config = TunnelConfig(fromFile: testConfigFile) {
+            XCTAssertEqual(config.address, "192.0.2.0/32")
+            XCTAssertEqual(config.peers[0].endpoint, "192.0.2.1/32:51820")
+            XCTAssertEqual(config.peers[0].allowedIps, ["198.51.100.0/24"])
         } else {
             XCTFail("Config file not parsed")
         }
@@ -118,8 +116,8 @@ class UnitTests: XCTestCase {
         let bundle = Bundle(for: type(of: self).self)
         let testConfigFile = bundle.path(forResource: "different-case-section", ofType: "conf")!
 
-        if let tunnel = Tunnel(fromFile: testConfigFile) {
-            XCTAssertEqual(tunnel.address, "10.10.101.123/24")
+        if let config = TunnelConfig(fromFile: testConfigFile) {
+            XCTAssertEqual(config.address, "10.10.101.123/24")
         } else {
             XCTFail("Config file not parsed")
         }

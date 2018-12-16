@@ -21,7 +21,7 @@ all: test dist install
 
 # run tests
 test: .test-unit .test-integration
-.test-unit: ${sources} .check | ${xcpretty}
+.test-unit: ${sources} .check | icons ${xcpretty}
 	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 	@touch $@
 
@@ -44,7 +44,7 @@ fix: .fix
 
 # setup requirements and run integration tests
 test-integration: .test-integration
-.test-integration: ${sources} /etc/wireguard/test.conf
+.test-integration: ${sources} /etc/wireguard/test.conf | icons
 	# application running in Xcode will hang the test
 	-osascript -e 'tell application "Xcode" to set actionResult to stop workspace document 1'
 	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
@@ -121,19 +121,15 @@ ${assets}/AppIcon.appiconset/%.png: ${tmp}/logo.png
 
 # Icons used for the menubar
 imagesets: \
-	${assets}/silhouette.imageset/ \
 	${assets}/silhouette.imageset/Contents.json \
 	${assets}/silhouette.imageset/18.png \
 	${assets}/silhouette.imageset/36.png \
-	${assets}/silhouette-dim.imageset/ \
 	${assets}/silhouette-dim.imageset/Contents.json \
 	${assets}/silhouette-dim.imageset/18.png \
 	${assets}/silhouette-dim.imageset/36.png \
-	${assets}/dragon.imageset/ \
 	${assets}/dragon.imageset/Contents.json \
 	${assets}/dragon.imageset/18.png \
 	${assets}/dragon.imageset/36.png \
-	${assets}/dragon-dim.imageset/ \
 	${assets}/dragon-dim.imageset/Contents.json \
 	${assets}/dragon-dim.imageset/18.png \
 	${assets}/dragon-dim.imageset/36.png
@@ -144,8 +140,8 @@ ${assets}/%.imageset/18.png: ${tmp}/%.png
 ${assets}/%.imageset/36.png: ${tmp}/%.png
 	${convert} $< -strip -scale 36x36 $@
 # Provide standard imageset definition
-${assets}/%.imageset/Contents.json: Misc/imageset.Contents.json | ${assets}/%.imageset/
-	mkdir -p $@
+${assets}/%.imageset/Contents.json: Misc/imageset.Contents.json
+	mkdir -p ${@D}
 	cp $< $@
 
 # Create a dimmed version of a image
@@ -154,6 +150,7 @@ ${assets}/%.imageset/Contents.json: Misc/imageset.Contents.json | ${assets}/%.im
 
 # Extract the logo part from the banner, color it black and white
 ${tmp}/logo.png: ${tmp}/wireguard.png | ${convert}
+	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -crop 1251x1251+0+0 -colorspace gray +dither -colors 2 \
 		-floodfill +600+200 white -floodfill +600+400 white -floodfill +350+900 white \
 		-floodfill +400+200 black -floodfill +777+117 black\
@@ -161,6 +158,7 @@ ${tmp}/logo.png: ${tmp}/wireguard.png | ${convert}
 
 # Extract the logo part from the banner, invert to keep only the dragon
 ${tmp}/dragon.png: ${tmp}/wireguard.png | ${convert}
+	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0\
 		-floodfill +600+200 black -floodfill +600+400 black -floodfill +350+900 black\
 		-floodfill +400+200 transparent -floodfill +777+117 transparent \
@@ -168,6 +166,7 @@ ${tmp}/dragon.png: ${tmp}/wireguard.png | ${convert}
 
 # Extract the logo part from the banner, but keep the dragon transparent
 ${tmp}/silhouette.png: ${tmp}/wireguard.png | ${convert}
+	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 \
 		-floodfill +400+200 black -floodfill +777+117 black\
 		$@
@@ -205,6 +204,6 @@ clean:
 mrproper: clean
 	rm -rf \
 		${tmp}/logo*.png \
-		${tmp}/wireguard.png WireGuardStatusbar/Assets.xcassets/connected.imageset/logo-*.png \
+		${tmp}/wireguard.png WireGuardStatusbar/Assets.xcassets/*.imageset/ \
 		WireGuardStatusbar/Assets.xcassets/AppIcon.appiconset/logo-*.png
 	sudo rm -rf /etc/wireguard/test.conf

@@ -1,10 +1,4 @@
-//
-//  UnitTests.swift
-//  UnitTests
-//
-//  Created by Johan Bloemberg on 09/12/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// Application unit tests
 
 import XCTest
 
@@ -49,7 +43,7 @@ class UnitTests: XCTestCase {
     func testMenuImage() {
         var tunnels = testTunnels
 
-        XCTAssertEqual(menuImage(tunnels: tunnels).name(), "dragon-dim")
+        XCTAssertEqual(menuImage(tunnels: tunnels).name(), "dragon")
         tunnels["Tunnel Name"]!.interface = "utun1"
         XCTAssertEqual(menuImage(tunnels: tunnels).name(), "silhouette")
     }

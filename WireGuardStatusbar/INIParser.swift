@@ -1,4 +1,4 @@
-// TODO: figure out how to get this using package manager (Cocoapods/SwiftPM)
+// TODO: figure out how to get this using package manager (Cocoapods/SwiftPM,Carthage)
 // or get rid of config file parsing altogether?
 
 //

@@ -1,10 +1,4 @@
-//
-//  Protocol.swift
-//  WireGuardStatusbarHelper
-//
-//  Created by Johan Bloemberg on 11/08/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// Functions that can be invoked by App on the Helper via XPC
 
 import Foundation
 

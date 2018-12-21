@@ -1,6 +1,8 @@
-#! /bin/sh
+#!/bin/sh
 
 set -x
+
+osascript -e 'tell application "WireGuardStatusbar" to quit'
 
 # Also uninstall old version of the helper
 sudo launchctl unload /Library/LaunchDaemons/nl.ijohan.WireGuardStatusbarHelper.plist
@@ -14,3 +16,5 @@ sudo rm /Library/PrivilegedHelperTools/WireGuardStatusbarHelper
 
 # Also remove application
 sudo rm -r /Applications/WireGuardStatusbar.app/
+
+exit 0

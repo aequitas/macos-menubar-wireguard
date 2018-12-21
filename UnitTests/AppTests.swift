@@ -2,7 +2,7 @@
 
 import XCTest
 
-class UnitTests: XCTestCase {
+class AppTests: XCTestCase {
     let testTunnels = [
         "Tunnel Name": Tunnel(config: TunnelConfig(
             address: "192.0.2.0/32",
@@ -94,10 +94,7 @@ class UnitTests: XCTestCase {
     }
 
     func testConfigParsing() {
-        let bundle = Bundle(for: type(of: self).self)
-        let testConfigFile = bundle.path(forResource: "test", ofType: "conf")!
-
-        if let config = TunnelConfig(fromFile: testConfigFile) {
+        if let config = TunnelConfig(fromConfig: testConfig) {
             XCTAssertEqual(config.address, "192.0.2.0/32")
             XCTAssertEqual(config.peers[0].endpoint, "192.0.2.1/32:51820")
             XCTAssertEqual(config.peers[0].allowedIps, ["198.51.100.0/24"])
@@ -107,10 +104,7 @@ class UnitTests: XCTestCase {
     }
 
     func testConfigParsing2() {
-        let bundle = Bundle(for: type(of: self).self)
-        let testConfigFile = bundle.path(forResource: "different-case-section", ofType: "conf")!
-
-        if let config = TunnelConfig(fromFile: testConfigFile) {
+        if let config = TunnelConfig(fromConfig: testConfigDifferentCaseSection) {
             XCTAssertEqual(config.address, "10.10.101.123/24")
         } else {
             XCTFail("Config file not parsed")

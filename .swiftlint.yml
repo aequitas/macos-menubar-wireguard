@@ -6,4 +6,4 @@ disabled_rules:
 excluded:
   # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift
-  - WireGuardStatusbar/SKQueue.swift
+  - WireGuardStatusbarHelper/SKQueue.swift

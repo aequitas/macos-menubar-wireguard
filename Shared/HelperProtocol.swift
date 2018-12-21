@@ -10,7 +10,7 @@ struct HelperConstants {
 /// Because communication over XPC is asynchronous, all methods in the protocol must have a return type of void
 @objc(HelperProtocol)
 protocol HelperProtocol {
+    func getTunnels(reply: @escaping (TunnelInfo) -> Void)
     func setTunnel(tunnelName: String, enable: Bool, reply: @escaping (NSNumber) -> Void)
     func getVersion(_ reply: @escaping (String) -> Void)
-    func shutdown()
 }

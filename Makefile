@@ -9,8 +9,8 @@ tailor=${brew_bin}/tailor
 
 git_sha=$(shell git rev-parse --short HEAD)
 
-swift_sources=$(shell find * -name *.swift|grep -vE 'SKQueue|INIParse')
-other_sources=$(shell find * -name *.plist) WireGuardStatusbar.xcodeproj/project.pbxproj
+swift_sources=$(shell find * -name "*.swift"|grep -vE 'SKQueue|INIParse')
+other_sources=$(shell find * -name "*.plist") WireGuardStatusbar.xcodeproj/project.pbxproj
 sources=${swift_sources} ${other_sources}
 
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
@@ -99,6 +99,9 @@ install: /Applications/WireGuardStatusbar.app
 	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app /Volumes/WireGuardStatusbar/Applications/
 	hdiutil detach -quiet /Volumes/WireGuardStatusbar/
 	open "$@"
+
+uninstall:
+	Misc/Uninstall.sh
 
 ## Icon/image generation
 

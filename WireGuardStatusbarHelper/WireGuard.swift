@@ -1,10 +1,4 @@
-//
-//  WireGuard.swift
-//  WireGuardStatusbarHelper
-//
-//  Created by Johan Bloemberg on 07/12/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// Interface with WireGuard using `wg-quick` or `wg` processes
 
 import Foundation
 

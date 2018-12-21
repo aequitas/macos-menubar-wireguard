@@ -1,10 +1,4 @@
-//
-//  UITests.swift
-//  UITests
-//
-//  Created by Johan Bloemberg on 09/12/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// User interface tests
 
 import XCTest
 

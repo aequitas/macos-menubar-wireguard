@@ -1,10 +1,4 @@
-//
-//  IntegrationTests.swift
-//  IntegrationTests
-//
-//  Created by Johan Bloemberg on 11/12/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// (UI) tests that interact with WireGuard runtime and configuration.
 
 import XCTest
 

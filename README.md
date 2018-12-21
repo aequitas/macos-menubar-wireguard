@@ -30,7 +30,7 @@ Automation scripting is provided in this repository to make development a little
 
 To test the project and check code quality run:
 
-    make test
+    make test-unit
 
 Integration tests require preparation and will ask for a `sudo` password to install a test configuration file in `/etc/wireguard`:
 
@@ -40,9 +40,11 @@ Code formatting should preferably by done by computers. To auto correct most vio
 
     make fix
 
-To completely verify/test the project and build a distributable `.dmg` simply run:
+To completely verify/test the project, build a distributable `.dmg` and install to `/Applications` simply run:
 
     make
+
+Or explore `make` with tab completion for other options.
 
 # Architecture/Security
 
@@ -50,7 +52,7 @@ To completely verify/test the project and build a distributable `.dmg` simply ru
 - The App will sit in the menubar after launching and handle all UI interaction and logic.
 - Whenever the App needs to perform actions requiring Administrator privileges (eg: start/stop tunnel, read configurations) it will communicate with the Helper via XPC to have these actions performed.
 - The Helper is installed as a [Privileged Launchd daemon](https://developer.apple.com/documentation/servicemanagement/1431078-smjobbless?language=objc) during the startup of the App. The user will be prompted for credentials during this action.
-- Logic/responsability in the Helper is kept to a minimum and communication between the App and the Helper is in simple primitives (eg: tunnelUp("tunnelname")) to reduce attack surface of the Helper.
+- Logic/responsability in the Helper is kept to a minimum and communication between the App and the Helper is in simple primitives to reduce attack surface of the Helper.
 - The Helper should not allow an unprivileged attacker to perform any actions via the XPC that would not be possible to perform when using the App.
 - Both the App and the Helper are signed and these signatures will be verified on Helper installation and XPC communication.
 - The Helper will only run when needed.

@@ -1,10 +1,4 @@
-//
-//  AppDelegate.swift
-//  WireGuardStatusbar
-//
-//  Created by Johan Bloemberg on 10/08/2018.
-//  Copyright © 2018 Johan Bloemberg. All rights reserved.
-//
+// Main Application logic and UI glue
 
 import Cocoa
 

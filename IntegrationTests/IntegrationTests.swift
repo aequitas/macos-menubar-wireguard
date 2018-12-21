@@ -32,13 +32,24 @@ class IntegrationTests: XCTestCase {
         menuBarsQuery.menuItems[testConfigFile].click()
 
         menuBarsQuery.children(matching: .statusItem).element.click()
-        // TODO discover how to verify the checked state of the menuitem, eg axMenuItemMarkChar
+        // TODO: discover how to verify the checked state of the menuitem, eg axMenuItemMarkChar
         XCTAssertTrue(menuBarsQuery.menuItems["  Address: 192.0.2.0/32"].exists)
 
         // disable tunnel after the test
         menuBarsQuery.menuItems[testConfigFile].click()
         menuBarsQuery.children(matching: .statusItem).element.click()
         XCTAssertFalse(menuBarsQuery.menuItems["  Address: 192.0.2.0/32"].exists)
+    }
 
+    func testGetTunnels() {
+        let bundle = Bundle(for: type(of: self).self)
+
+        let testConfig = try? String(contentsOfFile: bundle.path(forResource: testConfigFile, ofType: "conf")!)
+
+        Helper().getTunnels(reply: { tunnelInfo in
+            // since test tunnel configuration is bogus, we never expect a connected tunnel
+            XCTAssertEqual(tunnelInfo["test-localhost"]![0], "")
+            XCTAssertEqual(tunnelInfo["test-localhost"]![1], testConfig!)
+        })
     }
 }

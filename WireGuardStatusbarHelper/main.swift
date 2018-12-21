@@ -2,5 +2,4 @@
 
 import Foundation
 
-NSLog("Starting WireGuardStatusbar Helper....")
 Helper().run()

@@ -18,6 +18,13 @@ class IntegrationTests: XCTestCase {
         XCUIApplication().launch()
     }
 
+    override func tearDown() {
+        // launchd trottles daemons that quit within 10 seconds. Until this is fixed
+        // in App/Helper logic wait at least 10 second before starting the next test
+        // so there will be no failing tests because of this behaviour.
+        sleep(10)
+    }
+
     // If configuration is loaded correctly the proper menu item should be available
     func testLoadConfiguration() {
         let menuBarsQuery = XCUIApplication().menuBars

@@ -5,7 +5,7 @@ import Foundation
 class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     private var app: AppXPC?
 
-    /// Starts the helper daemon
+    // Starts the helper daemon
     func run() {
         // create XPC to App
         app = AppXPC(exportedObject: self,

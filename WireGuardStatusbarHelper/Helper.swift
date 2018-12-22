@@ -15,6 +15,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         registerWireGuardStateWatch()
 
         // keep running (last XPC connection closing quits)
+        // TODO: Helper needs to live for at least 10 seconds or launchd will get unhappy
         CFRunLoopRun()
     }
 
@@ -91,6 +92,13 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     // XPC: called by App to have Helper change the state of a tunnel to up or down
     func setTunnel(tunnelName: String, enable: Bool, reply: @escaping (NSNumber) -> Void) {
         let state = enable ? "up" : "down"
+
+        if !validateTunnelName(tunnelName: tunnelName) {
+            NSLog("Invalid tunnel name \(tunnelName)")
+            reply(1)
+            return
+        }
+
         NSLog("Set tunnel \(tunnelName) \(state)")
         reply(wgQuick([state, tunnelName]))
     }

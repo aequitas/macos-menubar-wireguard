@@ -2,6 +2,14 @@
 
 import Foundation
 
+// swiftlint:disable:next force_try
+let tunnelNameRegex = try! NSRegularExpression(pattern: "^[a-zA-Z0-9_=+.-]{1,15}$")
+
+func validateTunnelName(tunnelName: String) -> Bool {
+    return tunnelNameRegex.firstMatch(in: tunnelName,
+                                      range: NSRange(location: 0, length: tunnelName.count)) != nil
+}
+
 func wgQuick(_ arguments: [String]) -> NSNumber {
     let task = Process()
     task.launchPath = wgquickBin

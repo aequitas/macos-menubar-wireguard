@@ -9,7 +9,7 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 # Features
 
 - Sit in your menubar
-- Indicate if tunnels are connected
+- Indicate if tunnels are enabled
 - Bring tunnel up/down via one click
 - ~~Fail miserably when brew/wg-quick is not installed or permissions on files are incorrect~~
 
@@ -18,7 +18,7 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 - Follow the instruction to install WireGuard for macOS: https://www.wireguard.com/install/
 - Create a tunnel configuration file (eg: `/usr/local/etc/wireguard/utun1.conf`)
 - Download this App from [Releases](https://github.com/aequitas/macos-menubar-wireguard/releases)
-- Open the .dmg and copy the Application to where you like (eg: /Applications)
+- Open the .dmg and copy the Application to where you like (eg: '/Applications')
 - The next bit is needed because I don't have a Apple Developer account to properly sign the binary. If you don't like it consider building and signing the application yourself.
     - Start the App and get a dialog indicating the app is not signed
     - Go to: Preferences->Security & Privacy->General and click "Open Anyway"
@@ -53,8 +53,9 @@ Or explore `make` with tab completion for other options.
 - The Helper is installed as a [Privileged Launchd daemon](https://developer.apple.com/documentation/servicemanagement/1431078-smjobbless?language=objc) during the startup of the App. The user will be prompted for credentials during this action.
 - Logic/responsability in the Helper is kept to a minimum and communication between the App and the Helper is in simple primitives to reduce attack surface of the Helper.
 - The Helper should not allow an unprivileged attacker to perform any actions via the XPC that would not be possible to perform when using the App.
-- Both the App and the Helper are signed and these signatures will be verified on Helper installation and XPC communication.
-- The Helper will only run when needed.
+- Both the App and the Helper are signed and these signatures will be verified on Helper installation.
+- The Helper will only run during the runtime of the Application.
+- The Helper notifies the App on any change in the WireGuard configuration/runtime state. The App will then query the Helper to allow rebuilding its menus.
 
 # License
 

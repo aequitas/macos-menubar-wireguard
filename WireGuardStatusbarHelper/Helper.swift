@@ -63,6 +63,8 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
             while let configFile = enumerator?.nextObject() as? String {
                 // ignore non config file
                 if !configFile.hasSuffix(".conf") {
+                    // don't descend into subdirectories
+                    enumerator?.skipDescendants()
                     continue
                 }
 

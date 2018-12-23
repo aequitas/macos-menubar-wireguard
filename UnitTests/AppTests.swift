@@ -61,9 +61,10 @@ class AppTests: XCTestCase {
         let menu = buildMenu(tunnels: tunnels)
         XCTAssertEqual(menu.items[0].title, "Tunnel Name")
         XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
-        XCTAssertEqual(menu.items[1].title, "  Address: 192.0.2.0/32")
-        XCTAssertEqual(menu.items[2].title, "  Endpoint: 192.0.2.1/32:51820")
-        XCTAssertEqual(menu.items[3].title, "  Allowed IPs: 198.51.100.0/24")
+        XCTAssertEqual(menu.items[1].title, "  Interface: utun1")
+        XCTAssertEqual(menu.items[2].title, "  Address: 192.0.2.0/32")
+        XCTAssertEqual(menu.items[3].title, "  Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(menu.items[4].title, "  Allowed IPs: 198.51.100.0/24")
     }
 
     func testMenuDetails() {
@@ -73,9 +74,10 @@ class AppTests: XCTestCase {
         let menu = buildMenu(tunnels: tunnels, details: true)
         XCTAssertEqual(menu.items[0].title, "Tunnel Name")
         XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
-        XCTAssertEqual(menu.items[1].title, "  Address: 192.0.2.0/32")
-        XCTAssertEqual(menu.items[2].title, "  Endpoint: 192.0.2.1/32:51820")
-        XCTAssertEqual(menu.items[3].title, "  Allowed IPs: 198.51.100.0/24")
+        XCTAssertEqual(menu.items[1].title, "  Interface: utun1")
+        XCTAssertEqual(menu.items[2].title, "  Address: 192.0.2.0/32")
+        XCTAssertEqual(menu.items[3].title, "  Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(menu.items[4].title, "  Allowed IPs: 198.51.100.0/24")
     }
 
     func testMenuNoTunnels() {

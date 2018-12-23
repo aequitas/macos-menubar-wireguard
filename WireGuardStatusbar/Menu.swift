@@ -46,7 +46,7 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
                 statusMenu.insertItem(NSMenuItem(title: "  Address: \(config.address)",
                                                  action: nil, keyEquivalent: ""), at: 0)
                 statusMenu.insertItem(NSMenuItem(title: "  Interface: \(interface)",
-                    action: nil, keyEquivalent: ""), at: 0)
+                                                 action: nil, keyEquivalent: ""), at: 0)
             }
             statusMenu.insertItem(item, at: 0)
         }

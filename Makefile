@@ -103,6 +103,10 @@ install: /Applications/WireGuardStatusbar.app
 uninstall:
 	Misc/Uninstall.sh
 
+screenshot: Misc/demo.png
+Misc/demo.png: ${all_sources} WireGuardStatusbar.app
+	Misc/screenshot.sh $@
+
 ## Icon/image generation
 
 assets=WireGuardStatusbar/Assets.xcassets

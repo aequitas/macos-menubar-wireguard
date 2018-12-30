@@ -158,7 +158,7 @@ ${assets}/%.imageset/Contents.json: Misc/imageset.Contents.json
 
 # Extract the logo part from the banner, color it black and white
 ${tmp}/logo.png: ${tmp}/wireguard.png | ${convert}
-	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
+	${convert} --version | grep 7.0.8-1[5,6] ; (EXIT_CODE=0 || exit 1)      # versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -crop 1251x1251+0+0 -colorspace gray +dither -colors 2 \
 		-floodfill +600+200 white -floodfill +600+400 white -floodfill +350+900 white \
 		-floodfill +400+200 black -floodfill +777+117 black\
@@ -166,7 +166,7 @@ ${tmp}/logo.png: ${tmp}/wireguard.png | ${convert}
 
 # Extract the logo part from the banner, invert to keep only the dragon
 ${tmp}/dragon.png: ${tmp}/wireguard.png | ${convert}
-	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
+	${convert} --version | grep 7.0.8-1[5,6] ; (EXIT_CODE=0 || exit 1)      # versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0\
 		-floodfill +600+200 black -floodfill +600+400 black -floodfill +350+900 black\
 		-floodfill +400+200 transparent -floodfill +777+117 transparent \
@@ -174,7 +174,7 @@ ${tmp}/dragon.png: ${tmp}/wireguard.png | ${convert}
 
 # Extract the logo part from the banner, but keep the dragon transparent
 ${tmp}/silhouette.png: ${tmp}/wireguard.png | ${convert}
-	${convert} --version | grep 7.0.8-9 || exit 1 	# versions 7.0.8-{15,16} have a bug breaking floodfill
+	${convert} --version | grep 7.0.8-1[5,6] ; (EXIT_CODE=0 || exit 1)      # versions 7.0.8-{15,16} have a bug breaking floodfill
 	${convert} $< -strip -colorspace gray +dither -colors 2 -crop 1251x1251+0+0 \
 		-floodfill +400+200 black -floodfill +777+117 black\
 		$@

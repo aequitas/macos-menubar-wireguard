@@ -5,6 +5,9 @@
 .check*
 .fix*
 
+# Generated files
+WireGuardStatusbar/Assets.xcassets/*/*.png
+
 # Build artifacts
 WireGuardStatusbar.dmg
 WireGuardStatusbar.app

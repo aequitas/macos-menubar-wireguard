@@ -547,7 +547,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = "$(SRCROOT)/WireGuardStatusbar/Info.plist";
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -571,7 +571,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = "$(SRCROOT)/WireGuardStatusbar/Info.plist";
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -596,7 +596,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = IntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -618,7 +618,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = IntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -640,7 +640,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = UnitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -663,7 +663,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = UnitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -799,7 +799,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = WireGuardStatusbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -820,7 +820,7 @@
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 9WVHCC8B5A;
+				DEVELOPMENT_TEAM = 385Q5683Q8;
 				INFOPLIST_FILE = WireGuardStatusbar/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

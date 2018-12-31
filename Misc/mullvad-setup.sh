@@ -13,18 +13,10 @@ ARGS=( "$@" )
 SELF="${BASH_SOURCE[0]}"
 [[ $SELF == */* ]] || SELF="./$SELF"
 SELF="$(cd "${SELF%/*}" && pwd -P)/${SELF##*/}"
+[[ $UID == 0 ]] || exec sudo -p "[?] $PROGRAM must be run as root. Please enter the password for %u to continue: " -- "$BASH" -- "$SELF" "${ARGS[@]}"
+
 [[ ${BASH_VERSINFO[0]} -ge 4 ]] || die "bash ${BASH_VERSINFO[0]} detected, when bash 4+ required"
 
-# This is a hack, requiring this script to *not* be run as root to work correctly.
-if [[ "$UID" -ne "0" ]]
-then
-	./setup.sh
-	exec sudo -p "[?] $PROGRAM must be run as root. Please enter the password for %u to continue: " -- "$BASH" -- "$SELF" "${ARGS[@]}"
-else
-	echo "[!] Running as root; you must run as non-privileged user for auto-dependency installation."
-fi
-
-type wg >/dev/null || die "Please install wireguard-tools and then try again."
 type curl >/dev/null || die "Please install curl and then try again."
 type jq >/dev/null || die "Please install jq and then try again."
 set -e
@@ -69,7 +61,7 @@ RESPONSE="$(curl -sSL https://api.mullvad.net/wg/ -d account="$ACCOUNT" --data-u
 ADDRESS="$RESPONSE"
 DNS="193.138.219.228"
 
-echo "[+] Writing WireGuard configuration files."
+echo "[+] Writing WriteGuard configuration files."
 for CODE in "${SERVER_CODES[@]}"; do
 	CONFIGURATION_FILE="/etc/wireguard/${SERVER_LOCATIONS["$CODE"]}.conf"
 	umask 077
@@ -89,7 +81,10 @@ for CODE in "${SERVER_CODES[@]}"; do
 	mv "$CONFIGURATION_FILE.tmp" "$CONFIGURATION_FILE"
 done
 
-# TODO: Confirm file permissions allow WireGuardStatusBar to auto-populate the menu
+echo "[+] Success. The following commands may be run for connecting to Mullvad:"
+for CODE in "${SERVER_CODES[@]}"; do
+	echo "- ${SERVER_LOCATIONS["$CODE"]}:"
+	echo "  \$ wg-quick up $CODE"
+done
 
-echo "[+] Success. Now install/run WireGuard StatusBar and menu will auto-populate."
 echo "Please wait up to 60 seconds for your public key to be added to the servers."

@@ -34,14 +34,14 @@ FIELDS="$(jq -r 'foreach .countries[] as $country (.; .; foreach $country.cities
 while read -r COUNTRY && read -r CITY && read -r HOSTNAME && read -r PUBKEY && read -r IPADDR; do
 	CODE="${HOSTNAME%-wireguard}"
 	SERVER_CODES+=( "$CODE" )
-	SERVER_LOCATIONS["$CODE"]="$CITY, $COUNTRY"
+	SERVER_LOCATIONS["$CODE"]=${COUNTRY//[, ]/_}-${CITY//[, ]/_}
 	SERVER_PUBLIC_KEYS["$CODE"]="$PUBKEY"
 	SERVER_ENDPOINTS["$CODE"]="$IPADDR:51820"
 done <<<"$FIELDS"
 
 shopt -s nocasematch
 for CODE in "${SERVER_CODES[@]}"; do
-	CONFIGURATION_FILE="/etc/wireguard/mullvad-$CODE.conf"
+	CONFIGURATION_FILE="/etc/wireguard/${SERVER_LOCATIONS["$CODE"]}.conf"
 	[[ -f $CONFIGURATION_FILE ]] || continue
 	while read -r line; do
 		[[ $line =~ ^PrivateKey\ *=\ *([a-zA-Z0-9+/]{43}=)\ *$ ]] && PRIVATE_KEY="${BASH_REMATCH[1]}" && break
@@ -63,7 +63,7 @@ DNS="193.138.219.228"
 
 echo "[+] Writing WriteGuard configuration files."
 for CODE in "${SERVER_CODES[@]}"; do
-	CONFIGURATION_FILE="/etc/wireguard/mullvad-$CODE.conf"
+	CONFIGURATION_FILE="/etc/wireguard/${SERVER_LOCATIONS["$CODE"]}.conf"
 	umask 077
 	mkdir -p /etc/wireguard/
 	rm -f "$CONFIGURATION_FILE.tmp"
@@ -84,7 +84,7 @@ done
 echo "[+] Success. The following commands may be run for connecting to Mullvad:"
 for CODE in "${SERVER_CODES[@]}"; do
 	echo "- ${SERVER_LOCATIONS["$CODE"]}:"
-	echo "  \$ wg-quick up mullvad-$CODE"
+	echo "  \$ wg-quick up $CODE"
 done
 
 echo "Please wait up to 60 seconds for your public key to be added to the servers."

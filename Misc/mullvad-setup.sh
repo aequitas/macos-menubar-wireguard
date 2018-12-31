@@ -89,9 +89,7 @@ for CODE in "${SERVER_CODES[@]}"; do
 	mv "$CONFIGURATION_FILE.tmp" "$CONFIGURATION_FILE"
 done
 
-# Ensure file permissions allow WireGuardStatusBar to auto-populate the menu
-# which requires getting a directory listing as non-privileged user
-chmod o+r /etc/wireguard
+# TODO: Confirm file permissions allow WireGuardStatusBar to auto-populate the menu
 
 echo "[+] Success. Now install/run WireGuard StatusBar and menu will auto-populate."
 echo "Please wait up to 60 seconds for your public key to be added to the servers."

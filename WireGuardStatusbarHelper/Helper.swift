@@ -28,7 +28,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
                 NSLog("Watching \(directory) for changes")
                 queue.addPath(directory)
             } else {
-                NSLog("Not watching \(directory) as it doesn't exist")
+                NSLog("Not watching '\(directory)' as it doesn't exist")
             }
         }
     }
@@ -69,11 +69,15 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
                 }
 
                 let tunnelName = configFile.replacingOccurrences(of: ".conf", with: "")
-                tunnels[tunnelName] = []
+                if tunnels[tunnelName] != nil {
+                    NSLog("Skipping '\(configFile)' as this tunnel already exists from a higher configuration path.")
+                    continue
+                }
 
                 NSLog("Reading interface for tunnel \(tunnelName)")
                 var interfaceName = try? String(contentsOfFile: runPath + "/" + tunnelName + ".name", encoding: .utf8)
                 if interfaceName == nil {
+                    // tunnel is not connected
                     interfaceName = ""
                 }
 
@@ -81,6 +85,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
                 NSLog("Reading config file: \(configPath)/\(configFile)")
                 var configData = try? String(contentsOfFile: configPath + "/" + configFile, encoding: .utf8)
                 if configData == nil {
+                    NSLog("Failed to read configuration file '\(configPath)/\(configFile)'")
                     configData = ""
                 }
 
@@ -96,7 +101,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         let state = enable ? "up" : "down"
 
         if !validateTunnelName(tunnelName: tunnelName) {
-            NSLog("Invalid tunnel name \(tunnelName)")
+            NSLog("Invalid tunnel name '\(tunnelName)'")
             reply(1)
             return
         }

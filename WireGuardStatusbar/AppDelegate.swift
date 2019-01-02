@@ -80,8 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
         } as? HelperProtocol
 
         xpcService?.getTunnels(reply: { tunnelInfo in
-            self.tunnels = tunnelInfo.mapValues { interfaceAndConfigData in
-                return Tunnel(fromTunnelInfo: interfaceAndConfigData)
+            self.tunnels = tunnelInfo.map { name, interfaceAndConfigData in
+                return Tunnel(name: name, fromTunnelInfo: interfaceAndConfigData)
             }
             DispatchQueue.main.async { self.statusItem.image = menuImage(tunnels: self.tunnels) }
         })
@@ -90,7 +90,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
     // bring tunnel up/down
     @objc func toggleTunnel(_ sender: NSMenuItem) {
         if let tunnelName = sender.representedObject as? String {
-            let tunnel = tunnels[tunnelName]!
+            let tunnel = tunnels.filter { $0.name == tunnelName }[0]
 
             let xpcService = privilegedHelper!.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
                 NSLog("XPCService error: \(error)")

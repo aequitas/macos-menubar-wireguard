@@ -15,7 +15,7 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
 
     // WireGaurd missing is a big problem, user should fix this first. TODO, include WireGuard with the App
     if showInstallInstructions {
-        NSLog("WireGuard binary not found at \(wireguardBin)")
+        NSLog("WireGuard binary not found at '\(wireguardBin)'")
         statusMenu.insertItem(NSMenuItem(title: "WireGuard not installed! Click here for instructions",
                                          action: #selector(AppDelegate.showInstallInstructions(_:)),
                                          keyEquivalent: ""), at: 0)
@@ -26,27 +26,36 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
         statusMenu.insertItem(NSMenuItem(title: "No tunnel configurations found",
                                          action: nil, keyEquivalent: ""), at: 0)
     } else {
-        for (tunnelName, tunnel) in tunnels.sorted(by: { $0.0.lowercased() > $1.0.lowercased() }) {
-            let item = NSMenuItem(title: "\(tunnelName)",
+        for tunnel in tunnels.sorted(by: { $0.name.lowercased() > $1.name.lowercased() }) {
+            let item = NSMenuItem(title: "\(tunnel.name)",
                                   action: #selector(AppDelegate.toggleTunnel(_:)), keyEquivalent: "")
-            item.representedObject = tunnelName
+            item.representedObject = tunnel.name
             if tunnel.connected {
                 item.state = NSControl.StateValue.on
             }
-            if tunnel.connected || details, let config = tunnel.config {
-                for peer in config.peers {
-                    statusMenu.insertItem(NSMenuItem(title: "  Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
+            if tunnel.connected || details {
+                if let config = tunnel.config {
+                    for peer in config.peers {
+                        statusMenu.insertItem(
+                            NSMenuItem(title: "  Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
+                                       action: nil, keyEquivalent: ""), at: 0
+                        )
+                        statusMenu.insertItem(NSMenuItem(title: "  Endpoint: \(peer.endpoint)",
+                                                         action: nil, keyEquivalent: ""), at: 0)
+                    }
+                    statusMenu.insertItem(NSMenuItem(title: "  Address: \(config.address)",
                                                      action: nil, keyEquivalent: ""), at: 0)
-                    statusMenu.insertItem(NSMenuItem(title: "  Endpoint: \(peer.endpoint)",
-                                                     action: nil, keyEquivalent: ""), at: 0)
-                }
-                statusMenu.insertItem(NSMenuItem(title: "  Address: \(config.address)",
-                                                 action: nil, keyEquivalent: ""), at: 0)
-                if tunnel.interface != nil && tunnel.interface != "" {
-                    statusMenu.insertItem(NSMenuItem(title: "  Interface: \(tunnel.interface!)",
+                } else {
+                    statusMenu.insertItem(NSMenuItem(title: "  Could not parse tunnel configuration!",
                                                      action: nil, keyEquivalent: ""), at: 0)
                 }
             }
+
+            if tunnel.connected, let interface = tunnel.interface {
+                statusMenu.insertItem(NSMenuItem(title: "  Interface: \(interface)",
+                                                 action: nil, keyEquivalent: ""), at: 0)
+            }
+
             statusMenu.insertItem(item, at: 0)
         }
     }
@@ -55,7 +64,7 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
 }
 
 func menuImage(tunnels: Tunnels) -> NSImage {
-    let connectedTunnels = tunnels.filter { $1.connected }
+    let connectedTunnels = tunnels.filter { $0.connected }
     if connectedTunnels.isEmpty {
         let icon = NSImage(named: .disabled)!
         icon.isTemplate = true

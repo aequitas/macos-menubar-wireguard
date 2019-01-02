@@ -3,10 +3,12 @@
 import Foundation
 
 // List of all tunnels known by this application, used to build menu
-// Tunnels are referenced by their configuration file name similar to how wg-quick would∫
-typealias Tunnels = [TunnelName: Tunnel]
+// Tunnels are referenced by their configuration file name similar to how wg-quick would.
+typealias Tunnels = [Tunnel]
 
 struct Tunnel {
+    let name: String
+
     // name of the interface associated with this tunnel (if connected)
     var interface: TunnelInterface?
 
@@ -29,13 +31,18 @@ struct Peer {
 }
 
 extension Tunnel {
-    init(config: TunnelConfig?) {
+    init(name: String, config: TunnelConfig? = nil) {
+        self.name = name
         self.config = config
     }
 
-    init(fromTunnelInfo tunnelInfo: [TunnelInterfaceOrConfigData]) {
+    init(name: String, fromTunnelInfo tunnelInfo: [TunnelInterfaceOrConfigData]) {
+        self.name = name
         interface = tunnelInfo[0] != "" ? tunnelInfo[0] : nil
         config = TunnelConfig(fromConfig: tunnelInfo[1])
+        if config == nil {
+            NSLog("Failed to read configuration file for tunnel '\(name)'")
+        }
     }
 }
 
@@ -57,7 +64,6 @@ extension TunnelConfig {
                 address = interface["Address"] ?? ""
             }
         } else {
-            NSLog("Failed to read configuration file")
             return nil
         }
     }

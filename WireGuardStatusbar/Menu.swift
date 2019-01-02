@@ -34,9 +34,6 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
                 item.state = NSControl.StateValue.on
             }
             if tunnel.connected || details, let config = tunnel.config {
-                // connected tunnel implies a interface exists for the tunnel
-                let interface = tunnel.interface!
-
                 for peer in config.peers {
                     statusMenu.insertItem(NSMenuItem(title: "  Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
                                                      action: nil, keyEquivalent: ""), at: 0)
@@ -45,8 +42,10 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
                 }
                 statusMenu.insertItem(NSMenuItem(title: "  Address: \(config.address)",
                                                  action: nil, keyEquivalent: ""), at: 0)
-                statusMenu.insertItem(NSMenuItem(title: "  Interface: \(interface)",
-                                                 action: nil, keyEquivalent: ""), at: 0)
+                if tunnel.interface != nil && tunnel.interface != "" {
+                    statusMenu.insertItem(NSMenuItem(title: "  Interface: \(tunnel.interface!)",
+                                                     action: nil, keyEquivalent: ""), at: 0)
+                }
             }
             statusMenu.insertItem(item, at: 0)
         }

@@ -8,8 +8,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     // Starts the helper daemon
     func run() {
         // create XPC to App
-        app = AppXPC(exportedObject: self,
-                     onClose: { DispatchQueue.main.async { CFRunLoopStop(CFRunLoopGetCurrent()) } })
+        app = AppXPC(exportedObject: self, onConnect: abortShutdown, onClose: shutdown)
 
         // watch configuration and runstate directories for changes to notify App
         registerWireGuardStateWatch()
@@ -117,6 +116,28 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         } else {
             NSLog("Unable to get version information")
             reply("n/a")
+        }
+    }
+
+    // Launchd throttles services that restart to soon (<10 seconds), provide a mechanism to prevent this.
+    // set the time in the future when it is safe to shutdown the helper without launchd penalty
+    let launchdMinimaltimeExpired = DispatchTime.now() + DispatchTimeInterval.seconds(10)
+    var shutdownTask: DispatchWorkItem?
+
+    func shutdown() {
+        NSLog("Shutting down")
+        // Dispatch the shutdown of the runloop to at least 10 seconds after starting the application.
+        // This will shutdown immidiately if the deadline already passed.
+        shutdownTask = DispatchWorkItem { CFRunLoopStop(CFRunLoopGetCurrent()) }
+        DispatchQueue.main.asyncAfter(deadline: launchdMinimaltimeExpired, execute: shutdownTask!)
+    }
+
+    // allow shutdown to be aborted (eg: when a new XPC connection comes in)
+    func abortShutdown() {
+        if let shutdownTask = self.shutdownTask {
+            NSLog("Aborting shutdown")
+            shutdownTask.cancel()
+            self.shutdownTask = nil
         }
     }
 }

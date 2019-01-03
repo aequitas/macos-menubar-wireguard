@@ -6,14 +6,16 @@ class AppXPC: NSObject, NSXPCListenerDelegate {
     private let listener: NSXPCListener
 
     private var exportedObject: HelperProtocol?
+    private var onConnect: () -> Void
     private var onClose: () -> Void
 
     var connections = [NSXPCConnection]()
 
     let connectionListActions = DispatchQueue(label: "connectionListActions")
 
-    init(exportedObject: HelperProtocol, onClose: @escaping () -> Void) {
+    init(exportedObject: HelperProtocol, onConnect: @escaping () -> Void, onClose: @escaping () -> Void) {
         self.exportedObject = exportedObject
+        self.onConnect = onConnect
         self.onClose = onClose
 
         listener = NSXPCListener(machServiceName: HelperConstants.machServiceName)
@@ -25,6 +27,7 @@ class AppXPC: NSObject, NSXPCListenerDelegate {
     /// Called when the client connects to the helper daemon
     func listener(_: NSXPCListener, shouldAcceptNewConnection connection: NSXPCConnection) -> Bool {
         NSLog("Client connected")
+        onConnect()
 
         // Set the protocol that the calling application conforms to.
         connection.remoteObjectInterface = NSXPCInterface(with: AppProtocol.self)

@@ -11,7 +11,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.13</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.11</string>
+	<string>1.0.12</string>
 	<key>SMAuthorizedClients</key>
 	<array>
 		<string>anchor apple generic and identifier &quot;WireGuardStatusbar&quot;</string>

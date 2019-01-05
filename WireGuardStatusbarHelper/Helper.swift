@@ -129,6 +129,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         // Dispatch the shutdown of the runloop to at least 10 seconds after starting the application.
         // This will shutdown immidiately if the deadline already passed.
         shutdownTask = DispatchWorkItem { CFRunLoopStop(CFRunLoopGetCurrent()) }
+        // Dispatch to main queue since that is the thread where the runloop is
         DispatchQueue.main.asyncAfter(deadline: launchdMinimaltimeExpired, execute: shutdownTask!)
     }
 

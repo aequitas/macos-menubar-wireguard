@@ -3,6 +3,7 @@ disabled_rules:
   - todo
   # conflicts with swiftformat's default
   - trailing_comma
+  - function_body_length
 excluded:
   # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift

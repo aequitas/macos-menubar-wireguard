@@ -71,11 +71,19 @@ class AppTests: XCTestCase {
         XCTAssertEqual(menu.items[4].title, "  Allowed IPs: 198.51.100.0/24")
     }
 
+    func testMenuEnabledTunnelNoDetails() {
+        var tunnels = testTunnels
+        tunnels[0].interface = "utun1"
+
+        let menu = buildMenu(tunnels: tunnels, connectedTunnelDetails: false)
+        XCTAssertEqual(menu.items[1].title, "2 Invalid Config")
+    }
+
     func testMenuDetails() {
         var tunnels = testTunnels
         tunnels[0].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels, details: true)
+        let menu = buildMenu(tunnels: tunnels, allTunnelDetails: true)
         XCTAssertEqual(menu.items[0].title, "1 Tunnel Name")
         XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
         XCTAssertEqual(menu.items[1].title, "  Interface: utun1")
@@ -88,7 +96,7 @@ class AppTests: XCTestCase {
         var tunnels = testTunnels
         tunnels[1].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels, details: true)
+        let menu = buildMenu(tunnels: tunnels, allTunnelDetails: true)
         let offset = 4
         XCTAssertEqual(menu.items[0 + offset].title, "2 Invalid Config")
         XCTAssertEqual(menu.items[0 + offset].state, NSControl.StateValue.on)

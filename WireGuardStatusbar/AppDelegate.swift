@@ -19,6 +19,13 @@ extension NSImage.Name {
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
+    // don't load persistent defaults during development/ui-testing
+    #if DEBUG
+        let defaults = UserDefaults(suiteName: "test")!
+    #else
+        let defaults = UserDefaults.standard
+    #endif
+
     // keep the existence and state of all tunnel(configuration)s
     var tunnels = Tunnels()
 
@@ -30,6 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
     var privilegedHelper: HelperXPC?
 
     func applicationDidFinishLaunching(_: Notification) {
+        // set default preferences
+        defaults.register(defaults: defaultSettings)
+
         // set a default icon at startup
         statusItem.image = NSImage(named: .appInit)!
         statusItem.image!.isTemplate = true
@@ -40,7 +50,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
             button.sendAction(on: [NSEvent.EventTypeMask.leftMouseDown, NSEvent.EventTypeMask.rightMouseDown])
         }
 
-        // initialize helper,
+        // initialize helper XPC connection
         privilegedHelper = HelperXPC(exportedObject: self)
 
         // install the Helper or Update it if needed
@@ -64,9 +74,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
     // build menu on the fly using tunnels state/configuration
     @objc func statusBarButtonClicked(sender _: NSStatusBarButton) {
         let event = NSApp.currentEvent!
-        let details = event.modifierFlags.contains(.option)
+        let optionClicked = event.modifierFlags.contains(.option)
 
-        statusItem.popUpMenu(buildMenu(tunnels: tunnels, details: details,
+        let showAllTunnelDetails = defaults.bool(forKey: "showAllTunnelDetails")
+
+        let showDetails = optionClicked || showAllTunnelDetails
+        let showConnected = defaults.bool(forKey: "showConnectedTunnelDetails")
+
+        statusItem.popUpMenu(buildMenu(tunnels: tunnels,
+                                       allTunnelDetails: showDetails,
+                                       connectedTunnelDetails: showConnected,
                                        showInstallInstructions: !wireguardInstalled))
     }
 
@@ -110,13 +127,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
         alert.runModal()
     }
 
-    @objc func quit(_: NSMenuItem) {
-        NSApplication.shared.terminate(self)
-    }
-
     @objc func about(_: NSMenuItem) {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
+    }
+
+    var preferences: NSWindowController?
+    @objc func preferences(_: NSMenuItem) {
+        if preferences == nil {
+            preferences = Preferences()
+        }
+        preferences!.showWindow(nil)
+    }
+
+    @objc func quit(_: NSMenuItem) {
+        NSApplication.shared.terminate(self)
     }
 
     func applicationWillTerminate(_: Notification) {

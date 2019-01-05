@@ -24,3 +24,8 @@ Please follow the instructions on:
 
 and restart this Application afterwards.
 """
+
+let defaultSettings = [
+    "showAllTunnelDetails": false,
+    "showConnectedTunnelDetails": true,
+]

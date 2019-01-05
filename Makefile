@@ -93,12 +93,13 @@ ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 
 # install and run the App /Application using the distributable .dmg
 install: /Applications/WireGuardStatusbar.app
-/Applications/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app | WireGuardStatusbar.dmg
+/Applications/WireGuardStatusbar.app: WireGuardStatusbar.dmg
 	-osascript -e 'tell application "WireGuardStatusbar" to quit'
-	-diskutil umount /Volumes/WireGuardStatusbar
+	-hdiutil detach -quiet /Volumes/WireGuardStatusbar/
 	hdiutil attach -quiet WireGuardStatusbar.dmg
 	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app /Volumes/WireGuardStatusbar/Applications/
 	hdiutil detach -quiet /Volumes/WireGuardStatusbar/
+	touch $@
 	open "$@"
 
 uninstall:

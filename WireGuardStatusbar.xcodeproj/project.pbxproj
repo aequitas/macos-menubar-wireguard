@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,6 +44,9 @@
 		0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6621BB0C9A00701CCE /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
 		0456DA6721BB0C9C00701CCE /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
+		0457E2FC21DFF1F600DD17A2 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457E2FA21DFF1F600DD17A2 /* PreferencesController.swift */; };
+		0457E2FD21DFF1F600DD17A2 /* PreferencesController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0457E2FB21DFF1F600DD17A2 /* PreferencesController.xib */; };
+		0457E2FE21DFF2D400DD17A2 /* PreferencesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0457E2FA21DFF1F600DD17A2 /* PreferencesController.swift */; };
 		0466E5B821C1AB2D00113B45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B4BE43211E1E010001213A /* AppDelegate.swift */; };
 		0466E5B921C1AB5700113B45 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
 		0466E5BA21C1AB5700113B45 /* HelperProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6321BB0C9000701CCE /* HelperProtocol.swift */; };
@@ -124,6 +127,8 @@
 		04554CBB21C0515900A08A17 /* test-localhost.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "test-localhost.conf"; sourceTree = "<group>"; };
 		0456DA6221BB0C9000701CCE /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Const.swift; path = Shared/Const.swift; sourceTree = "<group>"; };
 		0456DA6321BB0C9000701CCE /* HelperProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelperProtocol.swift; path = Shared/HelperProtocol.swift; sourceTree = "<group>"; };
+		0457E2FA21DFF1F600DD17A2 /* PreferencesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesController.swift; sourceTree = "<group>"; };
+		0457E2FB21DFF1F600DD17A2 /* PreferencesController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreferencesController.xib; sourceTree = "<group>"; };
 		047AE5D821DE7D390099ABF6 /* HelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelperTests.swift; sourceTree = "<group>"; };
 		0490167D21C04B3800299400 /* IntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0490167F21C04B3900299400 /* IntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegrationTests.swift; sourceTree = "<group>"; };
@@ -242,6 +247,8 @@
 				0401E29621C990FB0030E707 /* HelperXPC.swift */,
 				0401E29821C9913B0030E707 /* Tunnel.swift */,
 				0401E2AB21CD853B0030E707 /* Menu.swift */,
+				0457E2FA21DFF1F600DD17A2 /* PreferencesController.swift */,
+				0457E2FB21DFF1F600DD17A2 /* PreferencesController.xib */,
 			);
 			path = WireGuardStatusbar;
 			sourceTree = "<group>";
@@ -396,6 +403,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0457E2FD21DFF1F600DD17A2 /* PreferencesController.xib in Resources */,
 				04B4BE46211E1E030001213A /* Assets.xcassets in Resources */,
 				04B4BE49211E1E030001213A /* MainMenu.xib in Resources */,
 				04B2BD2E21BD5DC800CCAE2F /* README.md in Resources */,
@@ -492,6 +500,7 @@
 				0401E2AA21CD81210030E707 /* Types.swift in Sources */,
 				0401E2B321CD93370030E707 /* AppXPC.swift in Sources */,
 				0401E29B21C992C80030E707 /* Tunnel.swift in Sources */,
+				0457E2FE21DFF2D400DD17A2 /* PreferencesController.swift in Sources */,
 				0401E29D21C992EE0030E707 /* HelperXPC.swift in Sources */,
 				0401E2B221CD93340030E707 /* WireGuard.swift in Sources */,
 				0401E2B121CD92A80030E707 /* Helper.swift in Sources */,
@@ -508,6 +517,7 @@
 				0401E2A921CD811F0030E707 /* Types.swift in Sources */,
 				0456DA6421BB0C9000701CCE /* Const.swift in Sources */,
 				0401E29921C9913B0030E707 /* Tunnel.swift in Sources */,
+				0457E2FC21DFF1F600DD17A2 /* PreferencesController.swift in Sources */,
 				0401E2AC21CD853B0030E707 /* Menu.swift in Sources */,
 				0401E29721C990FB0030E707 /* HelperXPC.swift in Sources */,
 				0456DA6521BB0C9000701CCE /* HelperProtocol.swift in Sources */,

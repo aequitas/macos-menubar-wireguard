@@ -4,14 +4,19 @@ import Cocoa
 
 // contruct menu with all tunnels found in configuration
 // TODO: find out if it is possible to have a dynamic bound IB menu with variable contents
-func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions: Bool = false) -> NSMenu {
+func buildMenu(tunnels: Tunnels, allTunnelDetails: Bool = false, connectedTunnelDetails: Bool = true,
+               showInstallInstructions: Bool = false) -> NSMenu {
     // TODO: currently just rebuilding the entire menu, maybe opt for replacing the tunnel entries instead?
     let statusMenu = NSMenu()
     statusMenu.minimumWidth = 200
 
     statusMenu.addItem(NSMenuItem.separator())
-    statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)), keyEquivalent: ""))
-    statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)), keyEquivalent: "q"))
+    statusMenu.addItem(NSMenuItem(title: "About", action: #selector(AppDelegate.about(_:)),
+                                  keyEquivalent: ""))
+    statusMenu.addItem(NSMenuItem(title: "Preferences...", action: #selector(AppDelegate.preferences(_:)),
+                                  keyEquivalent: ","))
+    statusMenu.addItem(NSMenuItem(title: "Quit", action: #selector(AppDelegate.quit(_:)),
+                                  keyEquivalent: "q"))
 
     // WireGaurd missing is a big problem, user should fix this first. TODO, include WireGuard with the App
     if showInstallInstructions {
@@ -33,7 +38,7 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
             if tunnel.connected {
                 item.state = NSControl.StateValue.on
             }
-            if tunnel.connected || details {
+            if (tunnel.connected && connectedTunnelDetails) || allTunnelDetails {
                 if let config = tunnel.config {
                     for peer in config.peers {
                         statusMenu.insertItem(
@@ -51,7 +56,7 @@ func buildMenu(tunnels: Tunnels, details: Bool = false, showInstallInstructions:
                 }
             }
 
-            if tunnel.connected, let interface = tunnel.interface {
+            if tunnel.connected && (connectedTunnelDetails || allTunnelDetails), let interface = tunnel.interface {
                 statusMenu.insertItem(NSMenuItem(title: "  Interface: \(interface)",
                                                  action: nil, keyEquivalent: ""), at: 0)
             }

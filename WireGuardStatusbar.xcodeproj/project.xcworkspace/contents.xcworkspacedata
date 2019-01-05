@@ -2,12 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:../Shared/Const.swift">
-   </FileRef>
-   <FileRef
-      location = "group:../Shared/HelperProtocol.swift">
-   </FileRef>
-   <FileRef
       location = "self:">
    </FileRef>
 </Workspace>

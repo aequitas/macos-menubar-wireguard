@@ -30,7 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
     var tunnels = Tunnels()
 
     // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
-    var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBin)
+    var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBinPath)
 
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 

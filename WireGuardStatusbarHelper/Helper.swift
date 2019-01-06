@@ -7,6 +7,43 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     private var queue: SKQueue?
 
+    // prefix path for etc/wireguard, bin/wg, bin/wireguard-go and bin/bash (bash 4)
+    // can be overridden by the user via root defaults to allow custom location for Homebrew
+    private var brewPrefix: String
+    // path to wg-quick, can be overriden by the user via root defaults
+    private var wgquickBinPath: String
+    // NOTICE: the root defaults override feature is a half implemented feature
+    // the GUI App will not be aware of these settings and might falsely warn that WireGuard
+    // is not installed. This warning can be ignored.
+    // Example, to set defaults as root for wgquickBinPath run:
+    // sudo defaults write WireGuardStatusbarHelper wgquickBinPath /opt/local/bin/wg-quick
+
+    // paths to search for tunnel configurations, ordered by wg-quick's preferences
+    private var configPaths: [String]
+
+    // read preferences set via root defaults
+    override init() {
+        if let brewPrefix = CFPreferencesCopyAppValue("brewPrefix" as CFString,
+                                                      HelperConstants.machServiceName as CFString) as? String {
+            NSLog("Overriding 'brewPrefix' with: \(brewPrefix)")
+            self.brewPrefix = brewPrefix
+        } else {
+            brewPrefix = defaultBrewPrefix
+        }
+        configPaths = [
+            "/etc/wireguard",
+            "\(brewPrefix)/etc/wireguard",
+        ]
+
+        if let wgquickBinPath = CFPreferencesCopyAppValue("wgquickBinPath" as CFString,
+                                                          HelperConstants.machServiceName as CFString) as? String {
+            NSLog("Overriding 'wgquickBinPath' with: \(wgquickBinPath)")
+            self.wgquickBinPath = wgquickBinPath
+        } else {
+            wgquickBinPath = "\(brewPrefix)/bin/wg-quick"
+        }
+    }
+
     // Starts the helper daemon
     func run() {
         // create XPC to App
@@ -118,7 +155,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         }
 
         NSLog("Set tunnel \(tunnelName) \(state)")
-        reply(wgQuick([state, tunnelName]))
+        reply(wgQuick([state, tunnelName], brewPrefix: brewPrefix, wgquickBinPath: wgquickBinPath))
 
         // because /var/run/wireguard might not exist and can be created after upping the first tunnel
         // run the registration of watchdirectories again and force trigger a state update to the app

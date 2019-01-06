@@ -2,17 +2,10 @@
 
 import Foundation
 
-let brewPrefix = "/usr/local"
+let defaultBrewPrefix = "/usr/local"
 let runPath = "/var/run/wireguard"
 
-// paths to search for tunnel configurations, ordered by wg-quick's preferences
-let configPaths = [
-    "/etc/wireguard",
-    "\(brewPrefix)/etc/wireguard",
-]
-
-let wireguardBin = "\(brewPrefix)/bin/wg"
-let wgquickBin = "\(brewPrefix)/bin/wg-quick"
+let wireguardBinPath = "\(defaultBrewPrefix)/bin/wg"
 
 let installInstructions = """
 Currently this Application does not come with WireGuard binaries. \

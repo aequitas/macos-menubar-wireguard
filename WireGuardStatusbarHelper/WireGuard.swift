@@ -10,9 +10,15 @@ func validateTunnelName(tunnelName: String) -> Bool {
                                       range: NSRange(location: 0, length: tunnelName.count)) != nil
 }
 
-func wgQuick(_ arguments: [String]) -> NSNumber {
+func wgQuick(_ arguments: [String], brewPrefix: String, wgquickBinPath: String) -> NSNumber {
+    // prevent passing an invalid path or else task.launch will result in a fatal NSInvalidArgumentException
+    guard FileManager.default.fileExists(atPath: wgquickBinPath) else {
+        NSLog("Path '\(wgquickBinPath)' for 'wg-quick' binary is invalid!")
+        return 1
+    }
+
     let task = Process()
-    task.launchPath = wgquickBin
+    task.launchPath = wgquickBinPath
     task.arguments = arguments
     // Add brew bin to path as wg-quick requires Bash 4 instead of macOS provided Bash 3
     task.environment = ["PATH": "\(brewPrefix)/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"]

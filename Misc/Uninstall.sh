@@ -17,4 +17,8 @@ sudo rm /Library/PrivilegedHelperTools/WireGuardStatusbarHelper
 # Also remove application
 sudo rm -r /Applications/WireGuardStatusbar.app/
 
+# And all settings
+defaults delete WireGuardStatusbar
+sudo defaults delete WireGuardStatusbarHelper
+
 exit 0

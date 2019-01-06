@@ -20,11 +20,11 @@ func buildMenu(tunnels: Tunnels, allTunnelDetails: Bool = false, connectedTunnel
 
     // WireGaurd missing is a big problem, user should fix this first. TODO, include WireGuard with the App
     if showInstallInstructions {
-        NSLog("WireGuard binary not found at '\(wireguardBin)'")
-        statusMenu.insertItem(NSMenuItem(title: "WireGuard not installed! Click here for instructions",
+        NSLog("WireGuard binary was not found at '\(wireguardBinPath)'")
+        statusMenu.insertItem(NSMenuItem(title: "WireGuard not installed! Click here for instructions...",
                                          action: #selector(AppDelegate.showInstallInstructions(_:)),
                                          keyEquivalent: ""), at: 0)
-        return statusMenu
+        statusMenu.insertItem(NSMenuItem.separator(), at: 0)
     }
 
     if tunnels.isEmpty {

@@ -5,6 +5,8 @@ import Foundation
 class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     private var app: AppXPC?
 
+    private var queue: SKQueue?
+
     // Starts the helper daemon
     func run() {
         // create XPC to App
@@ -21,13 +23,18 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     func registerWireGuardStateWatch() {
         // register watchers to respond to changes in wireguard config/runtime state
         // will trigger: receivedNotification
-        let queue = SKQueue(delegate: self)!
+        if queue == nil {
+            queue = SKQueue(delegate: self)!
+        }
         for directory in configPaths + [runPath] {
+            // skip already watched paths
+            if queue!.isPathWatched(directory) { continue }
+
             if FileManager.default.fileExists(atPath: directory) {
                 NSLog("Watching \(directory) for changes")
-                queue.addPath(directory)
+                queue!.addPath(directory)
             } else {
-                NSLog("Not watching '\(directory)' as it doesn't exist")
+                NSLog("Not watching '\(directory)' as it does not exist")
             }
         }
     }
@@ -44,6 +51,11 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         // not for every change in either run or config directories
         // At first maybe simple debounce to reduce amount of reloads of configuration?
 
+        appUpdateState()
+    }
+
+    // Send a signal to the App that tunnel state/configuration might have changed
+    func appUpdateState() {
         for connection in app!.connections {
             if let remoteObject = connection.remoteObjectProxy as? AppProtocol {
                 remoteObject.updateState()
@@ -107,6 +119,11 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
         NSLog("Set tunnel \(tunnelName) \(state)")
         reply(wgQuick([state, tunnelName]))
+
+        // because /var/run/wireguard might not exist and can be created after upping the first tunnel
+        // run the registration of watchdirectories again and force trigger a state update to the app
+        registerWireGuardStateWatch()
+        appUpdateState()
     }
 
     // XPC: allow App to query version of helper to allow updating when a new version is available

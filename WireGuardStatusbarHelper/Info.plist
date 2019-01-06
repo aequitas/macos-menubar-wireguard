@@ -9,9 +9,9 @@
 	<key>CFBundleName</key>
 	<string>WireGuardStatusbarHelper</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.14</string>
+	<string>1.15</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.12</string>
+	<string>1.0.13</string>
 	<key>SMAuthorizedClients</key>
 	<array>
 		<string>anchor apple generic and identifier &quot;WireGuardStatusbar&quot;</string>

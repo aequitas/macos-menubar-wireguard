@@ -53,60 +53,64 @@ class AppTests: XCTestCase {
     }
 
     func testMenu() {
-        let menu = buildMenu(tunnels: testTunnels)
-        XCTAssertEqual(menu.items[0].title, "1 Tunnel Name")
-        XCTAssertEqual(menu.items[0].state, NSControl.StateValue.off)
+        let items = buildMenu(tunnels: testTunnels)
+        XCTAssertEqual(items[0].title, "1 Tunnel Name")
+        XCTAssertEqual(items[0].state, NSControl.StateValue.off)
     }
 
     func testMenuEnabledTunnel() {
         var tunnels = testTunnels
         tunnels[0].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels)
-        XCTAssertEqual(menu.items[0].title, "1 Tunnel Name")
-        XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
-        XCTAssertEqual(menu.items[1].title, "  Interface: utun1")
-        XCTAssertEqual(menu.items[2].title, "  Address: 192.0.2.0/32")
-        XCTAssertEqual(menu.items[3].title, "  Endpoint: 192.0.2.1/32:51820")
-        XCTAssertEqual(menu.items[4].title, "  Allowed IPs: 198.51.100.0/24")
+        let items = buildMenu(tunnels: tunnels)
+        XCTAssertEqual(items[0].title, "1 Tunnel Name")
+        XCTAssertEqual(items[0].state, NSControl.StateValue.on)
+        XCTAssertEqual(items[1].title, "Interface: utun1")
+        XCTAssertEqual(items[2].title, "Address: 192.0.2.0/32")
+        XCTAssertEqual(items[3].title, "Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(items[4].title, "Allowed IPs: 198.51.100.0/24")
     }
 
     func testMenuEnabledTunnelNoDetails() {
         var tunnels = testTunnels
         tunnels[0].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels, connectedTunnelDetails: false)
-        XCTAssertEqual(menu.items[1].title, "2 Invalid Config")
+        let items = buildMenu(tunnels: tunnels, connectedTunnelDetails: false)
+        XCTAssertEqual(items[1].title, "2 Invalid Config")
     }
 
     func testMenuDetails() {
         var tunnels = testTunnels
         tunnels[0].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels, allTunnelDetails: true)
-        XCTAssertEqual(menu.items[0].title, "1 Tunnel Name")
-        XCTAssertEqual(menu.items[0].state, NSControl.StateValue.on)
-        XCTAssertEqual(menu.items[1].title, "  Interface: utun1")
-        XCTAssertEqual(menu.items[2].title, "  Address: 192.0.2.0/32")
-        XCTAssertEqual(menu.items[3].title, "  Endpoint: 192.0.2.1/32:51820")
-        XCTAssertEqual(menu.items[4].title, "  Allowed IPs: 198.51.100.0/24")
+        let items = buildMenu(tunnels: tunnels, allTunnelDetails: true)
+        XCTAssertEqual(items[0].title, "1 Tunnel Name")
+        XCTAssertEqual(items[0].state, NSControl.StateValue.on)
+        XCTAssertEqual(items[1].title, "Interface: utun1")
+        XCTAssertEqual(items[1].indentationLevel, 1)
+        XCTAssertEqual(items[2].title, "Address: 192.0.2.0/32")
+        XCTAssertEqual(items[2].indentationLevel, 1)
+        XCTAssertEqual(items[3].title, "Endpoint: 192.0.2.1/32:51820")
+        XCTAssertEqual(items[3].indentationLevel, 1)
+        XCTAssertEqual(items[4].title, "Allowed IPs: 198.51.100.0/24")
+        XCTAssertEqual(items[4].indentationLevel, 1)
     }
 
     func testMenuDetailsInvalidConfig() {
         var tunnels = testTunnels
         tunnels[1].interface = "utun1"
 
-        let menu = buildMenu(tunnels: tunnels, allTunnelDetails: true)
+        let items = buildMenu(tunnels: tunnels, allTunnelDetails: true)
         let offset = 4
-        XCTAssertEqual(menu.items[0 + offset].title, "2 Invalid Config")
-        XCTAssertEqual(menu.items[0 + offset].state, NSControl.StateValue.on)
-        XCTAssertEqual(menu.items[1 + offset].title, "  Interface: utun1")
-        XCTAssertEqual(menu.items[2 + offset].title, "  Could not parse tunnel configuration!")
+        XCTAssertEqual(items[0 + offset].title, "2 Invalid Config")
+        XCTAssertEqual(items[0 + offset].state, NSControl.StateValue.on)
+        XCTAssertEqual(items[1 + offset].title, "Interface: utun1")
+        XCTAssertEqual(items[2 + offset].title, "Could not parse tunnel configuration!")
     }
 
     func testMenuNoTunnels() {
-        let menu = buildMenu(tunnels: Tunnels())
-        XCTAssertEqual(menu.items[0].title, "No tunnel configurations found")
+        let items = buildMenu(tunnels: Tunnels())
+        XCTAssertEqual(items[0].title, "No tunnel configurations found")
     }
 
     func testMenuSorting() {
@@ -114,9 +118,9 @@ class AppTests: XCTestCase {
             Tunnel(name: "Z Tunnel Name"),
             Tunnel(name: "A Tunnel Name"),
         ]
-        let menu = buildMenu(tunnels: tunnels)
+        let items = buildMenu(tunnels: tunnels)
         // tunnels should be sorted alphabetically
-        XCTAssertEqual(menu.items[0].title, "A Tunnel Name")
+        XCTAssertEqual(items[0].title, "A Tunnel Name")
     }
 
     func testConfigParsing() {

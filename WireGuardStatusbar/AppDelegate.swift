@@ -18,21 +18,17 @@ extension NSImage.Name {
 }
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
-    // don't load persistent defaults during development/ui-testing
-    #if DEBUG
-        let defaults = UserDefaults(suiteName: "test")!
-    #else
-        let defaults = UserDefaults.standard
-    #endif
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol {
+    let defaults: UserDefaults = NSUserDefaultsController.shared.defaults
 
     // keep the existence and state of all tunnel(configuration)s
     var tunnels = Tunnels()
 
     // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
-    var wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBinPath)
+    @objc dynamic let wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBinPath)
 
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+    @IBOutlet var menu: NSMenu!
 
     var privilegedHelper: HelperXPC?
 
@@ -40,15 +36,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
         // set default preferences
         defaults.register(defaults: defaultSettings)
 
+        #if DEBUG
+            // reset preferences to defaults for development/(ui)testing
+            defaults.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+        #endif
+
         // set a default icon at startup
         statusItem.image = NSImage(named: .appInit)!
         statusItem.image!.isTemplate = true
 
-        // override mouse click handling to enable option-click for details
-        if let button = self.statusItem.button {
-            button.action = #selector(statusBarButtonClicked(sender:))
-            button.sendAction(on: [NSEvent.EventTypeMask.leftMouseDown, NSEvent.EventTypeMask.rightMouseDown])
-        }
+        // configure menu to use and set delegate to allow overriding menu option modifier behaviour
+        statusItem.menu = menu
+        menu.minimumWidth = 200
 
         // initialize helper XPC connection
         privilegedHelper = HelperXPC(exportedObject: self)
@@ -71,20 +70,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
         }
     }
 
-    // build menu on the fly using tunnels state/configuration
-    @objc func statusBarButtonClicked(sender _: NSStatusBarButton) {
-        let event = NSApp.currentEvent!
-        let optionClicked = event.modifierFlags.contains(.option)
-
+    @objc func menuNeedsUpdate(_ menu: NSMenu) {
+        // show details if menu is invoked while pressing down option key
+        let optionModifier = NSApp.currentEvent!.modifierFlags.contains(.option)
         let showAllTunnelDetails = defaults.bool(forKey: "showAllTunnelDetails")
-
-        let showDetails = optionClicked || showAllTunnelDetails
+        let showDetails = optionModifier || showAllTunnelDetails
         let showConnected = defaults.bool(forKey: "showConnectedTunnelDetails")
 
-        statusItem.popUpMenu(buildMenu(tunnels: tunnels,
-                                       allTunnelDetails: showDetails,
-                                       connectedTunnelDetails: showConnected,
-                                       showInstallInstructions: !wireguardInstalled))
+        // remove all tunnel and tunnel detail menu items
+        while let item = menu.item(withTag: MenuItemTypes.tunnel.rawValue) {
+            menu.removeItem(item)
+        }
+
+        // generate new tunnel and tunnel details menu items and add them to the menu
+        let tunnelMenuItems = buildMenu(tunnels: tunnels,
+                                        allTunnelDetails: showDetails,
+                                        connectedTunnelDetails: showConnected)
+        for item in tunnelMenuItems.reversed() {
+            item.tag = MenuItemTypes.tunnel.rawValue
+            menu.insertItem(item, at: 0)
+        }
     }
 
     // query the Helper for all current tunnels configuration and runtime state, update menu icon
@@ -121,26 +126,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, AppProtocol {
         }
     }
 
-    @objc func showInstallInstructions(_: NSMenuItem) {
+    @IBAction func showInstallInstructions(_: Any) {
         let alert = NSAlert()
         alert.messageText = installInstructions
         alert.runModal()
     }
 
-    @objc func about(_: NSMenuItem) {
+    @IBAction func about(_: Any) {
         NSApplication.shared.orderFrontStandardAboutPanel(self)
         NSApplication.shared.activate(ignoringOtherApps: true)
     }
 
     var preferences: NSWindowController?
-    @objc func preferences(_: NSMenuItem) {
+    @IBAction func preferences(_: Any) {
         if preferences == nil {
             preferences = Preferences()
         }
         preferences!.showWindow(nil)
     }
 
-    @objc func quit(_: NSMenuItem) {
+    @IBAction func quit(_: Any) {
         NSApplication.shared.terminate(self)
     }
 

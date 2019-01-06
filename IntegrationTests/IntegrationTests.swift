@@ -33,7 +33,7 @@ class IntegrationTests: XCTestCase {
 
         menuBarsQuery.children(matching: .statusItem).element.click()
         // TODO: discover how to verify the checked state of the menuitem, eg axMenuItemMarkChar
-        XCTAssertTrue(menuBarsQuery.menuItems["  Address: 192.0.2.0/32"].exists)
+        XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
 
         // disable tunnel after the test
         menuBarsQuery.menuItems[testConfigFile].click()
@@ -51,5 +51,22 @@ class IntegrationTests: XCTestCase {
             XCTAssertEqual(tunnelInfo["test-localhost"]![0], "")
             XCTAssertEqual(tunnelInfo["test-localhost"]![1], testConfig!)
         })
+    }
+
+    // test if changing the tunnel details preference has the desired effect
+    func testPreferences() {
+        let app = XCUIApplication()
+        let menuBarsQuery = app.menuBars
+        menuBarsQuery.children(matching: .statusItem).element.click()
+        // sanity check
+        XCTAssertFalse(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
+
+        menuBarsQuery.menuItems["Preferences..."].click()
+        let wireguardstatusbarPreferencesWindow = app.windows["WireGuardStatusbar Preferences"]
+        wireguardstatusbarPreferencesWindow.checkBoxes["Show details on all tunnels"].click()
+        wireguardstatusbarPreferencesWindow.buttons[XCUIIdentifierCloseWindow].click()
+
+        menuBarsQuery.children(matching: .statusItem).element.click()
+        XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
     }
 }

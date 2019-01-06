@@ -238,17 +238,17 @@
 		04B4BE42211E1E010001213A /* WireGuardStatusbar */ = {
 			isa = PBXGroup;
 			children = (
-				0428EA0E21BB07DB00178BA0 /* INIParser.swift */,
 				04B4BE43211E1E010001213A /* AppDelegate.swift */,
 				04B4BE45211E1E030001213A /* Assets.xcassets */,
-				04B4BE47211E1E030001213A /* MainMenu.xib */,
-				04B4BE4A211E1E030001213A /* Info.plist */,
 				0401E29021C844D70030E707 /* Credits.rtf */,
 				0401E29621C990FB0030E707 /* HelperXPC.swift */,
-				0401E29821C9913B0030E707 /* Tunnel.swift */,
+				04B4BE4A211E1E030001213A /* Info.plist */,
+				0428EA0E21BB07DB00178BA0 /* INIParser.swift */,
+				04B4BE47211E1E030001213A /* MainMenu.xib */,
 				0401E2AB21CD853B0030E707 /* Menu.swift */,
 				0457E2FA21DFF1F600DD17A2 /* PreferencesController.swift */,
 				0457E2FB21DFF1F600DD17A2 /* PreferencesController.xib */,
+				0401E29821C9913B0030E707 /* Tunnel.swift */,
 			);
 			path = WireGuardStatusbar;
 			sourceTree = "<group>";
@@ -809,7 +809,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbar;
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbarDev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

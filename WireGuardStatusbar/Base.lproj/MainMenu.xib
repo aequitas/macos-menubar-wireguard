@@ -12,7 +12,48 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="WireGuardStatusbar" customModuleProvider="target"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="WireGuardStatusbar" customModuleProvider="target">
+            <connections>
+                <outlet property="menu" destination="17f-lI-73c" id="mZc-6m-MYa"/>
+            </connections>
+        </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <menu id="17f-lI-73c">
+            <items>
+                <menuItem title="Configuration not loaded!" tag="1" enabled="NO" id="pEz-zf-mBD">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="XtX-2g-ku9"/>
+                <menuItem title="WireGuard not installed! Click here for instructions..." id="iVY-Ks-sq9">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showInstallInstructions:" target="Voe-Tx-rLC" id="wSY-yi-Utn"/>
+                        <binding destination="Voe-Tx-rLC" name="hidden" keyPath="self.wireguardInstalled" id="wJ4-fI-2R8"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="tw9-4O-MLg"/>
+                <menuItem title="About" id="ExS-9u-4D0">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="about:" target="Voe-Tx-rLC" id="YPi-Ub-lcY"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Preferences..." keyEquivalent="," id="LWi-Y3-vZF">
+                    <connections>
+                        <action selector="preferences:" target="Voe-Tx-rLC" id="koQ-WS-bUx"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Quit" keyEquivalent="q" id="8v7-cV-QZA">
+                    <connections>
+                        <action selector="quit:" target="Voe-Tx-rLC" id="frE-cI-40J"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="ke4-Vd-8hh"/>
+            </connections>
+            <point key="canvasLocation" x="-77" y="2"/>
+        </menu>
+        <userDefaultsController representsSharedInstance="YES" id="uf7-Dr-azo"/>
     </objects>
 </document>

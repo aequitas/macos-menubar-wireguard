@@ -123,21 +123,27 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
                 }
 
                 NSLog("Reading interface for tunnel \(tunnelName)")
-                var interfaceName = try? String(contentsOfFile: runPath + "/" + tunnelName + ".name", encoding: .utf8)
-                if interfaceName == nil {
+                var interfaceName: String
+                if let tunnelNameFileContents = try? String(contentsOfFile: runPath + "/" + tunnelName + ".name",
+                                                            encoding: .utf8) {
+                    interfaceName = tunnelNameFileContents.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
+                } else {
                     // tunnel is not connected
                     interfaceName = ""
                 }
 
                 // TODO: read configuration data from wg showconf as well
                 NSLog("Reading config file: \(configPath)/\(configFile)")
-                var configData = try? String(contentsOfFile: configPath + "/" + configFile, encoding: .utf8)
-                if configData == nil {
+                var configData: String
+                if let configFileContents = try? String(contentsOfFile: configPath + "/" + configFile,
+                                                        encoding: .utf8) {
+                    configData = configFileContents
+                } else {
                     NSLog("Failed to read configuration file '\(configPath)/\(configFile)'")
                     configData = ""
                 }
 
-                tunnels[tunnelName] = [interfaceName!, configData!]
+                tunnels[tunnelName] = [interfaceName, configData]
             }
         }
 

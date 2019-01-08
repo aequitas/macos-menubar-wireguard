@@ -46,6 +46,24 @@ extension Tunnel {
     }
 }
 
+extension Dictionary where Key == String {
+    subscript(caseInsensitive key: Key) -> Value? {
+        get {
+            if let key = keys.first(where: { $0.caseInsensitiveCompare(key) == .orderedSame }) {
+                return self[key]
+            }
+            return nil
+        }
+        set {
+            if let key = keys.first(where: { $0.caseInsensitiveCompare(key) == .orderedSame }) {
+                self[key] = newValue
+            } else {
+                self[key] = newValue
+            }
+        }
+    }
+}
+
 extension TunnelConfig {
     init?(fromConfig configFile: String) {
         // determine if config file can be read
@@ -53,15 +71,15 @@ extension TunnelConfig {
             let config = ini.sections
             if !config.isEmpty {
                 // TODO: currently supports only one peer, need to pick a different method for parsing config
-                let peer = config["Peer"] ?? [:]
+                let peer = config[caseInsensitive: "Peer"] ?? [:]
                 peers = [Peer(
-                    endpoint: peer["Endpoint"] ?? "",
-                    allowedIps: (peer["AllowedIPs"] ?? "").split(separator: ",").map {
+                    endpoint: peer[caseInsensitive: "Endpoint"] ?? "",
+                    allowedIps: (peer[caseInsensitive: "AllowedIPs"] ?? "").split(separator: ",").map {
                         $0.trimmingCharacters(in: .whitespaces)
                     }
                 )]
-                let interface = config["Interface"] ?? [:]
-                address = interface["Address"] ?? ""
+                let interface = config[caseInsensitive: "Interface"] ?? [:]
+                address = interface[caseInsensitive: "Address"] ?? ""
             }
         } else {
             return nil

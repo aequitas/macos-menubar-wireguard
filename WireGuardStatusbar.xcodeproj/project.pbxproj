@@ -60,6 +60,7 @@
 		04B4BE46211E1E030001213A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE45211E1E030001213A /* Assets.xcassets */; };
 		04B4BE49211E1E030001213A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04B4BE47211E1E030001213A /* MainMenu.xib */; };
 		04B92495211F6A68008D964A /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B92494211F6A68008D964A /* Helper.swift */; };
+		04C5BE2A21E5266A009EE19A /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C5BE2921E5266A009EE19A /* Shared.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -145,6 +146,7 @@
 		04B92494211F6A68008D964A /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		04B9249B211F7200008D964A /* Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Launchd.plist; sourceTree = "<group>"; };
 		04B9249C211F7215008D964A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04C5BE2921E5266A009EE19A /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +215,7 @@
 				04B2BD4321BDA69000CCAE2F /* AppTests.swift */,
 				0401E2AE21CD91E00030E707 /* HelperTests.swift */,
 				04B2BD4521BDA69000CCAE2F /* Info.plist */,
+				04C5BE2921E5266A009EE19A /* Shared.swift */,
 			);
 			path = UnitTests;
 			sourceTree = "<group>";
@@ -445,7 +448,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=~/.brew/bin:$PATH\nif which swiftlint >/dev/null; then\n    # don't let swiftlint warn for violations that would be fixed by swiftformat\n    find * -name \"*.swift\" | xargs -I% echo /bin/sh -c \"swiftformat < % | swiftlint --use-stdin | sed 's,\\<nopath\\>,%,'\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "export PATH=~/.brew/bin:$PATH\n\nif which swiftlint >/dev/null; then\n    # don't let swiftlint warn for violations that would be fixed by swiftformat\n    /usr/bin/find * -name \"*.swift\"| grep -vE 'SKQueue|INIParse' | xargs -I% /bin/sh -o pipefail -c \"swiftformat < % | swiftlint --lenient --use-stdin | sed 's,\\<nopath\\>,$PWD/%,'\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -492,6 +495,7 @@
 				0401E2B021CD91E00030E707 /* HelperTests.swift in Sources */,
 				0466E5BC21C1AB5700113B45 /* INIParser.swift in Sources */,
 				0466E5B821C1AB2D00113B45 /* AppDelegate.swift in Sources */,
+				04C5BE2A21E5266A009EE19A /* Shared.swift in Sources */,
 				0466E5BA21C1AB5700113B45 /* HelperProtocol.swift in Sources */,
 				04B2BD4421BDA69000CCAE2F /* AppTests.swift in Sources */,
 				0401E2AD21CD855F0030E707 /* Menu.swift in Sources */,

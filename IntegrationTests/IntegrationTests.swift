@@ -44,12 +44,13 @@ class IntegrationTests: XCTestCase {
     func testGetTunnels() {
         let bundle = Bundle(for: type(of: self).self)
 
-        let testConfig = try? String(contentsOfFile: bundle.path(forResource: testConfigFile, ofType: "conf")!)
+        // swiftlint:disable:next force_try
+        let testConfig = try! String(contentsOfFile: bundle.path(forResource: testConfigFile, ofType: "conf")!)
 
         Helper().getTunnels(reply: { tunnelInfo in
             // since test tunnel configuration is bogus, we never expect a connected tunnel
             XCTAssertEqual(tunnelInfo["test-localhost"]![0], "")
-            XCTAssertEqual(tunnelInfo["test-localhost"]![1], testConfig!)
+            XCTAssertEqual(tunnelInfo["test-localhost"]![1], censorConfigurationData(testConfig))
         })
     }
 

@@ -10,6 +10,18 @@ func validateTunnelName(tunnelName: String) -> Bool {
                                       range: NSRange(location: 0, length: tunnelName.count)) != nil
 }
 
+// censor sensitive information like private keys from configuration data
+func censorConfigurationData(_ configData: String) -> String {
+    // swiftlint:disable:next force_try
+    let censorPrivateKey = try! NSRegularExpression(pattern: "^PrivateKey.*$",
+                                                    options: [.anchorsMatchLines, .caseInsensitive])
+
+    return censorPrivateKey.stringByReplacingMatches(in: configData,
+                                                     options: [],
+                                                     range: NSRange(location: 0, length: configData.count),
+                                                     withTemplate: "PrivateKey = ***")
+}
+
 func wgQuick(_ arguments: [String], brewPrefix: String, wgquickBinPath: String) -> NSNumber {
     // prevent passing an invalid path or else task.launch will result in a fatal NSInvalidArgumentException
     guard FileManager.default.fileExists(atPath: wgquickBinPath) else {

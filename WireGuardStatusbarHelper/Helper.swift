@@ -142,6 +142,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
                     NSLog("Failed to read configuration file '\(configPath)/\(configFile)'")
                     configData = ""
                 }
+                configData = censorConfigurationData(configData)
 
                 tunnels[tunnelName] = [interfaceName, configData]
             }

@@ -4,6 +4,7 @@ disabled_rules:
   # conflicts with swiftformat's default
   - trailing_comma
   - function_body_length
+  - trailing_newline
 excluded:
   # ignore vendor files, will be removed in the future
   - WireGuardStatusbar/INIParser.swift

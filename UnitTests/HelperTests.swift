@@ -27,4 +27,14 @@ class HelperTests: XCTestCase {
             XCTAssertNotEqual(version, "n/a")
         }
     }
+
+    // when reading configs don't expose the private keys as we currently have not mechanism
+    // in place to prevent unauthorized xpc calls to the helper
+    func testDontExposePrivates() {
+        testConfigs.forEach { name, config in
+            print("Testing config \(name)")
+            let censoredConfigData = censorConfigurationData(config)
+            XCTAssertFalse(censoredConfigData.contains(testPrivateKey))
+        }
+    }
 }

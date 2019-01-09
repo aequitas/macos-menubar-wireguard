@@ -7,40 +7,36 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     private var queue: SKQueue?
 
-    // prefix path for etc/wireguard, bin/wg, bin/wireguard-go and bin/bash (bash 4)
-    // can be overridden by the user via root defaults to allow custom location for Homebrew
+    // Prefix path for etc/wireguard, bin/wg, bin/wireguard-go and bin/bash (bash 4),
+    // can be overridden by the user via root defaults to allow custom location for Homebrew.
     private var brewPrefix: String
-    // path to wg-quick, can be overriden by the user via root defaults
-    private var wgquickBinPath: String
+    // Path to wg-quick, can be overriden by the user via root defaults.
     // NOTICE: the root defaults override feature is a half implemented feature
     // the GUI App will not be aware of these settings and might falsely warn that WireGuard
     // is not installed. This warning can be ignored.
     // Example, to set defaults as root for wgquickBinPath run:
     // sudo defaults write WireGuardStatusbarHelper wgquickBinPath /opt/local/bin/wg-quick
+    private var wgquickBinPath: String
+    // Path use to determine if WireGuard Homebrew package is installed.
+    // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew.
+    private var wireguardBinPath: String
 
-    // paths to search for tunnel configurations, ordered by wg-quick's preferences
-    private var configPaths: [String]
+    let defaults = UserDefaults.standard
 
-    // read preferences set via root defaults
+    // Read preferences set via root defaults.
     override init() {
-        if let brewPrefix = CFPreferencesCopyAppValue("brewPrefix" as CFString,
-                                                      HelperConstants.machServiceName as CFString) as? String {
-            NSLog("Overriding 'brewPrefix' with: \(brewPrefix)")
-            self.brewPrefix = brewPrefix
-        } else {
-            brewPrefix = defaultBrewPrefix
-        }
-        configPaths = [
-            "/etc/wireguard",
-            "\(brewPrefix)/etc/wireguard",
-        ]
+        defaults.register(defaults: DefaultSettings.Helper)
 
-        if let wgquickBinPath = CFPreferencesCopyAppValue("wgquickBinPath" as CFString,
-                                                          HelperConstants.machServiceName as CFString) as? String {
+        brewPrefix = defaults.string(forKey: "brewPrefix")!
+        if brewPrefix != DefaultSettings.Helper["brewPrefix"] {
+            NSLog("Overriding 'brewPrefix' with: \(brewPrefix)")
+        }
+        wireguardBinPath = "\(brewPrefix)/bin/wg"
+
+        wgquickBinPath = "\(brewPrefix)/bin/wg-quick"
+        if let wgquickBinPath = defaults.string(forKey: "wgquickBinPath"), wgquickBinPath != "" {
             NSLog("Overriding 'wgquickBinPath' with: \(wgquickBinPath)")
             self.wgquickBinPath = wgquickBinPath
-        } else {
-            wgquickBinPath = "\(brewPrefix)/bin/wg-quick"
         }
     }
 
@@ -180,16 +176,25 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         }
     }
 
+    func wireguardInstalled(_ reply: (Bool) -> Void) {
+        let wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBinPath)
+        let wgquickInstalled = FileManager.default.fileExists(atPath: wgquickBinPath)
+        reply(wgquickInstalled && wireguardInstalled)
+    }
+
     // Launchd throttles services that restart to soon (<10 seconds), provide a mechanism to prevent this.
     // set the time in the future when it is safe to shutdown the helper without launchd penalty
     let launchdMinimaltimeExpired = DispatchTime.now() + DispatchTimeInterval.seconds(10)
     var shutdownTask: DispatchWorkItem?
 
     func shutdown() {
-        NSLog("Shutting down")
+        NSLog("Going to shut down")
         // Dispatch the shutdown of the runloop to at least 10 seconds after starting the application.
         // This will shutdown immidiately if the deadline already passed.
-        shutdownTask = DispatchWorkItem { CFRunLoopStop(CFRunLoopGetCurrent()) }
+        shutdownTask = DispatchWorkItem {
+            CFRunLoopStop(CFRunLoopGetCurrent())
+            NSLog("Shutting down")
+        }
         // Dispatch to main queue since that is the thread where the runloop is
         DispatchQueue.main.asyncAfter(deadline: launchdMinimaltimeExpired, execute: shutdownTask!)
     }

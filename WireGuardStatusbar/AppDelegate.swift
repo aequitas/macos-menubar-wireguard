@@ -24,8 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol 
     // keep the existence and state of all tunnel(configuration)s
     var tunnels = Tunnels()
 
-    // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew
-    @objc dynamic let wireguardInstalled = FileManager.default.fileExists(atPath: wireguardBinPath)
+    @objc dynamic var wireguardInstalled = false
 
     let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
     @IBOutlet var menu: NSMenu!
@@ -34,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol 
 
     func applicationDidFinishLaunching(_: Notification) {
         // set default preferences
-        defaults.register(defaults: defaultSettings)
+        defaults.register(defaults: DefaultSettings.App)
 
         #if DEBUG
             // reset preferences to defaults for development/(ui)testing
@@ -57,7 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol 
             // if installation failed alert user
             onFailure: alertHelperFailure,
             // if helper is up to date, installed or updated, get initial tunnel state
-            onSuccess: updateState
+            onSuccess: connectedToHelper
         )
     }
 
@@ -90,6 +89,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol 
             item.tag = MenuItemTypes.tunnel.rawValue
             menu.insertItem(item, at: 0)
         }
+    }
+
+    // Perform initialization after first connection with helper
+    func connectedToHelper() {
+        validateHelper()
+        updateState()
+    }
+
+    // Query the Helper to ensure it is properly initialized (eg: wg-quick is available)
+    func validateHelper() {
+        let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+            NSLog("XPCService error: \(error)")
+            return
+        } as? HelperProtocol
+
+        xpcService?.wireguardInstalled { self.wireguardInstalled = $0 }
     }
 
     // query the Helper for all current tunnels configuration and runtime state, update menu icon

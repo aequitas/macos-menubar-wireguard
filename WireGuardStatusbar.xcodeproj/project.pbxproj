@@ -339,7 +339,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Johan Bloemberg";
 				TargetAttributes = {
 					0444B85E211F5CD700CA6ECA = {
@@ -573,6 +573,7 @@
 					__launchd_plist,
 					"\"$(SRCROOT)/WireGuardStatusbarHelper/Launchd.plist\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbarHelper;
 			};
 			name = Debug;
 		};
@@ -589,6 +590,7 @@
 					__launchd_plist,
 					"\"$(SRCROOT)/WireGuardStatusbarHelper/Launchd.plist\"",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbarHelper;
 			};
 			name = Release;
 		};
@@ -707,7 +709,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = $TARGET_NAME;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -766,7 +767,6 @@
 				INFOPLIST_FILE = "$(SRCROOT)/$(TARGET_NAME)/Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = $TARGET_NAME;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -783,6 +783,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbar;
 			};
 			name = Debug;
 		};
@@ -794,6 +795,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = WireGuardStatusbar;
 			};
 			name = Release;
 		};

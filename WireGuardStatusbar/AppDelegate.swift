@@ -18,7 +18,7 @@ extension NSImage.Name {
 }
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotificationCenterDelegate, AppProtocol {
     let defaults: UserDefaults = NSUserDefaultsController.shared.defaults
 
     // keep the existence and state of all tunnel(configuration)s
@@ -133,17 +133,54 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, AppProtocol 
                 NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 
-            xpcService?.setTunnel(tunnelName: tunnelName, enable: !tunnel.connected, reply: { exitStatus in
-                NSLog("setTunnel \(tunnelName), to: \(!tunnel.connected), exit status: \(exitStatus)")
+            xpcService?.setTunnel(tunnelName: tunnelName, enable: !tunnel.connected, reply: { success, errorMessage in
+                NSLog("setTunnel \(tunnelName), to: \(!tunnel.connected), success: \(success), error: \(errorMessage)")
+                if !success {
+                    self.notifyError(errorMessage)
+                }
             })
         } else {
             NSLog("Sender not convertable to String: \(sender.representedObject.debugDescription)")
         }
     }
 
+    // Use notificationcenter banner to inform user of failed tunnel command
+    func notifyError(_ errorMessage: String) {
+        let notification = NSUserNotification()
+        notification.title = "Failed to change tunnel state!"
+        if errorMessage.split(separator: "\n").count == 1 {
+            notification.informativeText = errorMessage
+            notification.hasActionButton = false
+        }
+        notification.userInfo = ["message": errorMessage]
+        let center = NSUserNotificationCenter.default
+        center.delegate = self
+        center.scheduleNotification(notification)
+    }
+
+    // Make sure notifications are always show, even when the application is running in the foreground
+    func userNotificationCenter(_: NSUserNotificationCenter, shouldPresent _: NSUserNotification) -> Bool {
+        return true
+    }
+
+    // Handle user clicking on the "Show" button
+    func userNotificationCenter(_: NSUserNotificationCenter, didActivate notification: NSUserNotification) {
+        switch notification.activationType {
+        case .actionButtonClicked:
+            let message = notification.userInfo?["message"] as? String ?? "InternalError: failed to get error message."
+            let alert = NSAlert()
+            alert.messageText = "Failed to change tunnel state!"
+            alert.informativeText = message
+            alert.runModal()
+        default:
+            break
+        }
+    }
+
     @IBAction func showInstallInstructions(_: Any) {
         let alert = NSAlert()
-        alert.messageText = installInstructions
+        alert.messageText = "WireGuard is not installed!"
+        alert.informativeText = installInstructions
         alert.runModal()
     }
 

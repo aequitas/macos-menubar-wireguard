@@ -116,17 +116,19 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     }
 
     // XPC: called by App to have Helper change the state of a tunnel to up or down
-    func setTunnel(tunnelName: String, enable: Bool, reply: @escaping (NSNumber) -> Void) {
+    func setTunnel(tunnelName: String, enable: Bool, reply:
+        @escaping (_ success: Bool, _ errorMessage: String) -> Void) {
         let state = enable ? "up" : "down"
 
         if !WireGuard.validateTunnelName(tunnelName: tunnelName) {
             NSLog("Invalid tunnel name '\(tunnelName)'")
-            reply(1)
+            reply(false, "Invalid tunnel name '\(tunnelName)'")
             return
         }
 
         NSLog("Set tunnel \(tunnelName) \(state)")
-        reply(wireguard.wgQuick([state, tunnelName]))
+        let (success, errorMessage) = wireguard.wgQuick([state, tunnelName])
+        reply(success, errorMessage)
 
         // Because /var/run/wireguard might not exist and can be created after upping the first tunnel
         // run the registration of watchdirectories again and force trigger a state update to the app.

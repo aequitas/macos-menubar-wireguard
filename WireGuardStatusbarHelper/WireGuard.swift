@@ -104,11 +104,11 @@ struct WireGuard {
         return task
     }
 
-    func wgQuick(_ arguments: [String]) -> NSNumber {
+    func wgQuick(_ arguments: [String]) -> (Bool, String) {
         // prevent passing an invalid path or else task.launch will result in a fatal NSInvalidArgumentException
         guard FileManager.default.fileExists(atPath: wgquickBinPath) else {
             NSLog("Path '\(wgquickBinPath)' for 'wg-quick' binary is invalid!")
-            return 1
+            return (false, "Path '\(wgquickBinPath)' for 'wg-quick' binary is invalid!")
         }
 
         let task = Process()
@@ -128,6 +128,6 @@ struct WireGuard {
         let errdata = errpipe.fileHandleForReading.readDataToEndOfFile()
         NSLog(String(data: errdata, encoding: String.Encoding.utf8)!)
 
-        return task.terminationStatus as NSNumber
+        return (task.terminationStatus == 0, String(data: errdata, encoding: String.Encoding.utf8)!)
     }
 }

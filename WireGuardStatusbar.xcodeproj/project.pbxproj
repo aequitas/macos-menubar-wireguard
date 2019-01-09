@@ -448,7 +448,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=~/.brew/bin:$PATH\n\nif which swiftlint >/dev/null; then\n    # don't let swiftlint warn for violations that would be fixed by swiftformat\n    /usr/bin/find * -name \"*.swift\"| grep -vE 'SKQueue|INIParse' | xargs -I% /bin/sh -o pipefail -c \"swiftformat < % | swiftlint --lenient --use-stdin | sed 's,\\<nopath\\>,$PWD/%,'\"\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "export PATH=~/.brew/bin:$PATH\n\nif which swiftlint >/dev/null && which swiftformat >/dev/null; then\n    # don't let swiftlint warn for violations that would be fixed by swiftformat\n    /usr/bin/find * -name \"*.swift\"| grep -vE 'SKQueue|INIParse' | xargs -I% /bin/sh -o pipefail -c \"swiftformat < % | swiftlint --lenient --use-stdin | sed 's,\\<nopath\\>,$PWD/%,'\"\nelse\n    echo \"warning: SwiftLint or Swiftformat not installed!\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

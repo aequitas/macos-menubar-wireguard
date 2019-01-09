@@ -50,7 +50,7 @@ class IntegrationTests: XCTestCase {
         Helper().getTunnels(reply: { tunnelInfo in
             // since test tunnel configuration is bogus, we never expect a connected tunnel
             XCTAssertEqual(tunnelInfo["test-localhost"]![0], "")
-            XCTAssertEqual(tunnelInfo["test-localhost"]![1], censorConfigurationData(testConfig))
+            XCTAssertEqual(tunnelInfo["test-localhost"]![1], WireGuard.censorConfigurationData(testConfig))
         })
     }
 

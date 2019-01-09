@@ -16,9 +16,9 @@ class HelperTests: XCTestCase {
 
     // invalid tunnel names should not be accepted
     func testTunnelNames() {
-        XCTAssertTrue(validateTunnelName(tunnelName: "test"))
-        XCTAssertFalse(validateTunnelName(tunnelName: ""))
-        XCTAssertFalse(validateTunnelName(tunnelName: ";rm -rf *"))
+        XCTAssertTrue(WireGuard.validateTunnelName(tunnelName: "test"))
+        XCTAssertFalse(WireGuard.validateTunnelName(tunnelName: ""))
+        XCTAssertFalse(WireGuard.validateTunnelName(tunnelName: ";rm -rf *"))
     }
 
     // a version string should be returned
@@ -33,7 +33,7 @@ class HelperTests: XCTestCase {
     func testDontExposePrivates() {
         testConfigs.forEach { name, config in
             print("Testing config \(name)")
-            let censoredConfigData = censorConfigurationData(config)
+            let censoredConfigData = WireGuard.censorConfigurationData(config)
             XCTAssertFalse(censoredConfigData.contains(testPrivateKey))
         }
     }

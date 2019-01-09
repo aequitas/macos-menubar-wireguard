@@ -17,11 +17,13 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     // Example, to set defaults as root for wgquickBinPath run:
     // sudo defaults write WireGuardStatusbarHelper wgquickBinPath /opt/local/bin/wg-quick
     private var wgquickBinPath: String
-    // Path use to determine if WireGuard Homebrew package is installed.
+    // Path use to determine if WireGuard Homebrew package is installed and query wg for tunnel names and configuration
     // To check wg binary is enough to also guarentee wg-quick and wireguard-go when installed with Homebrew.
     private var wireguardBinPath: String
 
     let defaults = UserDefaults.standard
+
+    let wireguard: WireGuard
 
     // Read preferences set via root defaults.
     override init() {
@@ -38,6 +40,14 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
             NSLog("Overriding 'wgquickBinPath' with: \(wgquickBinPath)")
             self.wgquickBinPath = wgquickBinPath
         }
+
+        wireguard = WireGuard(
+            brewPrefix: brewPrefix,
+            wireguardBinPath: wireguardBinPath,
+            wgquickBinPath: wgquickBinPath,
+            configPaths: configPaths,
+            runPath: runPath
+        )
     }
 
     // Starts the helper daemon
@@ -100,69 +110,30 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     // XPC: return raw data to be used by App to construct tunnel configuration/state
     func getTunnels(reply: @escaping (TunnelInfo) -> Void) {
-        var tunnels: TunnelInfo = [:]
-
-        for configPath in configPaths {
-            let enumerator = FileManager.default.enumerator(atPath: configPath)
-            while let configFile = enumerator?.nextObject() as? String {
-                // ignore non config file
-                if !configFile.hasSuffix(".conf") {
-                    // don't descend into subdirectories
-                    enumerator?.skipDescendants()
-                    continue
-                }
-
-                let tunnelName = configFile.replacingOccurrences(of: ".conf", with: "")
-                if tunnels[tunnelName] != nil {
-                    NSLog("Skipping '\(configFile)' as this tunnel already exists from a higher configuration path.")
-                    continue
-                }
-
-                NSLog("Reading interface for tunnel \(tunnelName)")
-                var interfaceName: String
-                if let tunnelNameFileContents = try? String(contentsOfFile: runPath + "/" + tunnelName + ".name",
-                                                            encoding: .utf8) {
-                    interfaceName = tunnelNameFileContents.trimmingCharacters(in: NSCharacterSet.whitespacesAndNewlines)
-                } else {
-                    // tunnel is not connected
-                    interfaceName = ""
-                }
-
-                // TODO: read configuration data from wg showconf as well
-                NSLog("Reading config file: \(configPath)/\(configFile)")
-                var configData: String
-                if let configFileContents = try? String(contentsOfFile: configPath + "/" + configFile,
-                                                        encoding: .utf8) {
-                    configData = configFileContents
-                } else {
-                    NSLog("Failed to read configuration file '\(configPath)/\(configFile)'")
-                    configData = ""
-                }
-                configData = censorConfigurationData(configData)
-
-                tunnels[tunnelName] = [interfaceName, configData]
-            }
-        }
-
-        reply(tunnels)
+        reply(Dictionary(uniqueKeysWithValues: wireguard.tunnelNames().map { tunnelName in
+            (tunnelName, [wireguard.interfaceName(tunnelName), wireguard.tunnelConfig(tunnelName)])
+        }))
     }
 
     // XPC: called by App to have Helper change the state of a tunnel to up or down
     func setTunnel(tunnelName: String, enable: Bool, reply: @escaping (NSNumber) -> Void) {
         let state = enable ? "up" : "down"
 
-        if !validateTunnelName(tunnelName: tunnelName) {
+        if !WireGuard.validateTunnelName(tunnelName: tunnelName) {
             NSLog("Invalid tunnel name '\(tunnelName)'")
             reply(1)
             return
         }
 
         NSLog("Set tunnel \(tunnelName) \(state)")
-        reply(wgQuick([state, tunnelName], brewPrefix: brewPrefix, wgquickBinPath: wgquickBinPath))
+        reply(wireguard.wgQuick([state, tunnelName]))
 
-        // because /var/run/wireguard might not exist and can be created after upping the first tunnel
-        // run the registration of watchdirectories again and force trigger a state update to the app
+        // Because /var/run/wireguard might not exist and can be created after upping the first tunnel
+        // run the registration of watchdirectories again and force trigger a state update to the app.
+        // This is 'cheaper' than registering a watcher for the parent directory /var/run/.
         registerWireGuardStateWatch()
+
+        // Notify the app to have it pull in changes.
         appUpdateState()
     }
 

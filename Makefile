@@ -50,8 +50,8 @@ test-integration: .test-integration
 	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
 	@touch $@
 
-prep-integration: /etc/wireguard/test-localhost.conf
-/etc/wireguard/test-localhost.conf: IntegrationTests/test-localhost.conf
+prep-integration: /etc/wireguard/test-localhost.conf /etc/wireguard/test-invalid.conf
+/etc/wireguard/test-%.conf: IntegrationTests/test-%.conf
 	sudo chmod 0755 ${@D}
 	sudo cp $< $@
 

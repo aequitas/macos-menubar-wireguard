@@ -37,6 +37,7 @@
 		0401E2BC21CD97B20030E707 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0456DA6221BB0C9000701CCE /* Const.swift */; };
 		0428EA0D21BB066E00178BA0 /* WireGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0C21BB066E00178BA0 /* WireGuard.swift */; };
 		0428EA1021BB081A00178BA0 /* INIParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0428EA0E21BB07DB00178BA0 /* INIParser.swift */; };
+		043C8C8121E7CDBF00069D5C /* test-invalid.conf in Resources */ = {isa = PBXBuildFile; fileRef = 043C8C8021E7CDBF00069D5C /* test-invalid.conf */; };
 		0441E7EF211F78590035E4EF /* WireGuardStatusbarHelper in Copy Helper */ = {isa = PBXBuildFile; fileRef = 0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0444B862211F5CD700CA6ECA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0444B861211F5CD700CA6ECA /* main.swift */; };
 		04554CBC21C0515900A08A17 /* test-localhost.conf in Resources */ = {isa = PBXBuildFile; fileRef = 04554CBB21C0515900A08A17 /* test-localhost.conf */; };
@@ -122,6 +123,7 @@
 		040B449C2120474200E87CF5 /* SKQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKQueue.swift; sourceTree = "<group>"; };
 		0428EA0C21BB066E00178BA0 /* WireGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireGuard.swift; sourceTree = "<group>"; };
 		0428EA0E21BB07DB00178BA0 /* INIParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = INIParser.swift; sourceTree = "<group>"; };
+		043C8C8021E7CDBF00069D5C /* test-invalid.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "test-invalid.conf"; sourceTree = "<group>"; };
 		0441E7E9211F76B60035E4EF /* WireGuardStatusbar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WireGuardStatusbar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0441E7EC211F76B60035E4EF /* WireGuardStatusbarHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = WireGuardStatusbarHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		0444B861211F5CD700CA6ECA /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -200,11 +202,12 @@
 		0490167E21C04B3800299400 /* IntegrationTests */ = {
 			isa = PBXGroup;
 			children = (
-				04B2BD3521BD654C00CCAE2F /* UITests.swift */,
-				0490167F21C04B3900299400 /* IntegrationTests.swift */,
 				047AE5D821DE7D390099ABF6 /* HelperTests.swift */,
-				04554CBB21C0515900A08A17 /* test-localhost.conf */,
 				0490168121C04B3900299400 /* Info.plist */,
+				0490167F21C04B3900299400 /* IntegrationTests.swift */,
+				043C8C8021E7CDBF00069D5C /* test-invalid.conf */,
+				04554CBB21C0515900A08A17 /* test-localhost.conf */,
+				04B2BD3521BD654C00CCAE2F /* UITests.swift */,
 			);
 			path = IntegrationTests;
 			sourceTree = "<group>";
@@ -392,6 +395,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04554CBC21C0515900A08A17 /* test-localhost.conf in Resources */,
+				043C8C8121E7CDBF00069D5C /* test-invalid.conf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

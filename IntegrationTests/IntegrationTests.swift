@@ -3,6 +3,7 @@
 import XCTest
 
 let testConfigFile = "test-localhost"
+let testConfigFileInvalid = "test-invalid"
 
 class IntegrationTests: XCTestCase {
     override func setUp() {
@@ -10,11 +11,12 @@ class IntegrationTests: XCTestCase {
 
         // Verify the proper configuration file for testing is installed.
         let bundle = Bundle(for: type(of: self).self)
-        let testConfig = bundle.path(forResource: testConfigFile, ofType: "conf")
-        if !FileManager.default.contentsEqual(atPath: testConfig!, andPath: "/etc/wireguard/\(testConfigFile).conf") {
-            XCTFail("Integration test environment not prepared. Please run `make prep-integration`.")
+        for configFile in [testConfigFile, testConfigFileInvalid] {
+            let testConfig = bundle.path(forResource: configFile, ofType: "conf")
+            if !FileManager.default.contentsEqual(atPath: testConfig!, andPath: "/etc/wireguard/\(configFile).conf") {
+                XCTFail("Integration test environment not prepared. Please run `make prep-integration`.")
+            }
         }
-
         XCUIApplication().launch()
     }
 
@@ -69,5 +71,25 @@ class IntegrationTests: XCTestCase {
 
         menuBarsQuery.children(matching: .statusItem).element.click()
         XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
+    }
+    
+    func testShowError(){
+        let app = XCUIApplication()
+        let notificationCenter = XCUIApplication(bundleIdentifier: "com.apple.notificationcenterui")
+
+        let menuBarsQuery = app.menuBars
+        let statusItem = menuBarsQuery.children(matching: .statusItem).element
+        statusItem.click()
+        
+        let testInvalidMenuItem = menuBarsQuery.menuItems["test-invalid"]
+        testInvalidMenuItem.click()
+
+        notificationCenter.buttons["Show"].click()
+
+        // alert should popup with error message visible
+        let text = app.staticTexts.element(boundBy: 1).value as? String
+        XCTAssertTrue(text?.contains("Configuration parsing error") ?? false)
+
+        app.dialogs["alert"].buttons["OK"].click()
     }
 }

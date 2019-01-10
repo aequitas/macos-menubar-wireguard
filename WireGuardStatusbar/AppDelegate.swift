@@ -61,10 +61,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
     }
 
     // notify user of failed helper install
-    func alertHelperFailure() {
+    func alertHelperFailure(message: String?) {
         DispatchQueue.main.async {
             let alert = NSAlert()
-            alert.messageText = "Failed to install or update Privileged Helper. Please check logs."
+            alert.messageText = "Failed to install or update Privileged Helper."
+            alert.informativeText = message ?? ""
             alert.runModal()
         }
     }
@@ -129,7 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
         if let tunnelName = sender.representedObject as? String {
             let tunnel = tunnels.filter { $0.name == tunnelName }[0]
 
-            let xpcService = privilegedHelper!.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+            let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
                 NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 

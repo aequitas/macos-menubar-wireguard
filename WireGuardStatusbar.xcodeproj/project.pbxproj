@@ -266,6 +266,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0444B863211F5CD700CA6ECA /* Build configuration list for PBXNativeTarget "WireGuardStatusbarHelper" */;
 			buildPhases = (
+				043C8C8421E7F3F900069D5C /* Bump development version */,
 				0444B85B211F5CD700CA6ECA /* Sources */,
 				0444B85C211F5CD700CA6ECA /* Frameworks */,
 				0444B85D211F5CD700CA6ECA /* CopyFiles */,
@@ -421,6 +422,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		043C8C8421E7F3F900069D5C /* Bump development version */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Bump development version";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# make sure helper reinstall is triggered if source has changed\nif [ \"${CONFIGURATION}\" = \"Debug\" ]; then\n    newhash=$(cat WireGuardStatusbarHelper/*.swift|md5)\n    currenthash=$(/usr/libexec/PlistBuddy -c \"Print SOURCE_HASH\" WireGuardStatusbarHelper/Info.plist||true)\nif ! [ \"$currenthash\" = \"$newhash\" ];then\n    /usr/libexec/PlistBuddy -c \"Set CFBundleVersion $(date +%s)\" WireGuardStatusbarHelper/Info.plist\n    /usr/libexec/PlistBuddy -c \"Set SOURCE_HASH $newhash\" WireGuardStatusbarHelper/Info.plist\n    fi\nfi\n";
+		};
 		0441E7F2211F7D4A0035E4EF /* Verify Signature */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

@@ -13,8 +13,11 @@ swift_sources=$(shell find * -name "*.swift"|grep -vE 'SKQueue|INIParse')
 other_sources=$(shell find * -name "*.plist") WireGuardStatusbar.xcodeproj/project.pbxproj
 sources=${swift_sources} ${other_sources}
 
-version=$(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" WireGuardStatusbar/Info.plist)
-new_version?=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
+configuration?=Release
+
+version?=$(shell git describe --tags --always --abbrev=0)
+next_version:=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
+new_version?=${next_version}
 revisions=$(shell git rev-list --all --count)
 helper_revisions=$(shell git rev-list --all  --count WireGuardStatusbarHelper/*)
 
@@ -27,7 +30,7 @@ all: test dist install
 # run tests
 test: .test-unit .test-integration
 .test-unit: ${sources} .check | icons ${xcpretty}
-	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme WireGuardStatusbar -configuration ${configuration} test | ${xcpretty}
 	@touch $@
 
 # verify code quality
@@ -52,7 +55,7 @@ test-integration: .test-integration
 .test-integration: ${sources} /etc/wireguard/test-localhost.conf | icons
 	# application running in Xcode will hang the test
 	-osascript -e 'tell application "Xcode" to set actionResult to stop workspace document 1'
-	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme IntegrationTests -configuration ${configuration} test | ${xcpretty}
 	@touch $@
 
 prep-integration: /etc/wireguard/test-localhost.conf /etc/wireguard/test-invalid.conf
@@ -73,8 +76,8 @@ WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 	rm -rf "$@" && cp -r "${<}" "$@"
 
 # Create distributable .dmg in current working directory
-dist: WireGuardStatusbar-${new_version}-${revisions}.dmg
-WireGuardStatusbar-${new_version}-${revisions}.dmg: ${dist}/WireGuardStatusbar.app
+dist: WireGuardStatusbar-${version}-${revisions}.dmg
+WireGuardStatusbar-${version}-${revisions}.dmg: ${dist}/WireGuardStatusbar.app
 	hdiutil create "$@" -srcfolder "${<D}" -ov
 
 # Zipped distributable with current git commit sha
@@ -94,14 +97,14 @@ ${dist}/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app Misc/Uninst
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
-	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
+	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" -configuration ${configuration} archive | ${xcpretty}
 
 # install and run the App /Application using the distributable .dmg
 install: /Applications/WireGuardStatusbar.app
-/Applications/WireGuardStatusbar.app: WireGuardStatusbar-${new_version}-${revisions}.dmg
+/Applications/WireGuardStatusbar.app: WireGuardStatusbar-${version}-${revisions}.dmg
 	-osascript -e 'tell application "WireGuardStatusbar" to quit'
 	-hdiutil detach -quiet /Volumes/WireGuardStatusbar/
-	hdiutil attach -quiet WireGuardStatusbar-${new_version}-${revisions}.dmg
+	hdiutil attach -quiet WireGuardStatusbar-${version}-${revisions}.dmg
 	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app /Volumes/WireGuardStatusbar/Applications/
 	hdiutil detach -quiet /Volumes/WireGuardStatusbar/
 	touch $@

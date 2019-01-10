@@ -11,15 +11,21 @@ class HelperXPC {
         self.exportedObject = exportedObject
     }
 
-    func installOrUpdateHelper(onFailure: @escaping () -> Void, onSuccess: @escaping () -> Void) {
+    func installOrUpdateHelper(onFailure: @escaping (String?) -> Void, onSuccess: @escaping () -> Void) {
         helperStatus { installed in
             if !installed {
                 // Invalidate the connection to force a reconnect to the newly installed helper
                 self.xpcHelperConnection?.invalidate()
                 self.xpcHelperConnection = nil
 
-                if !self.installHelper() {
-                    onFailure()
+                if let error = self.installHelper() {
+                    onFailure(error)
+                    return
+                }
+                self.helperStatus { installed in
+                    if !installed {
+                        onFailure("Helper not correct version after install. If downgrading, uninstall first.")
+                    }
                 }
             }
             onSuccess()
@@ -59,7 +65,7 @@ class HelperXPC {
     }
 
     // Uses SMJobBless to install or update the helper tool
-    func installHelper() -> Bool {
+    func installHelper() -> String? {
         var authRef: AuthorizationRef?
         var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0,
                                          value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
@@ -70,19 +76,18 @@ class HelperXPC {
         if status != errAuthorizationSuccess {
             let error = NSError(domain: NSOSStatusErrorDomain, code: Int(status), userInfo: nil)
             NSLog("Authorization error: \(error)")
-            return false
+            return "Authorization error: \(error)"
         } else {
             var cfError: Unmanaged<CFError>?
             if !SMJobBless(kSMDomainSystemLaunchd, HelperConstants.machServiceName as CFString, authRef, &cfError) {
                 let blessError = cfError!.takeRetainedValue() as Error
                 NSLog("Bless Error: \(blessError)")
-                return false
-            } else {
-                NSLog("\(HelperConstants.machServiceName) installed successfully")
+                return "Bless Error: \(blessError)"
             }
+            NSLog("\(HelperConstants.machServiceName) installed successfully")
         }
 
-        return true
+        return nil
     }
 
     func helperConnection() -> NSXPCConnection? {

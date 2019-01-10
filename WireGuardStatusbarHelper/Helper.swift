@@ -2,6 +2,9 @@
 
 import Foundation
 
+// amount of ms to debounce filesystem events to prevent sending update notifications to the App to often
+let fseventDebounce = 100
+
 class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     private var app: AppXPC?
 
@@ -82,6 +85,8 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         }
     }
 
+    var debounceFilesystemEvents: DispatchWorkItem?
+
     // SKQueue: handle incoming file/directory change events
     func receivedNotification(_ notification: SKQueueNotification, path: String, queue _: SKQueue) {
         if configPaths.contains(path) {
@@ -92,9 +97,17 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         }
         // TODO: only send events on actual changes (/var/run/tunnel.name, /etc/wireguard/tunnel.conf)
         // not for every change in either run or config directories
-        // At first maybe simple debounce to reduce amount of reloads of configuration?
 
-        appUpdateState()
+        // prevent sending notifications about changes to config/runtime state to fast after another
+        if debounceFilesystemEvents == nil {
+            debounceFilesystemEvents = DispatchWorkItem {
+                self.debounceFilesystemEvents = nil
+                self.appUpdateState()
+            }
+            let deadline = DispatchTime.now() + DispatchTimeInterval.milliseconds(fseventDebounce)
+            DispatchQueue.main.asyncAfter(deadline: deadline,
+                                          execute: debounceFilesystemEvents!)
+        }
     }
 
     // Send a signal to the App that tunnel state/configuration might have changed

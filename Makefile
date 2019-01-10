@@ -109,6 +109,25 @@ screenshot: Misc/demo.png
 Misc/demo.png: ${all_sources} WireGuardStatusbar.app
 	Misc/screenshot.sh $@
 
+version=$(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" WireGuardStatusbar/Info.plist)
+new_version?=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
+revisions=$(shell git rev-list --all --count)
+bump:
+	@if ! git diff-index --quiet HEAD;then echo "Uncommited changes!"; exit 1; fi
+	@if git tag | grep -w ${new_version};then echo "Version exists!"; exit 1; fi
+	/usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString ${new_version}" WireGuardStatusbar/Info.plist
+	/usr/libexec/PlistBuddy -c "Set CFBundleVersion ${revisions}" WireGuardStatusbar/Info.plist
+	/usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString ${new_version}" WireGuardStatusbarHelper/Info.plist
+	git add */Info.plist
+	git commit --amend --no-edit
+	git tag ${new_version}
+
+release: test bump dist install
+	git push
+	git push --tags
+	open .
+	open https://github.com/aequitas/macos-menubar-wireguard/releases/edit/${new_version}
+
 ## Icon/image generation
 
 assets=WireGuardStatusbar/Assets.xcassets

@@ -9,12 +9,12 @@
 	<key>CFBundleName</key>
 	<string>WireGuardStatusbarHelper</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.19</string>
+	<string>1.20</string>
 	<key>CFBundleVersion</key>
 	<string>1.0.19</string>
 	<key>SMAuthorizedClients</key>
 	<array>
-		<string>anchor apple generic and identifier &quot;WireGuardStatusbar&quot;</string>
+		<string>anchor apple generic and identifier "WireGuardStatusbar"</string>
 	</array>
 </dict>
 </plist>

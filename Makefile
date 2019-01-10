@@ -16,6 +16,7 @@ sources=${swift_sources} ${other_sources}
 version=$(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" WireGuardStatusbar/Info.plist)
 new_version?=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
 revisions=$(shell git rev-list --all --count)
+helper_revisions=$(shell git rev-list --all  --count WireGuardStatusbarHelper/*)
 
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
 .PHONY: all
@@ -119,6 +120,7 @@ bump:
 	/usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString ${new_version}" WireGuardStatusbar/Info.plist
 	/usr/libexec/PlistBuddy -c "Set CFBundleVersion ${revisions}" WireGuardStatusbar/Info.plist
 	/usr/libexec/PlistBuddy -c "Set CFBundleShortVersionString ${new_version}" WireGuardStatusbarHelper/Info.plist
+	/usr/libexec/PlistBuddy -c "Set CFBundleVersion ${helper_revisions}" WireGuardStatusbarHelper/Info.plist
 	git add */Info.plist
 	git commit --amend --no-edit
 	git tag ${new_version}

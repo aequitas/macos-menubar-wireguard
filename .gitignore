@@ -6,7 +6,7 @@
 .fix*
 
 # Build artifacts
-WireGuardStatusbar.dmg
+WireGuardStatusbar-*.dmg
 WireGuardStatusbar.app
 WireGuardStatusbar-*.zip
 build/

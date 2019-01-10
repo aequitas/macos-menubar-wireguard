@@ -13,6 +13,10 @@ swift_sources=$(shell find * -name "*.swift"|grep -vE 'SKQueue|INIParse')
 other_sources=$(shell find * -name "*.plist") WireGuardStatusbar.xcodeproj/project.pbxproj
 sources=${swift_sources} ${other_sources}
 
+version=$(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" WireGuardStatusbar/Info.plist)
+new_version?=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
+revisions=$(shell git rev-list --all --count)
+
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
 .PHONY: all
 all: test dist install
@@ -68,8 +72,8 @@ WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 	rm -rf "$@" && cp -r "${<}" "$@"
 
 # Create distributable .dmg in current working directory
-dist: WireGuardStatusbar.dmg
-WireGuardStatusbar.dmg: ${dist}/WireGuardStatusbar.app
+dist: WireGuardStatusbar-${new_version}-${revisions}.dmg
+WireGuardStatusbar-${new_version}-${revisions}.dmg: ${dist}/WireGuardStatusbar.app
 	hdiutil create "$@" -srcfolder "${<D}" -ov
 
 # Zipped distributable with current git commit sha
@@ -93,10 +97,10 @@ ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
 
 # install and run the App /Application using the distributable .dmg
 install: /Applications/WireGuardStatusbar.app
-/Applications/WireGuardStatusbar.app: WireGuardStatusbar.dmg
+/Applications/WireGuardStatusbar.app: WireGuardStatusbar-${new_version}-${revisions}.dmg
 	-osascript -e 'tell application "WireGuardStatusbar" to quit'
 	-hdiutil detach -quiet /Volumes/WireGuardStatusbar/
-	hdiutil attach -quiet WireGuardStatusbar.dmg
+	hdiutil attach -quiet WireGuardStatusbar-${new_version}-${revisions}.dmg
 	cp -r /Volumes/WireGuardStatusbar/WireGuardStatusbar.app /Volumes/WireGuardStatusbar/Applications/
 	hdiutil detach -quiet /Volumes/WireGuardStatusbar/
 	touch $@
@@ -109,9 +113,6 @@ screenshot: Misc/demo.png
 Misc/demo.png: ${all_sources} WireGuardStatusbar.app
 	Misc/screenshot.sh $@
 
-version=$(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" WireGuardStatusbar/Info.plist)
-new_version?=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
-revisions=$(shell git rev-list --all --count)
 bump:
 	@if ! git diff-index --quiet HEAD;then echo "Uncommited changes!"; exit 1; fi
 	@if git tag | grep -w ${new_version};then echo "Version exists!"; exit 1; fi
@@ -224,7 +225,8 @@ clean:
 		.{fix,check,test}* \
 		${archive} \
 		${dist} \
-		WireGuardStatusbar.{dmg,app} \
+		WireGuardStatusbar.app \
+		WireGuardStatusbar-*.dmg \
 		WireGuardStatusbar-*.zip \
 		${tmp}/WireGuardStatusbar-*.app \
 		DerivedData/

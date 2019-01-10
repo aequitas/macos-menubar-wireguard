@@ -72,15 +72,15 @@ class IntegrationTests: XCTestCase {
         menuBarsQuery.children(matching: .statusItem).element.click()
         XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
     }
-    
-    func testShowError(){
+
+    func testShowError() {
         let app = XCUIApplication()
         let notificationCenter = XCUIApplication(bundleIdentifier: "com.apple.notificationcenterui")
 
         let menuBarsQuery = app.menuBars
         let statusItem = menuBarsQuery.children(matching: .statusItem).element
         statusItem.click()
-        
+
         let testInvalidMenuItem = menuBarsQuery.menuItems["test-invalid"]
         testInvalidMenuItem.click()
 

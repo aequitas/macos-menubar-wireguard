@@ -9,7 +9,7 @@
 	<key>CFBundleName</key>
 	<string>WireGuardStatusbarHelper</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.18</string>
+	<string>1.19</string>
 	<key>CFBundleVersion</key>
 	<string>1.0.19</string>
 	<key>SMAuthorizedClients</key>

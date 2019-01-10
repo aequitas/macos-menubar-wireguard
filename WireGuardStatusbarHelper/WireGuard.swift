@@ -20,7 +20,7 @@ struct WireGuard {
     // censor sensitive information like private keys from configuration data
     static func censorConfigurationData(_ configData: String) -> String {
         // swiftlint:disable:next force_try
-        let censorPrivateKey = try! NSRegularExpression(pattern: "^PrivateKey.*$",
+        let censorPrivateKey = try! NSRegularExpression(pattern: "^(PrivateKey|PresharedKey).*$",
                                                         options: [.anchorsMatchLines, .caseInsensitive])
 
         return censorPrivateKey.stringByReplacingMatches(in: configData,

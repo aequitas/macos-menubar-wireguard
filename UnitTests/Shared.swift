@@ -9,6 +9,7 @@ Address = 192.0.2.0/32
 PrivateKey = \(testPrivateKey)
 [Peer]
 PublicKey = ExO1PPLobAXSOCDFs7GpwJcG+5VMQZD9Pk73YqxXoS8=
+PreSharedKey = \(testPrivateKey)
 Endpoint = 192.0.2.1/32:51820
 AllowedIPs = 198.51.100.0/24
 """
@@ -22,6 +23,7 @@ privatekey = \(testPrivateKey)
 publickey = exo1pplobaxsocdfs7gpwjcg+5vmqzd9pk73yqxxos8=
 endpoint = 192.0.2.1/32:51820
 allowedips = 198.51.100.0/24
+presharedkey = \(testPrivateKey)
 """
 
 let testConfigs = [

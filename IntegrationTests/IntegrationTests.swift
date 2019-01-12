@@ -4,20 +4,35 @@ import XCTest
 
 let testConfigFile = "test-localhost"
 let testConfigFileInvalid = "test-invalid"
+let testConfigFileUsrLocal = "test-usr-local"
 
 class IntegrationTests: XCTestCase {
     override func setUp() {
         continueAfterFailure = false
 
-        // Verify the proper configuration file for testing is installed.
+        // Verify the proper configuration files for testing are installed.
         let bundle = Bundle(for: type(of: self).self)
-        for configFile in [testConfigFile, testConfigFileInvalid] {
-            let testConfig = bundle.path(forResource: configFile, ofType: "conf")
-            if !FileManager.default.contentsEqual(atPath: testConfig!, andPath: "/etc/wireguard/\(configFile).conf") {
+        var requiredTestConfigFiles = [testConfigFile, testConfigFileInvalid].map { "/etc/wireguard/\($0).conf" }
+        requiredTestConfigFiles.append("/usr/local/etc/wireguard/\(testConfigFileUsrLocal).conf")
+        for configFilePath in requiredTestConfigFiles {
+            let configFileName = ((configFilePath as NSString).lastPathComponent as NSString).deletingPathExtension
+            let testConfig = bundle.path(forResource: configFileName, ofType: "conf")
+            if !FileManager.default.contentsEqual(atPath: testConfig!, andPath: configFilePath) {
                 XCTFail("Integration test environment not prepared. Please run `make prep-integration`.")
             }
         }
-        XCUIApplication().launch()
+        let app = XCUIApplication()
+        app.launchEnvironment = ["RESET_CONFIGURATION": "1"]
+        app.launch()
+
+        // gives a little more time before starting a test to enter the password to install the helper
+        addUIInterruptionMonitor(withDescription: "Wait for Helper install password dialog") { (alert) -> Bool in
+            if alert.buttons["Install Helper"].exists {
+                sleep(1_000_000_000)
+                return true
+            }
+            return false
+        }
     }
 
     // If configuration is loaded correctly the proper menu item should be available
@@ -25,6 +40,8 @@ class IntegrationTests: XCTestCase {
         let menuBarsQuery = XCUIApplication().menuBars
         menuBarsQuery.children(matching: .statusItem).element.click()
         XCTAssertTrue(menuBarsQuery.menuItems[testConfigFile].exists)
+        XCTAssertTrue(menuBarsQuery.menuItems[testConfigFileInvalid].exists)
+        XCTAssertTrue(menuBarsQuery.menuItems[testConfigFileUsrLocal].exists)
     }
 
     // Tunnel should be checked and show details if it is enabled
@@ -91,5 +108,16 @@ class IntegrationTests: XCTestCase {
         XCTAssertTrue(text?.contains("Configuration parsing error") ?? false)
 
         app.dialogs["alert"].buttons["OK"].click()
+    }
+
+    func testTunnelDetails() {
+        let menuBarsQuery = XCUIApplication().menuBars
+        XCUIElement.perform(withKeyModifiers: .option) {
+            menuBarsQuery.children(matching: .statusItem).element.click()
+        }
+
+        XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
+        // details for /usr/local/etc/wireguard config
+        XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.3.0/32"].exists)
     }
 }

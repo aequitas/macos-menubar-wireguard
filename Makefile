@@ -13,8 +13,6 @@ swift_sources=$(shell find * -name "*.swift"|grep -vE 'SKQueue|INIParse')
 other_sources=$(shell find * -name "*.plist") WireGuardStatusbar.xcodeproj/project.pbxproj
 sources=${swift_sources} ${other_sources}
 
-configuration?=Release
-
 version?=$(shell git describe --tags --always --abbrev=0)
 next_version:=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
 new_version?=${next_version}
@@ -30,7 +28,7 @@ all: test dist install
 # run tests
 test: .test-unit .test-integration
 .test-unit: ${sources} .check | icons ${xcpretty}
-	set -o pipefail; xcodebuild -scheme WireGuardStatusbar -configuration ${configuration} test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme WireGuardStatusbar test | ${xcpretty}
 	@touch $@
 
 # verify code quality
@@ -55,11 +53,11 @@ test-integration: .test-integration
 .test-integration: ${sources} /etc/wireguard/test-localhost.conf | icons
 	# application running in Xcode will hang the test
 	-osascript -e 'tell application "Xcode" to set actionResult to stop workspace document 1'
-	set -o pipefail; xcodebuild -scheme IntegrationTests -configuration ${configuration} test | ${xcpretty}
+	set -o pipefail; xcodebuild -scheme IntegrationTests test | ${xcpretty}
 	@touch $@
 
-prep-integration: /etc/wireguard/test-localhost.conf /etc/wireguard/test-invalid.conf
-/etc/wireguard/test-%.conf: IntegrationTests/test-%.conf
+prep-integration: /etc/wireguard/test-localhost.conf /etc/wireguard/test-invalid.conf /usr/local/etc/wireguard/test-usr-local.conf
+/etc/wireguard/test-%.conf /usr/local/etc/wireguard/test-%.conf: IntegrationTests/test-%.conf
 	sudo chmod 0755 ${@D}
 	sudo cp $< $@
 
@@ -97,7 +95,7 @@ ${dist}/WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app Misc/Uninst
 
 # Generate archive build (this excludes debug symbols (dSYM) which are in a release build)
 ${build_dest}/WireGuardStatusbar.app: ${sources} | icons ${xcpretty}
-	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" -configuration ${configuration} archive | ${xcpretty}
+	xcodebuild -scheme WireGuardStatusbar -archivePath "${archive}" archive | ${xcpretty}
 
 # install and run the App /Application using the distributable .dmg
 install: /Applications/WireGuardStatusbar.app
@@ -128,11 +126,12 @@ bump:
 	git commit --amend --no-edit
 	git tag ${new_version}
 
-release: test bump dist install
+prep-release: test dist install
+release: prep-release
 	git push
 	git push --tags
 	open .
-	open https://github.com/aequitas/macos-menubar-wireguard/releases/edit/${new_version}
+	open https://github.com/aequitas/macos-menubar-wireguard/releases/edit/${version}
 
 ## Icon/image generation
 

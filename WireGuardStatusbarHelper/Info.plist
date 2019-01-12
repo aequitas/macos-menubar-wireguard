@@ -11,7 +11,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.22</string>
 	<key>CFBundleVersion</key>
-	<string>34</string>
+	<string>35</string>
 	<key>Hash</key>
 	<string>303e3fef62e57d3b185e15d2fb15ab21</string>
 	<key>SMAuthorizedClients</key>
@@ -19,6 +19,6 @@
 		<string>anchor apple generic and identifier "WireGuardStatusbar"</string>
 	</array>
 	<key>SOURCE_HASH</key>
-	<string>0a2cf7044d6923ec4b35e7fe34b7b4cb</string>
+	<string>926b12e8d7b7687205e644a65496db4f</string>
 </dict>
 </plist>

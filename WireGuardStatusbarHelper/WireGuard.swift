@@ -76,15 +76,10 @@ struct WireGuard {
 
             // TODO: read configuration data from wg showconf as well
             NSLog("Reading config file: \(configFile)")
-            var configData: String
             if let configFileContents = try? String(contentsOfFile: configFile,
                                                     encoding: .utf8) {
-                configData = configFileContents
-            } else {
-                NSLog("Failed to read configuration file '\(configFile)'")
-                configData = ""
+                return WireGuard.censorConfigurationData(configFileContents)
             }
-            return WireGuard.censorConfigurationData(configData)
         }
         NSLog("Could not find configuration file for tunnel '\(tunnelName)'")
         return ""

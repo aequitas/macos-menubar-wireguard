@@ -36,8 +36,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
         defaults.register(defaults: DefaultSettings.App)
 
         #if DEBUG
-            // reset preferences to defaults for development/(ui)testing
-            defaults.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+            // reset preferences to defaults for UI testing
+            if ProcessInfo.processInfo.environment["RESET_CONFIGURATION"] == "1" {
+                defaults.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
+            }
         #endif
 
         // set a default icon at startup

@@ -17,7 +17,7 @@ version?=$(shell git describe --tags --always --abbrev=0)
 next_version:=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
 new_version?=${next_version}
 revisions=$(shell git rev-list --all --count)
-helper_revisions=$(shell git rev-list --all  --count WireGuardStatusbarHelper/*)
+helper_revisions=$(shell git rev-list --all  --count WireGuardStatusbarHelper/*.swift)
 
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
 .PHONY: all

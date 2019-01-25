@@ -13,6 +13,33 @@ class TunnelDetailMenuItem: NSMenuItem {
     }
 }
 
+let maxMenuItemChars = 40
+
+extension String {
+    enum TruncationPosition {
+        case head
+        case middle
+        case tail
+    }
+
+    func truncated(limit: Int, position: TruncationPosition = .tail, leader: String = "...") -> String {
+        guard count > limit else { return self }
+
+        switch position {
+        case .head:
+            return leader + suffix(limit)
+        case .middle:
+            let headCharactersCount = Int(ceil(Float(limit - leader.count) / 2.0))
+
+            let tailCharactersCount = Int(floor(Float(limit - leader.count) / 2.0))
+
+            return "\(prefix(headCharactersCount))\(leader)\(suffix(tailCharactersCount))"
+        case .tail:
+            return prefix(limit) + leader
+        }
+    }
+}
+
 // contruct menu with all tunnels found in configuration
 // TODO: find out if it is possible to have a dynamic bound IB menu with variable contents
 func buildMenu(tunnels: Tunnels,
@@ -44,10 +71,19 @@ func buildMenu(tunnels: Tunnels,
                 items.append(TunnelDetailMenuItem(title: "Address: \(config.address)",
                                                   action: nil, keyEquivalent: ""))
                 for peer in config.peers {
-                    items.append(TunnelDetailMenuItem(title: "Endpoint: \(peer.endpoint)",
-                                                      action: nil, keyEquivalent: ""))
-                    items.append(TunnelDetailMenuItem(title: "Allowed IPs: \(peer.allowedIps.joined(separator: ", "))",
-                                                      action: nil, keyEquivalent: ""))
+                    let endpointTitle = "Endpoint: \(peer.endpoint)"
+                    let endpointItem = TunnelDetailMenuItem(title: endpointTitle.truncated(limit: maxMenuItemChars,
+                                                                                           position: .middle),
+                                                            action: nil, keyEquivalent: "")
+                    endpointItem.toolTip = endpointTitle
+                    items.append(endpointItem)
+
+                    let ipsTitle = "Allowed IPs: \(peer.allowedIps.joined(separator: ", "))"
+                    let ipsItem = TunnelDetailMenuItem(title: ipsTitle.truncated(limit: maxMenuItemChars,
+                                                                                 position: .middle),
+                                                       action: nil, keyEquivalent: "")
+                    ipsItem.toolTip = ipsTitle
+                    items.append(ipsItem)
                 }
             } else {
                 items.append(TunnelDetailMenuItem(title: "Could not parse tunnel configuration!",

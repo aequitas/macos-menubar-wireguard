@@ -3,6 +3,13 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/66efb09de55fafe897e0/maintainability)](https://codeclimate.com/github/aequitas/macos-menubar-wireguard/maintainability)
 [![Build Status](https://travis-ci.org/aequitas/macos-menubar-wireguard.svg?branch=master)](https://travis-ci.org/aequitas/macos-menubar-wireguard)
 
+## Notice
+ There is now an **official** WireGuard application that supersedes this App. You can find it at: https://www.wireguard.com/install/ or directly download it from the AppStore: https://itunes.apple.com/us/app/wireguard/id1451685025?ls=1&mt=12
+
+ The WireGuardStatusbar application will remain available and might get updates/bugfixes but not develop any new features. You might still want to use it if you run a macOS prior to 10.14.
+
+## Introduction
+
 This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 
 ![Screenshot](Misc/demo.png)
@@ -22,19 +29,6 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 - Create a tunnel configuration file (eg: `/usr/local/etc/wireguard/utun1.conf`)
 - Download this App from [Releases](https://github.com/aequitas/macos-menubar-wireguard/releases)
 - Open the .dmg and copy the Application to where you like (eg: '/Applications')
-- The next bit is needed because I don't have a Apple Developer account to properly sign the binary. If you don't like it consider building and signing the application yourself.
-  - Start the App and get a dialog indicating the app is not signed
-  - Go to: Preferences->Security & Privacy->General and click "Open Anyway"
-
-### Using Homebrew
-
-There is also a Homebrew Cask recipe available to install WireGuard Statusbar allong with WireGuard (thanks to @xdays).
-
-- Run the following command:
-
-      brew cask install wireguardstatusbar
-
-- The app is now installed as `/Applications/WireGuardStatusbar.app`.
 - The next bit is needed because I don't have a Apple Developer account to properly sign the binary. If you don't like it consider building and signing the application yourself.
   - Start the App and get a dialog indicating the app is not signed
   - Go to: Preferences->Security & Privacy->General and click "Open Anyway"

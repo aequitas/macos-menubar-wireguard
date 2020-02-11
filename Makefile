@@ -5,6 +5,7 @@ brew_bin:=$(shell brew --prefix || echo /usr/local)/bin
 convert=${brew_bin}/convert
 xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
 swiftlint=${brew_bin}/swiftlint
+swiftformat=${brew_bin}/swiftformat
 tailor=${brew_bin}/tailor
 
 git_sha=$(shell git rev-parse --short HEAD)
@@ -16,7 +17,7 @@ sources=${swift_sources} ${other_sources}
 version?=$(shell git describe --tags --always --abbrev=0)
 next_version:=$(shell echo ${version} | ( IFS=".$$IFS" ; read major minor && echo $$major.$$((minor + 1)) ))
 new_version?=${next_version}
-revisions=$(shell git rev-list --all --count)
+revisions=$(shell git rev-list --all --count HEAD)
 helper_revisions=$(shell git rev-list --all  --count WireGuardStatusbarHelper/*.swift)
 
 # without argument make will run all tests and checks, build a distributable image and install the app in /Applications
@@ -76,7 +77,7 @@ WireGuardStatusbar.app: ${build_dest}/WireGuardStatusbar.app
 # Create distributable .dmg in current working directory
 dist: WireGuardStatusbar-${version}-${revisions}.dmg
 WireGuardStatusbar-${version}-${revisions}.dmg: ${dist}/WireGuardStatusbar.app
-	hdiutil create "$@" -srcfolder "${<D}" -ov
+	hdiutil create -fs HFS+ "$@" -srcfolder "${<D}" -ov
 
 # Zipped distributable with current git commit sha
 zip: WireGuardStatusbar-${git_sha}.zip

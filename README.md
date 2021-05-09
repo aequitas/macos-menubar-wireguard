@@ -33,6 +33,18 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
   - Start the App and get a dialog indicating the app is not signed
   - Go to: Preferences->Security & Privacy->General and click "Open Anyway"
 
+#### Specify brew location
+
+In case you have brew installed in some non-default directory [since 1.16](https://github.com/aequitas/macos-menubar-wireguard/releases/tag/1.16) you can specify `brew` or `wg-quick` path.
+
+To set `brew` path:
+
+`sudo defaults write WireGuardStatusbarHelper brewPrefix /opt/local/`
+
+To set the path to `wg-quick` binary:
+
+`sudo defaults write WireGuardStatusbarHelper wgquickBinPath /opt/local/bin/wg-quick`
+
 ## Building & Testing
 
 Automation scripting is provided in this repository to make development a little easier. Primary development using Xcode is supported/preferred but some actions (integration testing, distribution build) are only available using `make`.

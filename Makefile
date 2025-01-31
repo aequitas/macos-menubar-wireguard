@@ -1,9 +1,9 @@
 SHELL=/bin/bash
 
 tmp=${TMPDIR:/=}
-brew_bin:=$(shell brew --prefix || echo /usr/local)/bin
+brew_bin?=$(shell brew --prefix || echo /usr/local)/bin
 convert=${brew_bin}/convert
-xcpretty=${HOME}/.gem/ruby/2.3.0/bin/xcpretty
+xcpretty=${HOME}/.gem/ruby/2.6.0/bin/xcpretty
 swiftlint=${brew_bin}/swiftlint
 swiftformat=${brew_bin}/swiftformat
 tailor=${brew_bin}/tailor
@@ -35,18 +35,18 @@ test: .test-unit .test-integration
 # verify code quality
 check: .check
 .check: ${swift_sources} .fix .check.tailor | ${swiftlint}
-	swiftlint --strict
+	${swiftlint} --strict
 	@touch $@
 
 # only run tailor on changed files as it is slow
 .check.tailor: ${swift_sources} | .fix ${tailor}
-	tailor $?
+	${tailor} $?
 	@touch $@
 
 # automatically fix all trivial code quality issues
 fix: .fix
 .fix: ${swift_sources} | ${swiftformat}
-	swiftformat $?
+	${swiftformat} --swiftversion 5 $?
 	@touch $@
 
 # setup requirements and run integration tests
@@ -231,7 +231,7 @@ Misc/wireguard.svg:
 ## Setup and maintenance
 
 ${convert} ${swiftlint} ${tailor} ${swiftformat}:
-	brew bundle install --verbose --no-upgrade
+	${brew_bin}/brew bundle install --verbose --no-upgrade
 
 # Used to generate less verbose xcodebuild output
 ${xcpretty}:

@@ -13,7 +13,7 @@ class IntegrationTests: XCTestCase {
         // Verify the proper configuration files for testing are installed.
         let bundle = Bundle(for: type(of: self).self)
         var requiredTestConfigFiles = [testConfigFile, testConfigFileInvalid].map { "/etc/wireguard/\($0).conf" }
-        requiredTestConfigFiles.append("/usr/local/etc/wireguard/\(testConfigFileUsrLocal).conf")
+        requiredTestConfigFiles.append("/opt/homebrew/etc/wireguard/\(testConfigFileUsrLocal).conf")
         for configFilePath in requiredTestConfigFiles {
             let configFileName = ((configFilePath as NSString).lastPathComponent as NSString).deletingPathExtension
             let testConfig = bundle.path(forResource: configFileName, ofType: "conf")
@@ -26,7 +26,7 @@ class IntegrationTests: XCTestCase {
         app.launch()
 
         // gives a little more time before starting a test to enter the password to install the helper
-        addUIInterruptionMonitor(withDescription: "Wait for Helper install password dialog") { (alert) -> Bool in
+        addUIInterruptionMonitor(withDescription: "Wait for Helper install password dialog") { alert -> Bool in
             if alert.buttons["Install Helper"].exists {
                 sleep(1_000_000_000)
                 return true
@@ -117,7 +117,7 @@ class IntegrationTests: XCTestCase {
         }
 
         XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.2.0/32"].exists)
-        // details for /usr/local/etc/wireguard config
+        // details for /opt/homebrew/etc/wireguard config
         XCTAssertTrue(menuBarsQuery.menuItems["Address: 192.0.3.0/32"].exists)
     }
 }

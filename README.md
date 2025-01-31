@@ -26,7 +26,7 @@ This is a macOS statusbar item (aka menubar icon) that wraps wg-quick.
 ### Manually
 
 - Follow the instruction to [install WireGuard for macOS](https://www.wireguard.com/install/)
-- Create a tunnel configuration file (eg: `/usr/local/etc/wireguard/utun1.conf`)
+- Create a tunnel configuration file (eg: `/opt/homebrew/etc/wireguard/utun1.conf`)
 - Download this App from [Releases](https://github.com/aequitas/macos-menubar-wireguard/releases)
 - Open the .dmg and copy the Application to where you like (eg: '/Applications')
 - The next bit is needed because I don't have a Apple Developer account to properly sign the binary. If you don't like it consider building and signing the application yourself.

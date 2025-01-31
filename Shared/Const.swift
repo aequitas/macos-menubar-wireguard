@@ -6,18 +6,20 @@ let runPath = "/var/run/wireguard"
 
 let installInstructions = """
 Currently this application does not come with WireGuard binaries. \
-It is required to manually install these using Homebrew.
+It is required to manually install these using Homebrew:
 
-Please follow the instructions on:
+  brew install wireguard-tools
 
-  https://www.wireguard.com/install/
+Or follow the instructions on:
+
+  https://www.wireguard.com/install/#macos-homebrew-and-macports-basic-cli-homebrew-userspace-go-homebrew-tools-macports-userspace-go-macports-tools
 
 and restart this application afterwards.
 """
 
-let defaultBrewPrefix = "/usr/local"
+let defaultBrewPrefix = "/opt/homebrew"
 
-struct DefaultSettings {
+enum DefaultSettings {
     static let App = [
         "showAllTunnelDetails": false,
         "showConnectedTunnelDetails": true,

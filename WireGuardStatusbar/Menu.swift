@@ -45,7 +45,8 @@ extension String {
 func buildMenu(tunnels: Tunnels,
                allTunnelDetails: Bool = false,
                connectedTunnelDetails: Bool = true,
-               showInstallInstructions _: Bool = false) -> [NSMenuItem] {
+               showInstallInstructions _: Bool = false) -> [NSMenuItem]
+{
     guard !tunnels.isEmpty else {
         return [NSMenuItem(title: "No tunnel configurations found",
                            action: nil, keyEquivalent: "")]

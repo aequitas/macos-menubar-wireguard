@@ -31,7 +31,7 @@ class HelperTests: XCTestCase {
     // when reading configs don't expose the private keys as we currently have not mechanism
     // in place to prevent unauthorized xpc calls to the helper
     func testDontExposePrivates() {
-        testConfigs.forEach { name, config in
+        for (name, config) in testConfigs {
             print("Testing config \(name)")
             let censoredConfigData = WireGuard.censorConfigurationData(config)
             XCTAssertFalse(censoredConfigData.contains(testPrivateKey))

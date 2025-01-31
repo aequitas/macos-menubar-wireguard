@@ -2,7 +2,7 @@
 
 import Foundation
 
-struct HelperConstants {
+enum HelperConstants {
     static let machServiceName = "WireGuardStatusbarHelper"
 }
 

@@ -35,7 +35,7 @@ class HelperXPC {
     func helper(_ completion: ((Bool) -> Void)?) -> HelperProtocol? {
         // Get the current helper connection and return the remote object (Helper.swift)
         // as a proxy object to call functions on.
-        guard let helper = self.helperConnection()?.remoteObjectProxyWithErrorHandler({ _ in
+        guard let helper = helperConnection()?.remoteObjectProxyWithErrorHandler({ _ in
             if let onCompletion = completion { onCompletion(false) }
         }) as? HelperProtocol else { return nil }
         return helper
@@ -50,7 +50,7 @@ class HelperXPC {
         guard
             let helperBundleInfo = CFBundleCopyInfoDictionaryForURL(helperURL as CFURL) as? [String: Any],
             let helperVersion = helperBundleInfo["CFBundleVersion"] as? String,
-            let helper = self.helper(completion)
+            let helper = helper(completion)
         else {
             NSLog("Helper: Failed to get Bundled helper version")
             completion(false)
@@ -69,7 +69,7 @@ class HelperXPC {
         var authRef: AuthorizationRef?
         var authItem = AuthorizationItem(name: kSMRightBlessPrivilegedHelper, valueLength: 0,
                                          value: UnsafeMutableRawPointer(bitPattern: 0), flags: 0)
-        var authRights: AuthorizationRights = AuthorizationRights(count: 1, items: &authItem)
+        var authRights = AuthorizationRights(count: 1, items: &authItem)
         let authFlags: AuthorizationFlags = [[], .extendRights, .interactionAllowed, .preAuthorize]
 
         let status = AuthorizationCreate(&authRights, nil, authFlags, &authRef)

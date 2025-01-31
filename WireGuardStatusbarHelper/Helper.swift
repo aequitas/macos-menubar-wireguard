@@ -88,7 +88,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
     var debounceFilesystemEvents: DispatchWorkItem?
 
     // SKQueue: handle incoming file/directory change events
-    func receivedNotification(_ notification: SKQueueNotification, path: String, queue _: SKQueue) {
+    func receivedNotification(_: SKQueueNotification, path: String, queue _: SKQueue) {
         if configPaths.contains(path) {
             NSLog("Configuration files changed, reloading")
         }
@@ -130,7 +130,8 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     // XPC: called by App to have Helper change the state of a tunnel to up or down
     func setTunnel(tunnelName: String, enable: Bool, reply:
-        @escaping (_ success: Bool, _ errorMessage: String) -> Void) {
+        @escaping (_ success: Bool, _ errorMessage: String) -> Void)
+    {
         let state = enable ? "up" : "down"
 
         if !WireGuard.validateTunnelName(tunnelName: tunnelName) {
@@ -187,7 +188,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     // allow shutdown to be aborted (eg: when a new XPC connection comes in)
     func abortShutdown() {
-        if let shutdownTask = self.shutdownTask {
+        if let shutdownTask = shutdownTask {
             NSLog("Aborting shutdown")
             shutdownTask.cancel()
             self.shutdownTask = nil

@@ -102,9 +102,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
 
     // Query the Helper to ensure it is properly initialized (eg: wg-quick is available)
     func validateHelper() {
-        let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+        let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error in
             NSLog("XPCService error: \(error)")
-            return
         } as? HelperProtocol
 
         xpcService?.wireguardInstalled { self.wireguardInstalled = $0 }
@@ -114,14 +113,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
     func updateState() {
         NSLog("Updating tunnel configuration and runtime state.")
 
-        let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+        let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error in
             NSLog("XPCService error: \(error)")
-            return
         } as? HelperProtocol
 
         xpcService?.getTunnels(reply: { tunnelInfo in
             self.tunnels = tunnelInfo.map { name, interfaceAndConfigData in
-                return Tunnel(name: name, fromTunnelInfo: interfaceAndConfigData)
+                Tunnel(name: name, fromTunnelInfo: interfaceAndConfigData)
             }
             DispatchQueue.main.async { self.statusItem.image = menuImage(tunnels: self.tunnels) }
         })
@@ -132,7 +130,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate, NSUserNotifi
         if let tunnelName = sender.representedObject as? String {
             let tunnel = tunnels.filter { $0.name == tunnelName }[0]
 
-            let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error -> Void in
+            let xpcService = privilegedHelper?.helperConnection()?.remoteObjectProxyWithErrorHandler { error in
                 NSLog("XPCService error: \(error)")
             } as? HelperProtocol
 

@@ -98,7 +98,7 @@ class AppTests: XCTestCase {
     }
 
     func testConfigParsing() {
-        testConfigs.forEach { name, config in
+        for (name, config) in testConfigs {
             print("Testing config \(name)")
             if let config = TunnelConfig(fromConfig: config) {
                 XCTAssertEqual(config.address, "192.0.2.0/32")

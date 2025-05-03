@@ -18,6 +18,7 @@ and restart this application afterwards.
 """
 
 let defaultBrewPrefix = "/opt/homebrew"
+let defaultConfigPath = "/etc/wireguard"
 
 enum DefaultSettings {
     static let App = [
@@ -31,9 +32,3 @@ enum DefaultSettings {
         "wgquickBinPath": "",
     ]
 }
-
-// locations where wg-quick searches for configuration files
-let configPaths = [
-    "/etc/wireguard",
-    "\(defaultBrewPrefix)/etc/wireguard",
-]

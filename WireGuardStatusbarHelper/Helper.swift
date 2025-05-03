@@ -44,6 +44,12 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
             self.wgquickBinPath = wgquickBinPath
         }
 
+        // locations where wg-quick searches for configuration files
+        let configPaths = [
+            defaultConfigPath,
+            "\(brewPrefix)\(defaultConfigPath)",
+        ]
+
         wireguard = WireGuard(
             brewPrefix: brewPrefix,
             wireguardBinPath: wireguardBinPath,
@@ -72,7 +78,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
         if queue == nil {
             queue = SKQueue(delegate: self)!
         }
-        for directory in configPaths + [runPath] {
+        for directory in wireguard.configPaths + [runPath] {
             // skip already watched paths
             if queue!.isPathWatched(directory) { continue }
 
@@ -89,7 +95,7 @@ class Helper: NSObject, HelperProtocol, SKQueueDelegate {
 
     // SKQueue: handle incoming file/directory change events
     func receivedNotification(_: SKQueueNotification, path: String, queue _: SKQueue) {
-        if configPaths.contains(path) {
+        if wireguard.configPaths.contains(path) {
             NSLog("Configuration files changed, reloading")
         }
         if path == runPath {
